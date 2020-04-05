@@ -16,7 +16,7 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    _mockCheckForSession().then(
+    _checkDurationTimer().then(
         (response) {
           if(response) {
             navigateToHomeScreen();
@@ -25,7 +25,7 @@ class _SplashScreenState extends State<SplashScreen> {
     );
   }
 
-  Future<bool> _mockCheckForSession() async {
+  Future<bool> _checkDurationTimer() async {
     await Future.delayed(Duration(milliseconds: 3000), () {} );
     return true;
   }
