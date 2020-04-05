@@ -1,8 +1,27 @@
 import 'package:flutter/material.dart';
+import 'splashscreen.dart';
 
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
+
+  @override
+  Widget build(BuildContext context) {
+    return new MaterialApp(
+        theme: ThemeData(
+          primarySwatch: Colors.blue,
+        ),
+        debugShowCheckedModeBanner: false,
+        home: new SplashScreen(),
+    );
+  }
+}
+
+/*var routes = <String, WidgetBuilder> {
+  "/": (BuildContext context) => MyApp()
+};*/
+
+/*class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
@@ -108,4 +127,4 @@ class _MyHomePageState extends State<MyHomePage> {
       ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
-}
+}*/
