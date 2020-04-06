@@ -17,10 +17,6 @@ class MyApp extends StatelessWidget {
   }
 }
 
-/*var routes = <String, WidgetBuilder> {
-  "/": (BuildContext context) => MyApp()
-};*/
-
 /*class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override

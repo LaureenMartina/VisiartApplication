@@ -3,7 +3,8 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_linkify/flutter_linkify.dart';
-import 'signUp/signup.dart';
+import 'package:visiart/signUp/signup.dart';
+import 'package:visiart/customFormUser/userInterests.dart';
 
 class HomeScreen extends StatefulWidget {
   static String home = "home";
@@ -14,11 +15,25 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeState extends State<HomeScreen> {
 
+  var routes = <String, WidgetBuilder> {
+    "/": (BuildContext context) => HomeScreen(),
+    "/go": (BuildContext context) => UserInterestsScreen(),
+    "/new": (BuildContext context) => SignUpScreen()
+  };
+
   void _navigateToSignUpScreen() {
-    Navigator.of(context).pushReplacement(
-        new MaterialPageRoute(
-            builder: (BuildContext context) => SignUpScreen()
-        )
+    //Navigator.pushNamed(context, '/new');
+    Navigator.pushReplacement(
+      context, MaterialPageRoute(
+            builder: (BuildContext context) => SignUpScreen() )
+    );
+  }
+
+  void _navigateToUserInterestsScreen() {
+    //Navigator.pushNamed(context, '/go');
+    Navigator.push(
+      context, MaterialPageRoute(
+        builder: (BuildContext context) => UserInterestsScreen() )
     );
   }
 
@@ -47,14 +62,13 @@ class _HomeState extends State<HomeScreen> {
       borderRadius: BorderRadius.circular(30.0),
       color: Color(0xff01A0C7),
       child: MaterialButton(
-        onPressed: () {},
+        onPressed: () { _navigateToUserInterestsScreen(); },
         child: Text("GO !",
             textAlign: TextAlign.center,
             style: TextStyle(fontFamily: 'Montserrat', fontSize: 18.0).copyWith(
                 color: Colors.white, fontWeight: FontWeight.bold)),
       ),
     );
-
 
     return Scaffold(
       body: Container(
