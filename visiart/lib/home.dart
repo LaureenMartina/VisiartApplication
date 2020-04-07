@@ -5,6 +5,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_linkify/flutter_linkify.dart';
 import 'package:visiart/signUp/signup.dart';
 import 'package:visiart/customFormUser/userInterests.dart';
+import 'package:visiart/dashboard/dashboard.dart';
 
 class HomeScreen extends StatefulWidget {
   static String home = "home";
@@ -18,7 +19,8 @@ class _HomeState extends State<HomeScreen> {
   var routes = <String, WidgetBuilder> {
     "/": (BuildContext context) => HomeScreen(),
     "/go": (BuildContext context) => UserInterestsScreen(),
-    "/new": (BuildContext context) => SignUpScreen()
+    "/new": (BuildContext context) => SignUpScreen(),
+    "/go/dashboard": (BuildContext context) => DashboardScreen()
   };
 
   void _navigateToSignUpScreen() {

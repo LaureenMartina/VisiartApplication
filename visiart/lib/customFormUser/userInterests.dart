@@ -2,6 +2,9 @@ import 'dart:ui';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:progress_button/progress_button.dart';
+import 'package:visiart/dashboard/dashboard.dart';
+
 
 class UserInterestsScreen extends StatefulWidget {
   @override
@@ -10,77 +13,76 @@ class UserInterestsScreen extends StatefulWidget {
 
 class _UserInterestsScreenState extends State<UserInterestsScreen> {
 
-  bool _switchValue = false;
-
   @override
   Widget build(BuildContext context) {
-
-    List<String> nameChips = [
-      "Museum", "Exposition", "Cinema", "Painting", "Athletic Event", "Music", "Concert",
-      "Dance", "Modern Art", "Theater", "Drawing", "Design", "Literature", "Spectacle", "Photography",
-    ];
-
-    final divider = Divider(
-      color: Colors.black38,
-      indent: 30,
-      endIndent: 30,
-    );
-
-    final switchAvailableUser = Container(
-      child: Row(
-        children: <Widget>[
-          Padding(
-            padding: EdgeInsets.only(left: 15, right: 40),
-            child: Align(
-              alignment: Alignment.centerLeft,
-              child: Text("Etes-vous prêt(e) à vous déplacer ?"),
-            ),
-          ),
-          Container(
-            alignment: Alignment.topRight,
-            child: Switch(
-              value: _switchValue,
-              onChanged: (value) {
-                setState(() {
-                  _switchValue = value;
-                  print(_switchValue);
-                });
-              },
-              activeTrackColor: Colors.lightGreenAccent,
-              activeColor: Colors.green,
-            ),
-          )
-        ],
-      ),
-    );
-
     return Scaffold(
       appBar: AppBar(
-        title: Text('Vos Centres d\'intérêts'),
-        backgroundColor: Colors.orange,
+        backgroundColor: Colors.deepOrange[200],
+        brightness: Brightness.light,
+        elevation: 2,
+        title: Text('Vos Centres d\'intérêts', style: TextStyle(color: Colors.black87),),
       ),
-      body: Column(
-        children: <Widget>[
-          Padding(
+      body: _bodyScreen(context),
+      backgroundColor: Colors.grey[200],
+    );
+  }
+}
+
+Widget _bodyScreen(BuildContext context) {
+  bool _switchValue = false;
+
+  final divider = Divider(
+    color: Colors.black38,
+    indent: 30,
+    endIndent: 30,
+  );
+
+  List<String> nameChips = [
+    "Museum", "Exposition", "Cinema", "Painting", "Athletic Event", "Music", "Concert",
+    "Dance", "Modern Art", "Theater", "Drawing", "Design", "Literature", "Spectacle", "Photography",
+  ];
+
+  void _navigateToDashboardScreen() {
+    //Navigator.pushNamed(context, '/new');
+    Navigator.pushReplacement(
+        context, MaterialPageRoute(
+        builder: (BuildContext context) => DashboardScreen() )
+    );
+  }
+
+  return CustomScrollView(
+    slivers: <Widget>[
+      SliverToBoxAdapter(
+        child: Container(
+          height: 100,
+          child: Padding(
             padding: EdgeInsets.only(top: 20.0),
             child: Text("Dites nous ce que vous aimez",
-              style: TextStyle(
-                  color: Colors.deepOrange,
-                  fontSize: 25,
-                  letterSpacing: 2.5
-              ),
-              textAlign: TextAlign.center
+                style: TextStyle(
+                    color: Colors.deepOrange[200],
+                    fontSize: 25,
+                    letterSpacing: 2.5
+                ),
+                textAlign: TextAlign.center
             ),
           ),
-          Padding(
-            padding: EdgeInsets.only(left: 15, right: 15, top: 20.0),
+        ),
+      ),
+      SliverToBoxAdapter(
+        child: Container(
+          height: 40,
+          child: Padding(
+            padding: EdgeInsets.only(left: 15, right: 15),
             child: Text("Sélectionnez un ou plusieurs domaines qui vous intéressent",
                 style: TextStyle(color: Colors.black87, fontSize: 14)
             ),
           ),
-          SizedBox(height: 5.0),
-          divider,
-          Padding(
+        ),
+      ),
+      SliverToBoxAdapter(
+        child: Container(
+          height: 250,
+          child: Padding(
             padding: EdgeInsets.only(left: 15),
             child: Align(
               alignment: Alignment.centerLeft,
@@ -89,20 +91,65 @@ class _UserInterestsScreenState extends State<UserInterestsScreen> {
                   children: [
                     for (var name in nameChips)
                       Padding(
-                        padding: const EdgeInsets.all(4),
+                        padding: const EdgeInsets.only(left: 4, right: 4),
                         child: CreateFilterChip(chipName: name),
-                    )
+                      )
                   ],
                 ),
               ),
             ),
           ),
-          divider,
-          switchAvailableUser,
-        ],
+        ),
       ),
-    );
-  }
+      SliverToBoxAdapter(
+        child: Container(
+          child: Row(
+            children: <Widget>[
+              Padding(
+                padding: EdgeInsets.only(left: 15, right: 40),
+                child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text("Etes-vous prêt(e) à vous déplacer ?"),
+                ),
+              ),
+              Container(
+                alignment: Alignment.centerRight,
+                child: Switch(
+                  value: _switchValue,
+                  activeTrackColor: Colors.lightGreenAccent,
+                  activeColor: Colors.green,
+                  onChanged: (value) {
+                    //setState(() {
+                    // TODO setState not working
+                      _switchValue = value;
+                      print(_switchValue);
+                    //});
+                  },
+                ),
+              )
+            ],
+          ),
+        ),
+      ),
+      SliverToBoxAdapter(
+        child: Padding(
+          padding: EdgeInsets.only(left: 30, right: 30, top: 10),
+          child: ProgressButton(
+            child: Text("Enregistrer",
+              style: TextStyle(color: Colors.black87, fontSize: 18),
+            ),
+            buttonState: ButtonState.normal,
+            backgroundColor: Colors.deepOrange[200],
+            onPressed: () {
+              // TODO progess button
+              _navigateToDashboardScreen();
+            },
+            progressColor: Colors.deepOrange[300],
+          ),
+        ),
+      ),
+    ],
+  );
 }
 
 class CreateFilterChip extends StatefulWidget {
