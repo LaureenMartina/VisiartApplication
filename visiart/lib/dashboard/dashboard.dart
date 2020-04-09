@@ -68,29 +68,40 @@ class _DashboardScreenState extends State<DashboardScreen> {
     }).toList(),
   );
 
-  final cardTrophees = Padding(
-    padding: EdgeInsets.only(right: 25),
-    child: SizedBox(
-      height: 130,
-      width: 130,
-      child: Card(
-        color: Colors.greenAccent,
-        child: Text('Trophées'),
-      ),
+  final cardTrophees = GestureDetector(
+    onTap: () {
+      print("Container clicked");
+    },// handle your onTap here
+    child: Padding(
+        padding: EdgeInsets.only(left: 20),
+        child: SizedBox(
+          height: 130,
+          width: 130,
+          child: Card (
+            color: Colors.greenAccent,
+            child: Text('Trophées'),
+          ),
+        )
     ),
   );
 
-  final cardAlerts = Padding(
-    padding: EdgeInsets.only(left: 25),
-    child: SizedBox(
-      height: 130,
-      width: 130,
-      child: Card(
-        color: Colors.greenAccent,
-        child: Text('Dessins'),
-      ),
+  final cardAlerts = GestureDetector(
+    onTap: () {
+      print("Container clicked");
+    },// handle your onTap here
+    child: Padding(
+        padding: EdgeInsets.only(left: 20),
+        child: SizedBox(
+          height: 130,
+          width: 130,
+          child: Card (
+            color: Colors.greenAccent,
+            child: Text('Dessins AR'),
+          ),
+        )
     ),
   );
+
 
   @override
   Widget build(BuildContext context) {
@@ -131,7 +142,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
           carouselActuality,
           SizedBox(height: 15,),
           Container(
-            margin: EdgeInsets.only(left: 25),
+            margin: EdgeInsets.only(left: 20),
             child: Row(
               children: <Widget>[
                 cardTrophees,
