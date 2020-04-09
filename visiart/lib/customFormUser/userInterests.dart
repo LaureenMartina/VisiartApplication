@@ -3,7 +3,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:progress_button/progress_button.dart';
-import 'package:visiart/dashboard/dashboard.dart';
+import 'package:visiart/dashboard/menu.dart';
 
 
 class UserInterestsScreen extends StatefulWidget {
@@ -46,7 +46,7 @@ Widget _bodyScreen(BuildContext context) {
     //Navigator.pushNamed(context, '/new');
     Navigator.pushReplacement(
         context, MaterialPageRoute(
-        builder: (BuildContext context) => DashboardScreen() )
+        builder: (BuildContext context) => MenuBoardScreen() )
     );
   }
 
