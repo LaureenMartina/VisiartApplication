@@ -2,7 +2,6 @@ import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:getflutter/getflutter.dart';
 
 class DashboardScreen extends StatefulWidget {
   @override
