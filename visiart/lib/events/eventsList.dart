@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
-import 'dart:convert';
 
 class EventsListScreen extends StatefulWidget {
   @override
@@ -85,7 +84,6 @@ class _EventsListScreenState extends State<EventsListScreen> {
                         ],
                       ),
                     ),
-                    ,
                   ],
                 ),
               );
