@@ -2,7 +2,7 @@ import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:getflutter/getflutter.dart';
+import 'package:visiart/awardsUser/awardsList.dart';
 
 class DashboardScreen extends StatefulWidget {
   @override
@@ -68,9 +68,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
     }).toList(),
   );
 
-  final cardTrophees = GestureDetector(
+  /*final cardTrophees = GestureDetector(
     onTap: () {
-      print("Container clicked");
+      Navigator.pushReplacement(
+        context, MaterialPageRoute(
+          builder: (BuildContext context) => AwardsListScreen() )
+      );
     },// handle your onTap here
     child: Padding(
         padding: EdgeInsets.only(left: 20),
@@ -83,9 +86,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
           ),
         )
     ),
-  );
+  );*/
 
-  final cardAlerts = GestureDetector(
+  /*final cardAlerts = GestureDetector(
     onTap: () {
       print("Container clicked");
     },// handle your onTap here
@@ -100,7 +103,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
           ),
         )
     ),
-  );
+  );*/
 
 
   @override
@@ -145,8 +148,46 @@ class _DashboardScreenState extends State<DashboardScreen> {
             margin: EdgeInsets.only(left: 20),
             child: Row(
               children: <Widget>[
-                cardTrophees,
-                cardAlerts,
+                // click to Awards Card
+                GestureDetector(
+                  onTap: () {
+                    Navigator.pushReplacement(
+                      context, MaterialPageRoute(
+                        builder: (BuildContext context) => AwardsListScreen() )
+                    );
+                  },// handle your onTap here
+                  child: Padding(
+                      padding: EdgeInsets.only(left: 20),
+                      child: SizedBox(
+                        height: 130,
+                        width: 130,
+                        child: Card (
+                          color: Colors.greenAccent,
+                          child: Text('Trophées'),
+                        ),
+                      )
+                  ),
+                ),
+                // click AlertCard
+                GestureDetector(
+                  onTap: () {
+                    /*Navigator.pushReplacement(
+                      context, MaterialPageRoute(
+                        builder: (BuildContext context) => () )
+                    );*/
+                  },// handle your onTap here
+                  child: Padding(
+                      padding: EdgeInsets.only(left: 20),
+                      child: SizedBox(
+                        height: 130,
+                        width: 130,
+                        child: Card (
+                          color: Colors.greenAccent,
+                          child: Text('Dessins AR'),
+                        ),
+                      )
+                  ),
+                ),
               ],
             ),
           ),
