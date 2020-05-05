@@ -13,6 +13,35 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   List<String> nameCards = ["Trophées", "Dessins"];
 
+  final getNameUser = Align(
+    alignment: Alignment.topCenter,
+    child: Padding(
+      padding: EdgeInsets.only(top:20),
+      child: Text(
+        'Bonjour USER',
+        style: TextStyle(
+          fontSize: 20.0,
+          fontWeight: FontWeight.bold,
+          color: Colors.teal[300],
+        ),
+      ),
+    ),
+  );
+
+  final titleCalendarOfActivities = Container(
+    margin: const EdgeInsets.only(
+      left: 16.0,top: 24.0, bottom: 5.0,
+    ),
+    child: Text(
+      'Calendrier de vos Activités',
+      style: TextStyle(
+        fontSize: 14.0,
+        fontWeight: FontWeight.bold,
+        color: Colors.teal[300],
+      ),
+    ),
+  );
+
   final sliderCalendarActivity = Container(
     height: 80.0,
     color: Colors.greenAccent,
@@ -35,7 +64,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   );
 
   final carouselActuality = CarouselSlider(
-    height: 120.0,
+    height: 150.0,
     initialPage: 0,
     enableInfiniteScroll: true,
     reverse: false,
@@ -68,42 +97,43 @@ class _DashboardScreenState extends State<DashboardScreen> {
     }).toList(),
   );
 
-  /*final cardTrophees = GestureDetector(
-    onTap: () {
-      Navigator.pushReplacement(
-        context, MaterialPageRoute(
-          builder: (BuildContext context) => AwardsListScreen() )
-      );
-    },// handle your onTap here
-    child: Padding(
-        padding: EdgeInsets.only(left: 20),
-        child: SizedBox(
-          height: 130,
-          width: 130,
-          child: Card (
-            color: Colors.greenAccent,
-            child: Text('Trophées'),
-          ),
-        )
+  Card _awardsCard() => Card(
+    elevation: 50,
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(30)
     ),
-  );*/
+    color: Colors.pink[800],
+    child: Padding(
+      padding: EdgeInsets.only(top:55, left: 20),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          Text("Vos Trophées", style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold, color: Colors.white)),
+          SizedBox(height: 4),
+        ],
+      ),
+    ),
+  );
 
-  /*final cardAlerts = GestureDetector(
-    onTap: () {
-      print("Container clicked");
-    },// handle your onTap here
-    child: Padding(
-        padding: EdgeInsets.only(left: 20),
-        child: SizedBox(
-          height: 130,
-          width: 130,
-          child: Card (
-            color: Colors.greenAccent,
-            child: Text('Dessins AR'),
-          ),
-        )
+  Card _drawingCard() => Card(
+    elevation: 50,
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(30)
     ),
-  );*/
+    color: Colors.teal[700],
+    child: Padding(
+      padding: EdgeInsets.only(top:60, left: 20),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          Text("Vos \nDessins AR", style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold, color: Colors.white)),
+          SizedBox(height: 4),
+        ],
+      ),
+    ),
+  );
 
 
   @override
@@ -112,84 +142,89 @@ class _DashboardScreenState extends State<DashboardScreen> {
       body: ListView(
         shrinkWrap: true,
         children: <Widget>[
-          Align(
-            alignment: Alignment.topCenter,
-            child: Padding(
-              padding: EdgeInsets.only(top:20),
-              child: Text(
-                'Bonjour USER',
-                style: TextStyle(
-                  fontSize: 20.0,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.teal[300],
-                ),
-              ),
-            ),
-          ),
-          Container(
-            margin: const EdgeInsets.only(
-              left: 16.0,top: 24.0, bottom: 5.0,
-            ),
-            child: Text(
-              'Calendrier de vos Activités',
-              style: TextStyle(
-                fontSize: 14.0,
-                fontWeight: FontWeight.bold,
-                color: Colors.teal[300],
-              ),
-            ),
-          ),
+          getNameUser,
+          titleCalendarOfActivities,
           Divider(color: Colors.grey,),
           sliderCalendarActivity,
-          SizedBox(height: 15,),
+          SizedBox(height: 20),
           carouselActuality,
-          SizedBox(height: 15,),
-          Container(
-            margin: EdgeInsets.only(left: 20),
-            child: Row(
-              children: <Widget>[
-                // click to Awards Card
-                GestureDetector(
-                  onTap: () {
-                    Navigator.pushReplacement(
-                      context, MaterialPageRoute(
-                        builder: (BuildContext context) => AwardsListScreen() )
-                    );
-                  },// handle your onTap here
-                  child: Padding(
-                      padding: EdgeInsets.only(left: 20),
-                      child: SizedBox(
-                        height: 130,
-                        width: 130,
-                        child: Card (
-                          color: Colors.greenAccent,
-                          child: Text('Trophées'),
+          SizedBox(height: 15),
+          Column(
+            children: <Widget>[ 
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  // click to Awards Card
+                  Stack(
+                    children: <Widget>[
+                      Container(
+                        width: 160,
+                        height: 160,
+                        margin: EdgeInsets.only(right: 10),
+                        padding: EdgeInsets.only(right: 10),
+                        child: GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context, MaterialPageRoute(
+                                builder: (BuildContext context) => AwardsListScreen() )
+                            );
+                          },
+                          child: _awardsCard(),
                         ),
-                      )
-                  ),
-                ),
-                // click AlertCard
-                GestureDetector(
-                  onTap: () {
-                    /*Navigator.pushReplacement(
-                      context, MaterialPageRoute(
-                        builder: (BuildContext context) => () )
-                    );*/
-                  },// handle your onTap here
-                  child: Padding(
-                      padding: EdgeInsets.only(left: 20),
-                      child: SizedBox(
-                        height: 130,
-                        width: 130,
-                        child: Card (
-                          color: Colors.greenAccent,
-                          child: Text('Dessins AR'),
+                      ),
+                      Positioned(
+                        left: 90,
+                        child: Container(
+                          width: 80,
+                          height: 80,
+                          padding: EdgeInsets.all(10),
+                          decoration: BoxDecoration(
+                            image: DecorationImage(
+                              image: AssetImage("assets/icons/miscellaneous.png"),
+                            ),
+                          ),
                         ),
-                      )
+                      ),
+                    ],
                   ),
-                ),
-              ],
-            ),
+                  // click AlertCard
+                  Stack(
+                    children: <Widget>[
+                      Container(
+                        width: 160,
+                        height: 160,
+                        margin: EdgeInsets.only(left: 10),
+                        padding: EdgeInsets.only(right: 10),
+                        child: GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context, MaterialPageRoute(
+                                builder: (BuildContext context) => AwardsListScreen() )
+                            );
+                          },
+                          child: _drawingCard(),
+                        ),
+                      ),
+                      Positioned(
+                        left: 90,
+                        top: 10,
+                        child: Container(
+                          width: 80,
+                          height: 80,
+                          padding: EdgeInsets.all(10),
+                          decoration: BoxDecoration(
+                            image: DecorationImage(
+                              image: AssetImage("assets/icons/drawing.png"),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ],
           ),
         ],
       ),
@@ -198,21 +233,21 @@ class _DashboardScreenState extends State<DashboardScreen> {
 }
 /*
 height: 130.0,
-            color: Colors.greenAccent,
-            child: Padding(
-              padding: EdgeInsets.only(left: 15, right: 15),
-              child: ListView(
-                scrollDirection: Axis.horizontal,
-                children: List.generate(2, (int index) {
-                  return Card(
-                    color: Colors.blue,
-                    child: Container(
-                      width: 130.0,
-                      height: 130.0,
-                      child: Text('${nameCards[index]}'),
-                    ),
-                  );
-                }),
-              ),
-            ),
+  color: Colors.greenAccent,
+  child: Padding(
+    padding: EdgeInsets.only(left: 15, right: 15),
+    child: ListView(
+      scrollDirection: Axis.horizontal,
+      children: List.generate(2, (int index) {
+        return Card(
+          color: Colors.blue,
+          child: Container(
+            width: 130.0,
+            height: 130.0,
+            child: Text('${nameCards[index]}'),
+          ),
+        );
+      }),
+    ),
+  ),
  */
