@@ -10,10 +10,13 @@ class AwardsListScreen extends StatefulWidget {
 
 class _AwardsListScreenState extends State<AwardsListScreen> {
 
-  bool curiousBadgeEnabled = false;
-  bool investedBadgeEnabled = false;
-  bool reagentBadgeEnabled = false;
-  bool passionateBadgeEnabled = false;
+  bool _curiousBadgeEnabled = true;
+  bool _investedBadgeEnabled = true;
+  bool _reagentBadgeEnabled = true;
+  bool _passionateBadgeEnabled = true;
+  int _counterInvested = 5;
+  int _counterReagent = 10;
+  int _counterPassionate = 3;
 
   String _descriptionCurious = "Badge Curieux\nobtenu lors de l'inscription et à la connexion à Visiart";
   String _descriptionInvested = "Badge Investi\nobtenu après avoir rejoint ou créé des salons de discussions";
@@ -23,7 +26,7 @@ class _AwardsListScreenState extends State<AwardsListScreen> {
 
   String _setCuriousImage() {
     String _imageBadge = "";
-    if(curiousBadgeEnabled) {
+    if(_curiousBadgeEnabled) {
       _imageBadge = "assets/imgs/curieux.png";
     }else{
       _imageBadge = "assets/imgs/coming-soon.png";
@@ -33,10 +36,9 @@ class _AwardsListScreenState extends State<AwardsListScreen> {
 
   String _setInvestedImage() {
     String _imageBadge = "";
-    int counterInvested = 0;
-    int finalCounter = 5;
+    int _finalCounter = 5;
 
-    if(investedBadgeEnabled && counterInvested >= finalCounter) {
+    if(_investedBadgeEnabled && _counterInvested >= _finalCounter) {
       _imageBadge = "assets/imgs/investi.png";
     }else{
       _imageBadge = "assets/imgs/coming-soon.png";
@@ -46,10 +48,9 @@ class _AwardsListScreenState extends State<AwardsListScreen> {
 
   String _setReagentImage() {
     String _imageBadge = "";
-    int counterInvested = 0;
-    int finalCounter = 5;
+    int _finalCounter = 5;
 
-    if(reagentBadgeEnabled && counterInvested >= finalCounter) {
+    if(_reagentBadgeEnabled && _counterReagent >= _finalCounter) {
       _imageBadge = "assets/imgs/reactif.png";
     }else{
       _imageBadge = "assets/imgs/coming-soon.png";
@@ -59,8 +60,10 @@ class _AwardsListScreenState extends State<AwardsListScreen> {
 
   String _setPassionateImage() {
     String _imageBadge = "";
+    int _counterDrawing = 3;
 
-    if(passionateBadgeEnabled && (curiousBadgeEnabled && investedBadgeEnabled && reagentBadgeEnabled)) {
+    if(_passionateBadgeEnabled && (_curiousBadgeEnabled && _investedBadgeEnabled && _reagentBadgeEnabled) && (_counterPassionate >= _counterDrawing) ) 
+    {
       _imageBadge = "assets/imgs/passionne.png";
     }else{
       _imageBadge = "assets/imgs/coming-soon.png";
@@ -426,14 +429,14 @@ class Detail extends StatelessWidget {
         title: Text('Back'),
       ),
       body: SingleChildScrollView(
-        padding: EdgeInsets.only(top:50),
+        padding: EdgeInsets.only(top:40),
         child: Column(
           children: [
             Center(
               child: Image.asset("${this.assetName}"),
             ),
             Padding(
-              padding: EdgeInsets.only(top:30, left: 30, right: 30),
+              padding: EdgeInsets.only(top:25, left: 30, right: 30),
               child: Text(
                 "${this.description}",
                 maxLines: 5,
