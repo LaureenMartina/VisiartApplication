@@ -15,6 +15,12 @@ class _AwardsListScreenState extends State<AwardsListScreen> {
   bool reagentBadgeEnabled = false;
   bool passionateBadgeEnabled = false;
 
+  String _descriptionCurious = "Badge Curieux\nobtenu lors de l'inscription et à la connexion à Visiart";
+  String _descriptionInvested = "Badge Investi\nobtenu après avoir rejoint ou créé des salons de discussions";
+  String _descriptionReagent = "Badge Réactif\nobtenu en participant aux diverses discussions";
+  String _descriptionPassionate = "Badge Passionné\nobtenu en enregistrant vos 3 dessins favoris et en ayant obtenu les badges précédents";
+
+
   String _setCuriousImage() {
     String _imageBadge = "";
     if(curiousBadgeEnabled) {
@@ -99,7 +105,7 @@ class _AwardsListScreenState extends State<AwardsListScreen> {
   Padding _titlePasionateBadge() => Padding(
     padding: EdgeInsets.all(10),
     child: Text(
-      '0/4\nBadge Passionné',
+      '0/6\nBadge Passionné',
       maxLines: 3,
       softWrap: true,
       style: TextStyle(fontSize: 17.0),
@@ -324,17 +330,29 @@ class _AwardsListScreenState extends State<AwardsListScreen> {
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
-              Container(
-                width: 200,
-                height: 230,
-                padding: EdgeInsets.all(0),
-                child: _curiousCard(),
+              GestureDetector(
+                onTap: () {
+                  Navigator.of(context).push(MaterialPageRoute<void>(
+                    builder: (context) => Detail(_setCuriousImage(), _descriptionCurious) ));
+                },
+                child: Container(
+                  width: 200,
+                  height: 230,
+                  padding: EdgeInsets.all(0),
+                  child: _curiousCard(),
+                ),
               ),
-              Container(
-                width: 200,
-                height: 230,
-                padding: EdgeInsets.all(0),
-                child: _investedCard(),
+              GestureDetector(
+                onTap: () {
+                  Navigator.of(context).push(MaterialPageRoute<void>(
+                    builder: (context) => Detail(_setInvestedImage(), _descriptionInvested) ));
+                },
+                child: Container(
+                  width: 200,
+                  height: 230,
+                  padding: EdgeInsets.all(0),
+                  child: _investedCard(),
+                ),
               ),
             ],
           ),
@@ -342,17 +360,29 @@ class _AwardsListScreenState extends State<AwardsListScreen> {
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
-              Container(
-                width: 200,
-                height: 230,
-                padding: EdgeInsets.all(0),
-                child: _reagentCard(),
+              GestureDetector(
+                onTap: () {
+                  Navigator.of(context).push(MaterialPageRoute<void>(
+                    builder: (context) => Detail(_setReagentImage(), _descriptionReagent) ));
+                },
+                child: Container(
+                  width: 200,
+                  height: 230,
+                  padding: EdgeInsets.all(0),
+                  child: _reagentCard(),
+                ),
               ),
-              Container(
-                width: 200,
-                height: 230,
-                padding: EdgeInsets.all(0),
-                child: _passionateCard(),
+              GestureDetector(
+                onTap: () {
+                  Navigator.of(context).push(MaterialPageRoute<void>(
+                    builder: (context) => Detail(_setPassionateImage(), _descriptionPassionate) ));
+                },
+                child: Container(
+                  width: 200,
+                  height: 230,
+                  padding: EdgeInsets.all(0),
+                  child: _passionateCard(),
+                ),
               ),
             ],
           ),
@@ -382,4 +412,39 @@ createWave(Size size, Path path){
   path.quadraticBezierTo(size.width/6, size.height - 80, size.width/2, size.height-40);
   path.quadraticBezierTo(3/4*size.width, size.height, size.width, size.height-60);
   path.lineTo(size.width, 0);
+}
+
+class Detail extends StatelessWidget {
+  final String assetName;
+  final String description;
+  const Detail(this.assetName, this.description);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Back'),
+      ),
+      body: SingleChildScrollView(
+        padding: EdgeInsets.only(top:50),
+        child: Column(
+          children: [
+            Center(
+              child: Image.asset("${this.assetName}"),
+            ),
+            Padding(
+              padding: EdgeInsets.only(top:30, left: 30, right: 30),
+              child: Text(
+                "${this.description}",
+                maxLines: 5,
+                softWrap: true,
+                style: TextStyle(fontSize: 17.0),
+                textAlign: TextAlign.center,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 }
