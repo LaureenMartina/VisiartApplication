@@ -10,7 +10,7 @@ class AwardsListScreen extends StatefulWidget {
 
 class _AwardsListScreenState extends State<AwardsListScreen> {
 
-  bool curiousBadgeEnabled = true;
+  bool curiousBadgeEnabled = false;
   bool investedBadgeEnabled = false;
   bool reagentBadgeEnabled = false;
   bool passionateBadgeEnabled = false;
@@ -66,36 +66,44 @@ class _AwardsListScreenState extends State<AwardsListScreen> {
   Padding _titleCuriousBadge() => Padding(
     padding: EdgeInsets.only(top: 10),
     child: Text(
-      'Badge Curieux',
+      '0/1\nBadge Curieux',
       maxLines: 3,
       softWrap: true,
+      style: TextStyle(fontSize: 17.0),
+      textAlign: TextAlign.center,
     ),
   );
   
   Padding _titleInvestedBadge() => Padding(
     padding: EdgeInsets.all(10),
     child: Text(
-      'Badge Investi',
+      '0/5\nBadge Investi',
       maxLines: 3,
       softWrap: true,
+      style: TextStyle(fontSize: 17.0),
+      textAlign: TextAlign.center,
     ),
   );
   
   Padding _titleReagentBadge() => Padding(
     padding: EdgeInsets.only(top: 10),
     child: Text(
-      'Badge Réactif',
+      '0/10\nBadge Réactif',
       maxLines: 3,
       softWrap: true,
+      style: TextStyle(fontSize: 17.0),
+      textAlign: TextAlign.center,
     ),
   );
 
   Padding _titlePasionateBadge() => Padding(
     padding: EdgeInsets.all(10),
     child: Text(
-      'Badge Passionné',
+      '0/4\nBadge Passionné',
       maxLines: 3,
       softWrap: true,
+      style: TextStyle(fontSize: 17.0),
+      textAlign: TextAlign.center,
     ),
   );
 
