@@ -10,13 +10,13 @@ class AwardsListScreen extends StatefulWidget {
 
 class _AwardsListScreenState extends State<AwardsListScreen> {
 
-  bool _curiousBadgeEnabled = true;
-  bool _investedBadgeEnabled = true;
-  bool _reagentBadgeEnabled = true;
-  bool _passionateBadgeEnabled = true;
-  int _counterInvested = 5;
-  int _counterReagent = 10;
-  int _counterPassionate = 3;
+  bool _curiousBadgeEnabled = true; //TODO change to FALSE
+  bool _investedBadgeEnabled = true; //TODO change to FALSE
+  bool _reagentBadgeEnabled = true; //TODO change to FALSE
+  bool _passionateBadgeEnabled = true; //TODO change to FALSE
+  int _counterInvested = 5; //TODO change counter
+  int _counterReagent = 10; //TODO change counter
+  int _counterPassionate = 3; //TODO change counter
 
   String _descriptionCurious = "Badge Curieux\nobtenu lors de l'inscription et à la connexion à Visiart";
   String _descriptionInvested = "Badge Investi\nobtenu après avoir rejoint ou créé des salons de discussions";
