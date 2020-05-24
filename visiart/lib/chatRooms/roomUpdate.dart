@@ -6,23 +6,24 @@ import 'package:flutter/material.dart';
 import 'package:visiart/chatRooms/Room.dart';
 import 'package:http/http.dart' as http;
 
-class RoomsCreateScreen extends StatefulWidget { 
+class RoomsUpdateScreen extends StatefulWidget { 
   @override
-  _RoomsCreateScreenState createState() => _RoomsCreateScreenState();
+  _RoomsUpdateScreenState createState() => _RoomsUpdateScreenState();
 }
 
 
-class _RoomsCreateData {
+class _RoomsUpdateData {
   String roomName = '';
   String roomThematic = '';
+  Room roomToUpdate;
 }
-class _RoomsCreateScreenState extends State<RoomsCreateScreen> {
+class _RoomsUpdateScreenState extends State<RoomsUpdateScreen> {
 
    
   final GlobalKey<FormState> _formKey = new GlobalKey<FormState>();
-  _RoomsCreateData _data = new _RoomsCreateData();
+  _RoomsUpdateData _data = new _RoomsUpdateData();
 
-  Future<http.Response> createRoom(String newRoomName, String newRoomThematic) {
+  Future<http.Response> updateRoom(String newRoomName, String newRoomThematic) {
     return http.post(
         'http://91.121.165.149/rooms',
         headers: {
@@ -36,17 +37,21 @@ class _RoomsCreateScreenState extends State<RoomsCreateScreen> {
     );
   }
 
+  Room getRoom(){
+    return _RoomsUpdateData().roomToUpdate;
+  }
+
   void submit() {
     // First validate form.
     if (this._formKey.currentState.validate()) {
         _formKey.currentState.save(); // Save our form now.
 
         
-        print('Printing the data.');
-        print('roomName: ${_data.roomName}');
-        print('roomThematic: ${_data.roomThematic}');
+        //print('Printing the data.');
+        //print('roomName: ${_data.roomName}');
+        //print('roomThematic: ${_data.roomThematic}');
 
-        this.createRoom(_data.roomName, _data.roomThematic);
+        this.updateRoom(_data.roomName, _data.roomThematic);
     }
   }
   @override
@@ -75,8 +80,10 @@ class _RoomsCreateScreenState extends State<RoomsCreateScreen> {
               ),
               new TextFormField(
                 keyboardType: TextInputType.text,
+                controller: TextEditingController(text: _RoomsUpdateData().roomToUpdate.name),
                 decoration: new InputDecoration(
-                  hintText: 'Thème du salon',
+                  hintText: _RoomsUpdateData().roomToUpdate.name,
+                  
                   //labelText: ''
                 ),
                 onSaved: (String value) {
@@ -87,7 +94,7 @@ class _RoomsCreateScreenState extends State<RoomsCreateScreen> {
                 width: screenSize.width,
                 child: new RaisedButton(
                   child: new Text(
-                    'Créer un salon',
+                    'Modifier le salon',
                     style: new TextStyle(
                       color: Colors.white
                     ),

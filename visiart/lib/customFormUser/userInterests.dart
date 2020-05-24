@@ -88,13 +88,13 @@ Widget _bodyScreen(BuildContext context) {
               alignment: Alignment.centerLeft,
               child: Container(
                 child: Wrap(
-                  children: [
+                  /* children: [
                     for (var name in nameChips)
                       Padding(
                         padding: const EdgeInsets.only(left: 4, right: 4),
                         child: CreateFilterChip(chipName: name),
                       )
-                  ],
+                  ], */
                 ),
               ),
             ),
