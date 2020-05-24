@@ -16,7 +16,7 @@ class _MenuBoardScreenState extends State<MenuBoardScreen> {
 
   final List<Widget> _children = [
     DashboardScreen(),
-    RoomsListScreen(),
+    RoomsListPage(),
     EventsListScreen()
   ];
 
