@@ -35,7 +35,7 @@ dependencies:
   path_provider: ^0.5.0
   video_player: ^0.10.11
   camera: ^0.5.4+2
-  flutter_launcher_icons: "^0.7.0"
+  flutter_launcher_icons: ^0.7.5
   flare_flutter: ^2.0.3
   arkit_plugin: ^0.3.0
 
