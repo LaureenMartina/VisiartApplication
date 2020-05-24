@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:visiart/dashboard/dashboard.dart';
+import 'package:visiart/dashboard/menu.dart';
 
 class AwardsListScreen extends StatefulWidget {
   @override
@@ -8,14 +10,23 @@ class AwardsListScreen extends StatefulWidget {
 
 class _AwardsListScreenState extends State<AwardsListScreen> {
 
-  bool curiousBadgeEnabled = true;
-  bool investedBadgeEnabled = false;
-  bool reagentBadgeEnabled = false;
-  bool passionateBadgeEnabled = false;
+  bool _curiousBadgeEnabled = true; //TODO change to FALSE
+  bool _investedBadgeEnabled = true; //TODO change to FALSE
+  bool _reagentBadgeEnabled = true; //TODO change to FALSE
+  bool _passionateBadgeEnabled = true; //TODO change to FALSE
+  int _counterInvested = 5; //TODO change counter
+  int _counterReagent = 10; //TODO change counter
+  int _counterPassionate = 3; //TODO change counter
+
+  String _descriptionCurious = "Badge Curieux\nobtenu lors de l'inscription et à la connexion à Visiart";
+  String _descriptionInvested = "Badge Investi\nobtenu après avoir rejoint ou créé des salons de discussions";
+  String _descriptionReagent = "Badge Réactif\nobtenu en participant aux diverses discussions";
+  String _descriptionPassionate = "Badge Passionné\nobtenu en enregistrant vos 3 dessins favoris et en ayant obtenu les badges précédents";
+
 
   String _setCuriousImage() {
     String _imageBadge = "";
-    if(curiousBadgeEnabled) {
+    if(_curiousBadgeEnabled) {
       _imageBadge = "assets/imgs/curieux.png";
     }else{
       _imageBadge = "assets/imgs/coming-soon.png";
@@ -25,10 +36,9 @@ class _AwardsListScreenState extends State<AwardsListScreen> {
 
   String _setInvestedImage() {
     String _imageBadge = "";
-    int counterInvested = 0;
-    int finalCounter = 5;
+    int _finalCounter = 5;
 
-    if(investedBadgeEnabled && counterInvested >= finalCounter) {
+    if(_investedBadgeEnabled && _counterInvested >= _finalCounter) {
       _imageBadge = "assets/imgs/investi.png";
     }else{
       _imageBadge = "assets/imgs/coming-soon.png";
@@ -38,10 +48,9 @@ class _AwardsListScreenState extends State<AwardsListScreen> {
 
   String _setReagentImage() {
     String _imageBadge = "";
-    int counterInvested = 0;
-    int finalCounter = 5;
+    int _finalCounter = 5;
 
-    if(reagentBadgeEnabled && counterInvested >= finalCounter) {
+    if(_reagentBadgeEnabled && _counterReagent >= _finalCounter) {
       _imageBadge = "assets/imgs/reactif.png";
     }else{
       _imageBadge = "assets/imgs/coming-soon.png";
@@ -51,14 +60,217 @@ class _AwardsListScreenState extends State<AwardsListScreen> {
 
   String _setPassionateImage() {
     String _imageBadge = "";
+    int _counterDrawing = 3;
 
-    if(passionateBadgeEnabled && (curiousBadgeEnabled && investedBadgeEnabled && reagentBadgeEnabled)) {
+    if(_passionateBadgeEnabled && (_curiousBadgeEnabled && _investedBadgeEnabled && _reagentBadgeEnabled) && (_counterPassionate >= _counterDrawing) ) 
+    {
       _imageBadge = "assets/imgs/passionne.png";
     }else{
       _imageBadge = "assets/imgs/coming-soon.png";
     }
     return _imageBadge;
   }
+
+
+  Padding _titleCuriousBadge() => Padding(
+    padding: EdgeInsets.only(top: 10),
+    child: Text(
+      '0/1\nBadge Curieux',
+      maxLines: 3,
+      softWrap: true,
+      style: TextStyle(fontSize: 17.0),
+      textAlign: TextAlign.center,
+    ),
+  );
+  
+  Padding _titleInvestedBadge() => Padding(
+    padding: EdgeInsets.all(10),
+    child: Text(
+      '0/5\nBadge Investi',
+      maxLines: 3,
+      softWrap: true,
+      style: TextStyle(fontSize: 17.0),
+      textAlign: TextAlign.center,
+    ),
+  );
+  
+  Padding _titleReagentBadge() => Padding(
+    padding: EdgeInsets.only(top: 10),
+    child: Text(
+      '0/10\nBadge Réactif',
+      maxLines: 3,
+      softWrap: true,
+      style: TextStyle(fontSize: 17.0),
+      textAlign: TextAlign.center,
+    ),
+  );
+
+  Padding _titlePasionateBadge() => Padding(
+    padding: EdgeInsets.all(10),
+    child: Text(
+      '0/6\nBadge Passionné',
+      maxLines: 3,
+      softWrap: true,
+      style: TextStyle(fontSize: 17.0),
+      textAlign: TextAlign.center,
+    ),
+  );
+
+
+  Flexible _imageCuriousBadge() => Flexible(
+    child: Container(
+      width: 140,
+      height: 140,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        /*gradient: new LinearGradient(
+          colors: [Colors.blueGrey, Colors.blueGrey[700]],
+        ),*/
+        image: DecorationImage(
+          fit: BoxFit.cover,
+          image: AssetImage(_setCuriousImage()),
+        ),
+      ),
+    ),
+  );
+
+  Flexible _imageInvestedBadge() => Flexible(
+    child: Container(
+      width: 140,
+      height: 140,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        image: DecorationImage(
+          fit: BoxFit.cover,
+          image: AssetImage(_setInvestedImage()),
+        ),
+      ),
+    ),
+  );
+
+  Flexible _imageReagentBadge() => Flexible(
+    child: Container(
+      width: 140,
+      height: 140,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        /*gradient: new LinearGradient(
+          colors: [Colors.brown, Colors.deepOrange[900]],
+        ),*/
+        image: DecorationImage(
+          fit: BoxFit.cover,
+          image: AssetImage(_setReagentImage()),
+        ),
+      ),
+    ),
+  );
+
+  Flexible _imagePassionateBadge() => Flexible(
+    child: Container(
+      width: 140,
+      height: 140,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        image: DecorationImage(
+          fit: BoxFit.cover,
+          image: AssetImage(_setPassionateImage()),
+        ),
+      ),
+    ),
+  );
+
+
+  Card _curiousCard() => Card(
+    elevation: 0,
+    shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(50)
+    ),
+    color: Colors.transparent,
+    child: Padding(
+      padding: EdgeInsets.only(top: 10),
+      child: Container(
+        alignment: Alignment.center,
+        child: Column(
+          //crossAxisAlignment: CrossAxisAlignment.center,
+          //mainAxisAlignment: MainAxisAlignment.center,
+          //mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            _imageCuriousBadge(),
+            _titleCuriousBadge(),
+          ],
+        ),
+      ),
+    ),
+  );
+
+  Card _investedCard() => Card(
+    elevation: 0,
+    shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(50)
+    ),
+    color: Colors.transparent,
+    child: Padding(
+      padding: EdgeInsets.only(top: 10),
+      child: Container(
+        alignment: Alignment.center,
+        child: Column(
+          //crossAxisAlignment: CrossAxisAlignment.center,
+          //mainAxisAlignment: MainAxisAlignment.center,
+          //mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            _imageInvestedBadge(),
+            _titleInvestedBadge(),
+          ],
+        ),
+      ),
+    ),
+  );
+
+  Card _reagentCard() => Card(
+    elevation: 0,
+    shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(50)
+    ),
+    color: Colors.transparent,
+    child: Padding(
+      padding: EdgeInsets.only(top: 10),
+      child: Container(
+        alignment: Alignment.center,
+        child: Column(
+          //crossAxisAlignment: CrossAxisAlignment.center,
+          //mainAxisAlignment: MainAxisAlignment.center,
+          //mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            _imageReagentBadge(),
+            _titleReagentBadge(),
+          ],
+        ),
+      ),
+    ),
+  );
+
+  Card _passionateCard() => Card(
+    elevation: 0,
+    shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(50)
+    ),
+    color: Colors.transparent,
+    child: Padding(
+      padding: EdgeInsets.all(10),
+      child: Container(
+        alignment: Alignment.center,
+        child: Column(
+          //crossAxisAlignment: CrossAxisAlignment.center,
+          //mainAxisAlignment: MainAxisAlignment.center,
+          //mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            _imagePassionateBadge(),
+            _titlePasionateBadge(),
+          ],
+        ),
+      ),
+    ),
+  );
 
 
   @override
@@ -95,7 +307,10 @@ class _AwardsListScreenState extends State<AwardsListScreen> {
                         child: InkWell(
                           splashColor: Colors.yellow, // splash color
                           onTap: () {
-                            Navigator.pushNamed(context, 'pageTwoRoute');
+                            Navigator.push(
+                              context, MaterialPageRoute(
+                                builder: (BuildContext context) => MenuBoardScreen() )
+                            );
                           }, // button pressed
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
@@ -118,102 +333,28 @@ class _AwardsListScreenState extends State<AwardsListScreen> {
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
-              Container(
-                width: 200,
-                height: 230,
-                padding: EdgeInsets.all(0),
-                child: Card(
-                  elevation: 0,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(50)
-                  ),
-                  color: Colors.transparent,
-                  child: Padding(
-                    padding: EdgeInsets.only(top: 10),
-                    child: Container(
-                      alignment: Alignment.center,
-                      child: Column(
-                        //crossAxisAlignment: CrossAxisAlignment.center,
-                        //mainAxisAlignment: MainAxisAlignment.center,
-                        //mainAxisSize: MainAxisSize.min,
-                        children: <Widget>[
-                          Flexible(
-                            child: Container(
-                              width: 140,
-                              height: 140,
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                /*gradient: new LinearGradient(
-                                  colors: [Colors.blueGrey, Colors.blueGrey[700]],
-                                ),*/
-                                image: DecorationImage(
-                                  fit: BoxFit.cover,
-                                  image: AssetImage(_setCuriousImage()),
-                                ),
-                              ),
-                            ),
-                          ),
-                          Padding(
-                            padding: EdgeInsets.only(top: 10),
-                            child: Text(
-                              'Badge Curieux',
-                              maxLines: 3,
-                              softWrap: true,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
+              GestureDetector(
+                onTap: () {
+                  Navigator.of(context).push(MaterialPageRoute<void>(
+                    builder: (context) => Detail(_setCuriousImage(), _descriptionCurious) ));
+                },
+                child: Container(
+                  width: 200,
+                  height: 230,
+                  padding: EdgeInsets.all(0),
+                  child: _curiousCard(),
                 ),
               ),
-              Container(
-                width: 200,
-                height: 230,
-                padding: EdgeInsets.all(0),
-                child: Card(
-                  elevation: 0,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(50)
-                  ),
-                  color: Colors.transparent,
-                  child: Padding(
-                    padding: EdgeInsets.only(top: 10),
-                    child: Container(
-                      alignment: Alignment.center,
-                      child: Column(
-                        //crossAxisAlignment: CrossAxisAlignment.center,
-                        //mainAxisAlignment: MainAxisAlignment.center,
-                        //mainAxisSize: MainAxisSize.min,
-                        children: <Widget>[
-                          Flexible(
-                            child: Container(
-                              width: 140,
-                              height: 140,
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                /*gradient: new LinearGradient(
-                                  colors: [Colors.black, Colors.brown],
-                                ),*/
-                                image: DecorationImage(
-                                  fit: BoxFit.cover,
-                                  image: AssetImage(_setInvestedImage()),
-                                ),
-                              ),
-                            ),
-                          ),
-                          Padding(
-                            padding: EdgeInsets.all(10),
-                            child: Text(
-                              'Badge Investi',
-                              maxLines: 3,
-                              softWrap: true,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
+              GestureDetector(
+                onTap: () {
+                  Navigator.of(context).push(MaterialPageRoute<void>(
+                    builder: (context) => Detail(_setInvestedImage(), _descriptionInvested) ));
+                },
+                child: Container(
+                  width: 200,
+                  height: 230,
+                  padding: EdgeInsets.all(0),
+                  child: _investedCard(),
                 ),
               ),
             ],
@@ -222,99 +363,28 @@ class _AwardsListScreenState extends State<AwardsListScreen> {
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
-              Container(
-                width: 200,
-                height: 230,
-                padding: EdgeInsets.all(0),
-                child: Card(
-                  elevation: 0,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(50)
-                  ),
-                  color: Colors.transparent,
-                  child: Padding(
-                    padding: EdgeInsets.only(top: 10),
-                    child: Container(
-                      alignment: Alignment.center,
-                      child: Column(
-                        //crossAxisAlignment: CrossAxisAlignment.center,
-                        //mainAxisAlignment: MainAxisAlignment.center,
-                        //mainAxisSize: MainAxisSize.min,
-                        children: <Widget>[
-                          Flexible(
-                            child: Container(
-                              width: 140,
-                              height: 140,
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                /*gradient: new LinearGradient(
-                                  colors: [Colors.brown, Colors.deepOrange[900]],
-                                ),*/
-                                image: DecorationImage(
-                                  fit: BoxFit.cover,
-                                  image: AssetImage(_setReagentImage()),
-                                ),
-                              ),
-                            ),
-                          ),
-                          Padding(
-                            padding: EdgeInsets.only(top: 10),
-                            child: Text(
-                              'Badge Réactif',
-                              maxLines: 3,
-                              softWrap: true,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
+              GestureDetector(
+                onTap: () {
+                  Navigator.of(context).push(MaterialPageRoute<void>(
+                    builder: (context) => Detail(_setReagentImage(), _descriptionReagent) ));
+                },
+                child: Container(
+                  width: 200,
+                  height: 230,
+                  padding: EdgeInsets.all(0),
+                  child: _reagentCard(),
                 ),
               ),
-              Container(
-                width: 200,
-                height: 230,
-                padding: EdgeInsets.all(0),
-                child: Card(
-                  elevation: 0,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(50)
-                  ),
-                  color: Colors.transparent,
-                  child: Padding(
-                    padding: EdgeInsets.all(10),
-                    child: Container(
-                      alignment: Alignment.center,
-                      child: Column(
-                        //crossAxisAlignment: CrossAxisAlignment.center,
-                        //mainAxisAlignment: MainAxisAlignment.center,
-                        //mainAxisSize: MainAxisSize.min,
-                        children: <Widget>[
-                          Flexible(
-                            child: Container(
-                              width: 140,
-                              height: 140,
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                image: DecorationImage(
-                                  fit: BoxFit.cover,
-                                  image: AssetImage(_setPassionateImage()),
-                                ),
-                              ),
-                            ),
-                          ),
-                          Padding(
-                            padding: EdgeInsets.all(10),
-                            child: Text(
-                              'Badge Passionné',
-                              maxLines: 3,
-                              softWrap: true,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
+              GestureDetector(
+                onTap: () {
+                  Navigator.of(context).push(MaterialPageRoute<void>(
+                    builder: (context) => Detail(_setPassionateImage(), _descriptionPassionate) ));
+                },
+                child: Container(
+                  width: 200,
+                  height: 230,
+                  padding: EdgeInsets.all(0),
+                  child: _passionateCard(),
                 ),
               ),
             ],
@@ -328,8 +398,6 @@ class _AwardsListScreenState extends State<AwardsListScreen> {
 class MyClipper extends CustomClipper<Path> {
   @override
   Path getClip(Size size) {
-    print(size);
-    // TODO: implement getClip
     Path path = Path();
     createWave(size, path);
     path.close();
@@ -338,7 +406,6 @@ class MyClipper extends CustomClipper<Path> {
 
   @override
   bool shouldReclip(CustomClipper<Path> oldClipper) {
-    // TODO: implement shouldReclip
     return true;
   }
 }
@@ -348,4 +415,39 @@ createWave(Size size, Path path){
   path.quadraticBezierTo(size.width/6, size.height - 80, size.width/2, size.height-40);
   path.quadraticBezierTo(3/4*size.width, size.height, size.width, size.height-60);
   path.lineTo(size.width, 0);
+}
+
+class Detail extends StatelessWidget {
+  final String assetName;
+  final String description;
+  const Detail(this.assetName, this.description);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Back'),
+      ),
+      body: SingleChildScrollView(
+        padding: EdgeInsets.only(top:40),
+        child: Column(
+          children: [
+            Center(
+              child: Image.asset("${this.assetName}"),
+            ),
+            Padding(
+              padding: EdgeInsets.only(top:25, left: 30, right: 30),
+              child: Text(
+                "${this.description}",
+                maxLines: 5,
+                softWrap: true,
+                style: TextStyle(fontSize: 17.0),
+                textAlign: TextAlign.center,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 }

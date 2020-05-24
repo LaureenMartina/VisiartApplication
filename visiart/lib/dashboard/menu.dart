@@ -1,6 +1,4 @@
 import 'dart:ui';
-import 'package:flutter/foundation.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:visiart/events/eventsList.dart';
 import 'package:visiart/dashboard/dashboard.dart';
@@ -20,7 +18,7 @@ class _MenuBoardScreenState extends State<MenuBoardScreen> {
     EventsListScreen()
   ];
 
-  final account = ListTile(
+  ListTile _account() => ListTile(
     title: Text('Mon Compte',
       style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
     ),
@@ -32,7 +30,7 @@ class _MenuBoardScreenState extends State<MenuBoardScreen> {
     onTap: () {  },
   );
 
-  final about = ListTile(
+  ListTile _about() => ListTile(
     title: Text('A Propos',
       style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
     ),
@@ -44,7 +42,7 @@ class _MenuBoardScreenState extends State<MenuBoardScreen> {
     onTap: () {  },
   );
 
-  final paramsUser = ListTile(
+  ListTile _paramsUser() => ListTile(
     title: Text('Paramètres',
       style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
     ),
@@ -56,7 +54,7 @@ class _MenuBoardScreenState extends State<MenuBoardScreen> {
     onTap: () {  },
   );
 
-  final logout = ListTile(
+  ListTile _logout() => ListTile(
     title: Text('Déconnexion',
       style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
     ),
@@ -67,6 +65,7 @@ class _MenuBoardScreenState extends State<MenuBoardScreen> {
     leading: Icon(Icons.launch, size: 40, color: Colors.brown[900],),
     onTap: () {  },
   );
+
 
   @override
   Widget build(BuildContext context) {
@@ -97,16 +96,16 @@ class _MenuBoardScreenState extends State<MenuBoardScreen> {
                 )
               ),
             ),
-            account,
-            about,
-            paramsUser,
+            _account(),
+            _about(),
+            _paramsUser(),
             Divider(
               indent: 10,
               endIndent: 10,
               thickness: 1,
               color: Colors.deepPurpleAccent[200],
             ),
-            logout,
+            _logout(),
           ],
         ),
       ),
