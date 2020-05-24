@@ -1,12 +1,12 @@
 # Visiart App
 
-:iphone: Disponible sur iOS et Android 
-en :fr: Français et en :gb: Anglais
+> An application mobile with artistic inspiration ! :art: :sparkles:
 
-An application mobile with artistic inspiration ! :art: :sparkles:
+:soon: :iphone: Disponible sur iOS et Android 
 
-:soon: Version Anglaise
+Langues: :fr: Français et :gb: Anglais
 
+-----------------
 
 ## Getting Started
 
