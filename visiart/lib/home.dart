@@ -1,11 +1,10 @@
 import 'dart:ui';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:url_launcher/url_launcher.dart';
-import 'package:flutter_linkify/flutter_linkify.dart';
 import 'package:visiart/signUp/signup.dart';
 import 'package:visiart/customFormUser/userInterests.dart';
 import 'package:visiart/dashboard/menu.dart';
+import 'package:visiart/awardsUser/awardsList.dart';
 
 class HomeScreen extends StatefulWidget {
   static String home = "home";
@@ -20,7 +19,8 @@ class _HomeState extends State<HomeScreen> {
     "/": (BuildContext context) => HomeScreen(),
     "/go": (BuildContext context) => UserInterestsScreen(),
     "/new": (BuildContext context) => SignUpScreen(),
-    "/go/menuboard": (BuildContext context) => MenuBoardScreen()
+    "/go/menuboard": (BuildContext context) => MenuBoardScreen(),
+    //"/go/menuboard/awards": (BuildContext context) => AwardsListScreen(),
   };
 
   void _navigateToSignUpScreen() {
@@ -33,7 +33,7 @@ class _HomeState extends State<HomeScreen> {
 
   void _navigateToUserInterestsScreen() {
     //Navigator.pushNamed(context, '/go');
-    Navigator.push(
+    Navigator.pushReplacement(
       context, MaterialPageRoute(
         builder: (BuildContext context) => UserInterestsScreen() )
     );
