@@ -1,6 +1,12 @@
-# visiart
+# Visiart App
 
-A new Flutter project.
+:iphone: Disponible sur iOS et Android 
+en :fr: Français et en :gb: Anglais
+
+An application mobile with artistic inspiration ! :art: :sparkles:
+
+:soon: Version Anglaise
+
 
 ## Getting Started
 
