@@ -6,6 +6,7 @@ import 'package:visiart/awardsUser/awardsList.dart';
 import 'package:visiart/drawingsUser/drawing.dart';
 
 class DashboardScreen extends StatefulWidget {
+
   @override
   _DashboardScreenState createState() => _DashboardScreenState();
 }

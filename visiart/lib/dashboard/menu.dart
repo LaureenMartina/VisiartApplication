@@ -4,6 +4,7 @@ import 'package:visiart/events/eventsList.dart';
 import 'package:visiart/dashboard/dashboard.dart';
 import 'package:visiart/chatRooms/roomsList.dart';
 
+
 class MenuBoardScreen extends StatefulWidget {
   @override
   _MenuBoardScreenState createState() => _MenuBoardScreenState();
