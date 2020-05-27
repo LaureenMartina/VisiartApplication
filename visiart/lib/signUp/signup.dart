@@ -6,6 +6,9 @@ import 'package:visiart/customFormUser/userInterests.dart';
 import 'package:visiart/home.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:visiart/models/User.dart';
+import 'package:visiart/config/SharedPref.dart';
+import 'package:http/http.dart' as http;
 
 class SignUpScreen extends StatefulWidget {
   @override
@@ -187,19 +190,54 @@ Future<String> signInWithGoogle() async {
 
   final FirebaseUser currentUser = await _auth.currentUser();
 
-  var name, email;
+  var name = currentUser.displayName;
+  var email = currentUser.email;
+  var password = " "; // TODO if connexion is GMAIL
 
-  if (user != null) {
-    name = currentUser.displayName;
-    email = currentUser.email;
-  }
+  User userModel = new User.fromUser(name, email);
+  userModel.setUsername(name);
+  userModel.setEmail(email);
 
-  print("name: $name");
-  print("name: $email");
+  var json = createUser(name, name, email, password);
+  print("json $json");
+
+  /*SharedPref sharedPref = SharedPref();
+  sharedPref.save("userId", userid);
+  sharedPref.save("name", name);
+  sharedPref.save("email", email);*/
 
   assert(user.uid == currentUser.uid);
 
   return 'signInWithGoogle succeeded: $user';
+}
+
+Future<Map<String, dynamic>> createUser(String newUsername, String newName, String newEmail, String newPassword) async {
+  final api = 'http://91.121.165.149/auth/local/register';
+  print("username: $newUsername");
+  print("name: $newName");
+  print("email: $newEmail");
+  print("pwd: $newPassword");
+  final response = await http.post(
+      api,
+      headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+      },
+      body: jsonEncode(<String, String>{
+          'username': newUsername,
+          'name': newName,
+          'email': newEmail,
+          'password': newPassword
+      }),
+  );
+
+  if (response.statusCode == 200) {
+    Map<String, dynamic> jsonResponse = json.decode(response.body);
+    print('jsonResponse -> ${jsonResponse['id']}!');
+    return jsonResponse;
+  } else {
+    throw Exception('Failed to load user from API');
+  }
 }
 
 /*void signOutGoogle() async{
