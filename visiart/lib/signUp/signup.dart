@@ -1,6 +1,11 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
+import 'package:visiart/customFormUser/userInterests.dart';
 import 'package:visiart/home.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 class SignUpScreen extends StatefulWidget {
   @override
@@ -8,6 +13,7 @@ class SignUpScreen extends StatefulWidget {
 }
 
 class _SignUpScreenState extends State<SignUpScreen> {
+
   @override
   Widget build(BuildContext context) {
 
@@ -129,13 +135,25 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   icon: Image.asset("assets/imgs/gmail.png"),
                   iconSize: 50,
                   tooltip: 'link to Gmail',
-                  onPressed: () {},
+                  onPressed: () {
+                    signInWithGoogle().whenComplete(() {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) {
+                            return UserInterestsScreen();
+                          },
+                        ),
+                      );
+                    });
+                  },
                 ),
                 IconButton(
                   icon: Image.asset("assets/imgs/fb.png"),
                   iconSize: 50,
                   tooltip: 'link to Facebook',
-                  onPressed: () {},
+                  onPressed: () {
+
+                  },
                 ),
               ],
             )
@@ -146,3 +164,46 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   }
 }
+
+final FirebaseAuth _auth = FirebaseAuth.instance;
+final GoogleSignIn googleSignIn = GoogleSignIn();
+
+Future<String> signInWithGoogle() async {
+  
+  final GoogleSignInAccount googleSignInAccount = await googleSignIn.signIn();
+  
+  final GoogleSignInAuthentication googleSignInAuthentication = await googleSignInAccount.authentication;
+
+  final AuthCredential credential = GoogleAuthProvider.getCredential(
+    accessToken: googleSignInAuthentication.accessToken,
+    idToken: googleSignInAuthentication.idToken,
+  );
+
+  final AuthResult authResult = await _auth.signInWithCredential(credential);
+  final FirebaseUser user = authResult.user;
+
+  assert(!user.isAnonymous);
+  assert(await user.getIdToken() != null);
+
+  final FirebaseUser currentUser = await _auth.currentUser();
+
+  var name, email;
+
+  if (user != null) {
+    name = currentUser.displayName;
+    email = currentUser.email;
+  }
+
+  print("name: $name");
+  print("name: $email");
+
+  assert(user.uid == currentUser.uid);
+
+  return 'signInWithGoogle succeeded: $user';
+}
+
+/*void signOutGoogle() async{
+  await googleSignIn.signOut();
+
+  print("User Sign Out");
+}*/
