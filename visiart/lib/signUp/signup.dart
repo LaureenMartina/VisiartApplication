@@ -1,14 +1,19 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
+import 'package:http/http.dart';
 import 'package:visiart/customFormUser/userInterests.dart';
 import 'package:visiart/home.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:visiart/models/User.dart';
 import 'package:visiart/config/SharedPref.dart';
-import 'package:http/http.dart' as http;
+
+SharedPref sharedPref = SharedPref();
+User userModel = new User();
+final FirebaseAuth _auth = FirebaseAuth.instance;
+final GoogleSignIn googleSignIn = GoogleSignIn();
+
 
 class SignUpScreen extends StatefulWidget {
   @override
@@ -135,7 +140,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: <Widget>[
                 IconButton(
-                  icon: Image.asset("assets/imgs/gmail.png"),
+                  icon: Image.asset("assets/icons/gmail.png"),
                   iconSize: 50,
                   tooltip: 'link to Gmail',
                   onPressed: () {
@@ -151,11 +156,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   },
                 ),
                 IconButton(
-                  icon: Image.asset("assets/imgs/fb.png"),
+                  icon: Image.asset("assets/icons/fb.png"),
                   iconSize: 50,
                   tooltip: 'link to Facebook',
                   onPressed: () {
-
+                    
                   },
                 ),
               ],
@@ -168,13 +173,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
   }
 }
 
-final FirebaseAuth _auth = FirebaseAuth.instance;
-final GoogleSignIn googleSignIn = GoogleSignIn();
-
 Future<String> signInWithGoogle() async {
   
   final GoogleSignInAccount googleSignInAccount = await googleSignIn.signIn();
-  
   final GoogleSignInAuthentication googleSignInAuthentication = await googleSignInAccount.authentication;
 
   final AuthCredential credential = GoogleAuthProvider.getCredential(
@@ -192,51 +193,66 @@ Future<String> signInWithGoogle() async {
 
   var name = currentUser.displayName;
   var email = currentUser.email;
-  var password = " "; // TODO if connexion is GMAIL
+  var password = " "; // TODO empty if connexion is GMAIL
 
-  User userModel = new User.fromUser(name, email);
-  userModel.setUsername(name);
-  userModel.setEmail(email);
+  createUser(name, name, email, password);
 
-  var json = createUser(name, name, email, password);
-  print("json $json");
-
-  /*SharedPref sharedPref = SharedPref();
-  sharedPref.save("userId", userid);
-  sharedPref.save("name", name);
-  sharedPref.save("email", email);*/
+  int _id = sharedPref.readInteger("id");
+  print("_id -> $_id");
 
   assert(user.uid == currentUser.uid);
 
   return 'signInWithGoogle succeeded: $user';
 }
 
-Future<Map<String, dynamic>> createUser(String newUsername, String newName, String newEmail, String newPassword) async {
+Future<void> createUser(String newUsername, String newName, String newEmail, String newPassword) async {
   final api = 'http://91.121.165.149/auth/local/register';
-  print("username: $newUsername");
-  print("name: $newName");
-  print("email: $newEmail");
-  print("pwd: $newPassword");
-  final response = await http.post(
+  
+  Map data = {
+    'username': newUsername,
+    'name': newName,
+    'email': newEmail,
+    'password': newPassword
+  };
+
+  Response response = await post(
       api,
       headers: {
           'Content-Type': 'application/json',
           'Accept': 'application/json',
       },
-      body: jsonEncode(<String, String>{
-          'username': newUsername,
-          'name': newName,
-          'email': newEmail,
-          'password': newPassword
-      }),
+      body: json.encode(data),
   );
 
+  Map<String, dynamic> jsonResponse = json.decode(response.body);
+
   if (response.statusCode == 200) {
-    Map<String, dynamic> jsonResponse = json.decode(response.body);
-    print('jsonResponse -> ${jsonResponse['id']}!');
-    return jsonResponse;
+    //print("res -> $jsonResponse");
+    //print('token: ${jsonResponse['jwt']}');
+    //print('userId: ${jsonResponse['user']['id']}');
+    int id = jsonResponse['user']['id'];
+    String name = jsonResponse['user']['name'];
+    String username = jsonResponse['user']['username'];
+    String email = jsonResponse['user']['email'];
+    String token = jsonResponse['jwt'];
+
+    userModel.setId(id);
+    userModel.setToken(token);
+    userModel.setUsername(username);
+    userModel.setName(name);
+    userModel.setEmail(email);
+
+    sharedPref.saveInteger("userId", id);
+    sharedPref.save("name", name);
+    sharedPref.save("email", email);
+    sharedPref.save("token", token);
+
+    //return jsonResponse;
+  } else if(response.statusCode == 400) {
+    String errorMsg = jsonResponse['message'][0]['messages'][0]['message'];
+    throw Exception(errorMsg);
   } else {
-    throw Exception('Failed to load user from API');
+    throw Exception('Failed to create user from API');
   }
 }
 
