@@ -3,14 +3,17 @@ import 'dart:convert';
 
 class SharedPref {
   
-  read(String key) async {
-    final prefs = await SharedPreferences.getInstance();
+  Future<String> read(String key) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
     return prefs.getString(key);
+    /*prefs.then( (pref) => 
+      res = pref.getString(key)
+    );*/
   }
 
-  readInteger(String key) async {
-    final prefs = await SharedPreferences.getInstance();
-    return prefs.getInt(key);
+  Future<int> readInteger(String key) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getInt(key) ?? 4;
   }
 
   readObj(String key) async {
@@ -19,12 +22,12 @@ class SharedPref {
   }
 
   save(String key, value) async {
-    final prefs = await SharedPreferences.getInstance();
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setString(key, value);
   }
 
   saveInteger(String key, value) async {
-    final prefs = await SharedPreferences.getInstance();
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setInt(key, value);
   }
 

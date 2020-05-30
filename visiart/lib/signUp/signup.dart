@@ -160,7 +160,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   iconSize: 50,
                   tooltip: 'link to Facebook',
                   onPressed: () {
-                    
+                    displayIdFromSharedPrefs();
                   },
                 ),
               ],
@@ -197,12 +197,15 @@ Future<String> signInWithGoogle() async {
 
   createUser(name, name, email, password);
 
-  int _id = sharedPref.readInteger("id");
-  print("_id -> $_id");
-
   assert(user.uid == currentUser.uid);
 
   return 'signInWithGoogle succeeded: $user';
+}
+
+ // ------ Get value from SharedPreferences ------
+void displayIdFromSharedPrefs() async {
+  var _id = await sharedPref.readInteger("userId");
+  print("_id -> $_id");
 }
 
 Future<void> createUser(String newUsername, String newName, String newEmail, String newPassword) async {
@@ -231,12 +234,14 @@ Future<void> createUser(String newUsername, String newName, String newEmail, Str
     //print('token: ${jsonResponse['jwt']}');
     //print('userId: ${jsonResponse['user']['id']}');
     int id = jsonResponse['user']['id'];
+    print("id= $id");
     String name = jsonResponse['user']['name'];
     String username = jsonResponse['user']['username'];
     String email = jsonResponse['user']['email'];
     String token = jsonResponse['jwt'];
 
     userModel.setId(id);
+    print("user id --> ${userModel.getId()}");
     userModel.setToken(token);
     userModel.setUsername(username);
     userModel.setName(name);
