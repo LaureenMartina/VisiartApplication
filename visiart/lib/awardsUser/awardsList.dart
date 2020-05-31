@@ -329,9 +329,8 @@ class _AwardsListScreenState extends State<AwardsListScreen> {
                     builder: (context) => Detail(_setCuriousImage(), _descriptionCurious) ));
                 },
                 child: Container(
-                  width: 200,
+                  width: 185,
                   height: 230,
-                  padding: EdgeInsets.all(0),
                   child: _curiousCard(),
                 ),
               ),
@@ -341,9 +340,8 @@ class _AwardsListScreenState extends State<AwardsListScreen> {
                     builder: (context) => Detail(_setInvestedImage(), _descriptionInvested) ));
                 },
                 child: Container(
-                  width: 200,
+                  width: 185,
                   height: 230,
-                  padding: EdgeInsets.all(0),
                   child: _investedCard(),
                 ),
               ),
@@ -359,9 +357,8 @@ class _AwardsListScreenState extends State<AwardsListScreen> {
                     builder: (context) => Detail(_setReagentImage(), _descriptionReagent) ));
                 },
                 child: Container(
-                  width: 200,
+                  width: 185,
                   height: 230,
-                  padding: EdgeInsets.all(0),
                   child: _reagentCard(),
                 ),
               ),
@@ -371,9 +368,8 @@ class _AwardsListScreenState extends State<AwardsListScreen> {
                     builder: (context) => Detail(_setPassionateImage(), _descriptionPassionate) ));
                 },
                 child: Container(
-                  width: 200,
+                  width: 185,
                   height: 230,
-                  padding: EdgeInsets.all(0),
                   child: _passionateCard(),
                 ),
               ),
