@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "649227774986",
+    "firebase_url": "https://visiartapp-83742.firebaseio.com",
+    "project_id": "visiartapp-83742",
+    "storage_bucket": "visiartapp-83742.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:649227774986:android:6db4895846b5ea5bb703f3",
+        "android_client_info": {
+          "package_name": "com.example.visiart"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "649227774986-aulf2hkukro5r888d3b92m2aed5ndptf.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.visiart",
+            "certificate_hash": "cfc1ff34ec9ce680fd436d4c868f21c620a20807"
+          }
+        },
+        {
+          "client_id": "649227774986-8q8njrua45qc2b6b3n2aa72hgrl3i86t.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCDLHHKK1DUx65Qdx79CVXyn84fQqRdLtQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "649227774986-8q8njrua45qc2b6b3n2aa72hgrl3i86t.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

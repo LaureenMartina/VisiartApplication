@@ -5,7 +5,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:progress_button/progress_button.dart';
 import 'package:visiart/dashboard/menu.dart';
 
-
 class UserInterestsScreen extends StatefulWidget {
   @override
   _UserInterestsScreenState createState() => _UserInterestsScreenState();
