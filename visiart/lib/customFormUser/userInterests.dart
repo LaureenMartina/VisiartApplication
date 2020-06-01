@@ -47,11 +47,11 @@ Widget _bodyScreen(BuildContext context) {
   }
 
   void _navigateToDashboardScreen() {
-    //Navigator.pushNamed(context, '/new');
-    Navigator.pushReplacement(
+    Navigator.pushNamed(context, 'dashboard');
+    /*Navigator.pushReplacement(
         context, MaterialPageRoute(
         builder: (BuildContext context) => MenuBoardScreen() )
-    );
+    );*/
   }
 
   return CustomScrollView(
