@@ -1,4 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:visiart/awardsUser/awardsList.dart';
+import 'package:visiart/customFormUser/userInterests.dart';
+import 'package:visiart/dashboard/menu.dart';
+import 'package:visiart/events/eventsList.dart';
+import 'package:visiart/home.dart';
+import 'package:visiart/signUp/signup.dart';
 import 'splashscreen.dart';
 
 void main() => runApp(MyApp());
@@ -12,10 +18,24 @@ class MyApp extends StatelessWidget {
           primarySwatch: Colors.deepPurple,
         ),
         debugShowCheckedModeBanner: false,
-        home: new SplashScreen(),
+        initialRoute: "/",
+        routes: _routes,
+        //home: new SplashScreen(),
     );
   }
 }
+
+var _routes = <String, WidgetBuilder> {
+  "/": (BuildContext context) => SplashScreen(),
+  "connexion": (BuildContext context) => HomeScreen(),
+  "hobbies": (BuildContext context) => UserInterestsScreen(),
+  "inscription": (BuildContext context) => SignUpScreen(),
+  "dashboard": (BuildContext context) => MenuBoardScreen(),
+  "awards": (BuildContext context) => AwardsListScreen(),
+  //"drawing": (BuildContext context) => Draw(), //merge with the drawing branch before
+  "events": (BuildContext context) => EventsListScreen(),
+  //"tchat": (BuildContext context) => RoomsChatsScreen(), // Flo
+};
 
 /*class MyApp extends StatelessWidget {
   // This widget is the root of your application.

@@ -165,10 +165,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         padding: EdgeInsets.only(right: 10),
                         child: GestureDetector(
                           onTap: () {
-                            Navigator.push(
+                            Navigator.pushNamed(context, 'awards');
+                            /*Navigator.push(
                               context, MaterialPageRoute(
                                 builder: (BuildContext context) => AwardsListScreen() )
-                            );
+                            );*/
                           },
                           child: _awardsCard(),
                         ),
@@ -198,10 +199,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         padding: EdgeInsets.only(right: 10),
                         child: GestureDetector(
                           onTap: () {
-                            Navigator.push(
+                            Navigator.pushNamed(context, 'awards'); // TODO change to drawing
+                            /*Navigator.push(
                               context, MaterialPageRoute(
                                 builder: (BuildContext context) => AwardsListScreen() )
-                            );
+                            );*/
                           },
                           child: _drawingCard(),
                         ),
@@ -231,23 +233,3 @@ class _DashboardScreenState extends State<DashboardScreen> {
     );
   }
 }
-/*
-height: 130.0,
-  color: Colors.greenAccent,
-  child: Padding(
-    padding: EdgeInsets.only(left: 15, right: 15),
-    child: ListView(
-      scrollDirection: Axis.horizontal,
-      children: List.generate(2, (int index) {
-        return Card(
-          color: Colors.blue,
-          child: Container(
-            width: 130.0,
-            height: 130.0,
-            child: Text('${nameCards[index]}'),
-          ),
-        );
-      }),
-    ),
-  ),
- */

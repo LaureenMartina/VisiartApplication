@@ -1,8 +1,8 @@
 import 'dart:ui';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:progress_button/progress_button.dart';
+import 'package:visiart/config/config.dart' as globals;
 import 'package:visiart/dashboard/menu.dart';
 
 class UserInterestsScreen extends StatefulWidget {
@@ -41,12 +41,17 @@ Widget _bodyScreen(BuildContext context) {
     "Dance", "Modern Art", "Theater", "Drawing", "Design", "Literature", "Spectacle", "Photography",
   ];
 
+  void _setAwardsFirstConnexion() {
+    print(globals.curiousBadgeEnabled = true);
+    globals.curiousBadgeEnabled = true;
+  }
+
   void _navigateToDashboardScreen() {
-    //Navigator.pushNamed(context, '/new');
-    Navigator.pushReplacement(
+    Navigator.pushNamed(context, 'dashboard');
+    /*Navigator.pushReplacement(
         context, MaterialPageRoute(
         builder: (BuildContext context) => MenuBoardScreen() )
-    );
+    );*/
   }
 
   return CustomScrollView(
@@ -87,13 +92,13 @@ Widget _bodyScreen(BuildContext context) {
               alignment: Alignment.centerLeft,
               child: Container(
                 child: Wrap(
-                  /* children: [
+                  children: [
                     for (var name in nameChips)
                       Padding(
                         padding: const EdgeInsets.only(left: 4, right: 4),
                         child: CreateFilterChip(chipName: name),
                       )
-                  ], */
+                  ],
                 ),
               ),
             ),
@@ -140,7 +145,7 @@ Widget _bodyScreen(BuildContext context) {
             buttonState: ButtonState.normal,
             backgroundColor: Colors.deepOrange[200],
             onPressed: () {
-              // TODO progess button
+              _setAwardsFirstConnexion();
               _navigateToDashboardScreen();
             },
             progressColor: Colors.deepOrange[300],

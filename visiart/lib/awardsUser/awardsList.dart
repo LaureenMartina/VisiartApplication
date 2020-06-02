@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:visiart/dashboard/dashboard.dart';
 import 'package:visiart/dashboard/menu.dart';
+import 'package:visiart/config/config.dart' as globals;
 
 class AwardsListScreen extends StatefulWidget {
   @override
@@ -9,14 +9,6 @@ class AwardsListScreen extends StatefulWidget {
 }
 
 class _AwardsListScreenState extends State<AwardsListScreen> {
-
-  bool _curiousBadgeEnabled = true; //TODO change to FALSE
-  bool _investedBadgeEnabled = true; //TODO change to FALSE
-  bool _reagentBadgeEnabled = true; //TODO change to FALSE
-  bool _passionateBadgeEnabled = true; //TODO change to FALSE
-  int _counterInvested = 5; //TODO change counter
-  int _counterReagent = 10; //TODO change counter
-  int _counterPassionate = 3; //TODO change counter
 
   String _descriptionCurious = "Badge Curieux\nobtenu lors de l'inscription et à la connexion à Visiart";
   String _descriptionInvested = "Badge Investi\nobtenu après avoir rejoint ou créé des salons de discussions";
@@ -26,7 +18,8 @@ class _AwardsListScreenState extends State<AwardsListScreen> {
 
   String _setCuriousImage() {
     String _imageBadge = "";
-    if(_curiousBadgeEnabled) {
+    if(globals.curiousBadgeEnabled) {
+      globals.counterCurious = 1;
       _imageBadge = "assets/imgs/curieux.png";
     }else{
       _imageBadge = "assets/imgs/coming-soon.png";
@@ -36,9 +29,8 @@ class _AwardsListScreenState extends State<AwardsListScreen> {
 
   String _setInvestedImage() {
     String _imageBadge = "";
-    int _finalCounter = 5;
 
-    if(_investedBadgeEnabled && _counterInvested >= _finalCounter) {
+    if(globals.investedBadgeEnabled && globals.counterInvested >= globals.finalCounterInvested) {
       _imageBadge = "assets/imgs/investi.png";
     }else{
       _imageBadge = "assets/imgs/coming-soon.png";
@@ -48,9 +40,8 @@ class _AwardsListScreenState extends State<AwardsListScreen> {
 
   String _setReagentImage() {
     String _imageBadge = "";
-    int _finalCounter = 5;
 
-    if(_reagentBadgeEnabled && _counterReagent >= _finalCounter) {
+    if(globals.reagentBadgeEnabled && globals.counterReagent >= globals.finalCounterReagent) {
       _imageBadge = "assets/imgs/reactif.png";
     }else{
       _imageBadge = "assets/imgs/coming-soon.png";
@@ -60,9 +51,8 @@ class _AwardsListScreenState extends State<AwardsListScreen> {
 
   String _setPassionateImage() {
     String _imageBadge = "";
-    int _counterDrawing = 3;
 
-    if(_passionateBadgeEnabled && (_curiousBadgeEnabled && _investedBadgeEnabled && _reagentBadgeEnabled) && (_counterPassionate >= _counterDrawing) ) 
+    if(globals.passionateBadgeEnabled && (globals.curiousBadgeEnabled && globals.investedBadgeEnabled && globals.reagentBadgeEnabled) && (globals.counterPassionate >= globals.counterDrawing) ) 
     {
       _imageBadge = "assets/imgs/passionne.png";
     }else{
@@ -75,7 +65,7 @@ class _AwardsListScreenState extends State<AwardsListScreen> {
   Padding _titleCuriousBadge() => Padding(
     padding: EdgeInsets.only(top: 10),
     child: Text(
-      '0/1\nBadge Curieux',
+      '${globals.counterCurious}/${globals.finalCounterCurious}\nBadge Curieux',
       maxLines: 3,
       softWrap: true,
       style: TextStyle(fontSize: 17.0),
@@ -86,7 +76,7 @@ class _AwardsListScreenState extends State<AwardsListScreen> {
   Padding _titleInvestedBadge() => Padding(
     padding: EdgeInsets.all(10),
     child: Text(
-      '0/5\nBadge Investi',
+      '${globals.counterInvested}/${globals.finalCounterInvested}\nBadge Investi',
       maxLines: 3,
       softWrap: true,
       style: TextStyle(fontSize: 17.0),
@@ -97,7 +87,7 @@ class _AwardsListScreenState extends State<AwardsListScreen> {
   Padding _titleReagentBadge() => Padding(
     padding: EdgeInsets.only(top: 10),
     child: Text(
-      '0/10\nBadge Réactif',
+      '${globals.counterReagent}/${globals.finalCounterReagent}\nBadge Réactif',
       maxLines: 3,
       softWrap: true,
       style: TextStyle(fontSize: 17.0),
@@ -108,7 +98,7 @@ class _AwardsListScreenState extends State<AwardsListScreen> {
   Padding _titlePasionateBadge() => Padding(
     padding: EdgeInsets.all(10),
     child: Text(
-      '0/6\nBadge Passionné',
+      '${globals.counterPassionate}/${globals.finalCounterPassionate}\nBadge Passionné',
       maxLines: 3,
       softWrap: true,
       style: TextStyle(fontSize: 17.0),
@@ -339,9 +329,8 @@ class _AwardsListScreenState extends State<AwardsListScreen> {
                     builder: (context) => Detail(_setCuriousImage(), _descriptionCurious) ));
                 },
                 child: Container(
-                  width: 200,
+                  width: 185,
                   height: 230,
-                  padding: EdgeInsets.all(0),
                   child: _curiousCard(),
                 ),
               ),
@@ -351,9 +340,8 @@ class _AwardsListScreenState extends State<AwardsListScreen> {
                     builder: (context) => Detail(_setInvestedImage(), _descriptionInvested) ));
                 },
                 child: Container(
-                  width: 200,
+                  width: 185,
                   height: 230,
-                  padding: EdgeInsets.all(0),
                   child: _investedCard(),
                 ),
               ),
@@ -369,9 +357,8 @@ class _AwardsListScreenState extends State<AwardsListScreen> {
                     builder: (context) => Detail(_setReagentImage(), _descriptionReagent) ));
                 },
                 child: Container(
-                  width: 200,
+                  width: 185,
                   height: 230,
-                  padding: EdgeInsets.all(0),
                   child: _reagentCard(),
                 ),
               ),
@@ -381,9 +368,8 @@ class _AwardsListScreenState extends State<AwardsListScreen> {
                     builder: (context) => Detail(_setPassionateImage(), _descriptionPassionate) ));
                 },
                 child: Container(
-                  width: 200,
+                  width: 185,
                   height: 230,
-                  padding: EdgeInsets.all(0),
                   child: _passionateCard(),
                 ),
               ),

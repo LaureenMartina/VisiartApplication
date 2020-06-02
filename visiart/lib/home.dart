@@ -1,13 +1,8 @@
 import 'dart:ui';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:visiart/signUp/signup.dart';
-import 'package:visiart/customFormUser/userInterests.dart';
-import 'package:visiart/dashboard/menu.dart';
-import 'package:visiart/awardsUser/awardsList.dart';
 
 class HomeScreen extends StatefulWidget {
-  static String home = "home";
 
   @override
   _HomeState createState() => new _HomeState();
@@ -15,28 +10,20 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeState extends State<HomeScreen> {
 
-  var routes = <String, WidgetBuilder> {
-    "/": (BuildContext context) => HomeScreen(),
-    "/go": (BuildContext context) => UserInterestsScreen(),
-    "/new": (BuildContext context) => SignUpScreen(),
-    "/go/menuboard": (BuildContext context) => MenuBoardScreen(),
-    //"/go/menuboard/awards": (BuildContext context) => AwardsListScreen(),
-  };
-
   void _navigateToSignUpScreen() {
-    //Navigator.pushNamed(context, '/new');
-    Navigator.pushReplacement(
+    Navigator.pushNamed(context, 'inscription');
+    /*Navigator.pushReplacement(
       context, MaterialPageRoute(
             builder: (BuildContext context) => SignUpScreen() )
-    );
+    );*/
   }
 
   void _navigateToUserInterestsScreen() {
-    //Navigator.pushNamed(context, '/go');
-    Navigator.pushReplacement(
+    Navigator.pushNamed(context, 'hobbies');
+    /*Navigator.pushReplacement(
       context, MaterialPageRoute(
         builder: (BuildContext context) => UserInterestsScreen() )
-    );
+    );*/
   }
 
   @override
