@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:visiart/chatRooms/Room.dart';
+import 'package:visiart/chatRooms/roomChats.dart';
 import 'package:visiart/chatRooms/roomCreate.dart';
 
 void main() => runApp(new RoomsList());
@@ -48,14 +49,14 @@ class _RoomsListPageState extends State<RoomsListPage> {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
         'Authorization':
-            'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNTg3ODk5MjY5LCJleHAiOjE1OTA0OTEyNjl9.vKilU-EeAiD3jlqyTV6H4WCNc9BMjjEmFDWyKH9wJh4',
+            'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNTkxMTE5MTcwLCJleHAiOjE1OTM3MTExNzB9.f1tCL0PmSCdsU9whCbf_26CRlMa1VTa3urwO7GOdyk8',
         });
 
         if (response.statusCode == 200) {
             List jsonResponse = json.decode(response.body);
             this.duplicateItems = jsonResponse.map((room) => new Room.fromJson(room)).toList();
             setState(() {
-            items.addAll(duplicateItems);
+              items.addAll(duplicateItems);
             });
         	return jsonResponse.map((room) => new Room.fromJson(room)).toList();
         } else {
@@ -86,6 +87,31 @@ class _RoomsListPageState extends State<RoomsListPage> {
     }
 
   }
+
+  GestureDetector _row(Room room, IconData icon) => GestureDetector(
+    onTap: () =>
+        //Scaffold.of(context).showSnackBar(SnackBar(content: Text(title))),
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => RoomsChatsScreen()),  
+          //MaterialPageRoute(builder: (context) => RoomDetails()),
+        ),
+    child: new Card(
+      //I am the clickable child
+      child: new Column(
+        children: <Widget>[
+          //new Image.network(video[index]),
+          new Padding(padding: new EdgeInsets.all(3.0)),
+          new Text(
+            room.name,
+            style: new TextStyle(
+                fontWeight: FontWeight.bold, color: Colors.black),
+          ),
+        ],
+      ),
+    ),
+  );
+
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
@@ -115,18 +141,20 @@ class _RoomsListPageState extends State<RoomsListPage> {
                 shrinkWrap: true,
                 itemCount: items.length,
                 itemBuilder: (context, index) {
-                  return ListTile(
+                  /* return ListTile(
                     title: Text('${items[index].name}'),
-                  );
+                  ); */
+                  return _row(items[index], Icons.work);
                 },
+                
               ),
             ),
             RaisedButton(
               child: Text('Ajouter un salon', style: TextStyle(fontSize: 20)),
               onPressed: () {
                       Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => RoomsCreateScreen()),
+                        context,
+                        MaterialPageRoute(builder: (context) => RoomsCreateScreen()),
                     );
                   },
                   color: Colors.blue,

@@ -76,7 +76,7 @@ class _RoomsListScreenState extends State<RoomsListScreen> {
           //Scaffold.of(context).showSnackBar(SnackBar(content: Text(title))),
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => RoomsChatsScreen(room: room)),  
+            MaterialPageRoute(builder: (context) => RoomsChatsScreen()),  
 			      //MaterialPageRoute(builder: (context) => RoomDetails()),
           ),
       child: new Card(
