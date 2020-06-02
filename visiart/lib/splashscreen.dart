@@ -46,7 +46,7 @@ class _SplashScreenState extends State<SplashScreen> {
             "assets/flare/splashscreen.flr",
             alignment: Alignment.center,
             fit: BoxFit.contain,
-            animation: "splashscreen",
+            animation: "splashScreen",
           ),
         ),
       ),
