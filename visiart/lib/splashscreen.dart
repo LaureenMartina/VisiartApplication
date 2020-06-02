@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:flare_flutter/flare_actor.dart';
 import 'home.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -41,13 +40,11 @@ class _SplashScreenState extends State<SplashScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        child: Center(
-          child: FlareActor(
-            "assets/flare/splashscreen.flr",
-            alignment: Alignment.center,
-            fit: BoxFit.contain,
-            animation: "splashScreen",
-          ),
+        child: Stack(
+          alignment: Alignment.center,
+          children: <Widget>[
+            Image.asset("assets/imgs/test.png")
+          ],
         ),
       ),
     );
