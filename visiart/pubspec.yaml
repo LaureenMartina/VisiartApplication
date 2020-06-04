@@ -41,8 +41,6 @@ dependencies:
   prefs: ^3.2.0
   flare_flutter: ^2.0.3
   lottie: ^0.3.3
-  flutter_bloc: ^4.0.0
-  rflutter_alert: ^1.0.3
 
 dev_dependencies:
   flutter_test:
