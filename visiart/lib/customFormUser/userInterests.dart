@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:progress_button/progress_button.dart';
 import 'package:visiart/config/config.dart' as globals;
-import 'package:visiart/dashboard/menu.dart';
+import 'package:visiart/models/ModalAwards.dart';
 
 class UserInterestsScreen extends StatefulWidget {
   @override
@@ -28,7 +28,13 @@ class _UserInterestsScreenState extends State<UserInterestsScreen> {
 }
 
 Widget _bodyScreen(BuildContext context) {
-  bool _switchValue = false;
+  bool _switchValue = false; // Button Switch
+
+  final String titlePopup = "Bravooo !!";
+  final String description = "Votre 1er Trophée !\nDisponible depuis votre dashboard";
+  final String button = "Compris 👍";
+  final String navigateModalTo = "dashboard";
+
 
   final divider = Divider(
     color: Colors.black38,
@@ -46,13 +52,12 @@ Widget _bodyScreen(BuildContext context) {
     globals.curiousBadgeEnabled = true;
   }
 
-  void _navigateToDashboardScreen() {
-    Navigator.pushNamed(context, 'dashboard');
-    /*Navigator.pushReplacement(
-        context, MaterialPageRoute(
-        builder: (BuildContext context) => MenuBoardScreen() )
-    );*/
+  // Call to have the Popup Badge information
+  void _showModal(BuildContext context) {
+    ModalAwards _modalAwards = new ModalAwards(titlePopup, description, button, context, navigateModalTo);
+    Future<dynamic> modal = _modalAwards.getModal();
   }
+
 
   return CustomScrollView(
     slivers: <Widget>[
@@ -146,7 +151,7 @@ Widget _bodyScreen(BuildContext context) {
             backgroundColor: Colors.deepOrange[200],
             onPressed: () {
               _setAwardsFirstConnexion();
-              _navigateToDashboardScreen();
+              _showModal(context);
             },
             progressColor: Colors.deepOrange[300],
           ),

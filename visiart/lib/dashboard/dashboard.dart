@@ -2,16 +2,31 @@ import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:visiart/awardsUser/awardsList.dart';
+import 'package:visiart/awardsUser/modalAwards.dart';
+import 'package:visiart/config/config.dart' as globals;
 
 class DashboardScreen extends StatefulWidget {
+
   @override
   _DashboardScreenState createState() => _DashboardScreenState();
 }
 
 class _DashboardScreenState extends State<DashboardScreen> {
-
+  //var isEnabled = globals.curiousBadgeEnabled;
   List<String> nameCards = ["Trophées", "Dessins"];
+
+  /*@override
+  void initState() {
+    super.initState();
+    //_triggerAwards();
+  }
+
+  void _triggerAwards() {
+    setState(() {
+      print("Hello popup !!");
+      if(isEnabled) ModalAwards();
+    });
+  }*/
 
   final getNameUser = Align(
     alignment: Alignment.topCenter,
@@ -138,6 +153,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   @override
   Widget build(BuildContext context) {
+    //_triggerAwards();
     return Scaffold(
       body: ListView(
         shrinkWrap: true,
