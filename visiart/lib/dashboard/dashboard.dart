@@ -2,8 +2,6 @@ import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:visiart/awardsUser/modalAwards.dart';
-import 'package:visiart/config/config.dart' as globals;
 
 class DashboardScreen extends StatefulWidget {
 
@@ -12,7 +10,6 @@ class DashboardScreen extends StatefulWidget {
 }
 
 class _DashboardScreenState extends State<DashboardScreen> {
-  //var isEnabled = globals.curiousBadgeEnabled;
   List<String> nameCards = ["Trophées", "Dessins"];
 
   /*@override
