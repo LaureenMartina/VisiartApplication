@@ -1,8 +1,15 @@
 library visiart.globals;
 
 //API
-String http = "http://91.121.165.149/";
-String urlRegisterUser = http + "auth/local/register";
+const String API_BASE_URL = "http://91.121.165.149";
+
+const String API_REGISTER = API_BASE_URL + "/auth/local/register";
+const String API_LOGIN = API_BASE_URL + "/auth/local";
+
+const API_HEADERS = {
+  'Content-Type': 'application/json',
+  'Accept': 'application/json',
+};
 
 // Awards
 bool curiousBadgeEnabled = false;
