@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:visiart/awardsUser/awardsList.dart';
 import 'package:visiart/customFormUser/userInterests.dart';
 import 'package:visiart/dashboard/menu.dart';
 import 'package:visiart/events/eventsList.dart';
 import 'package:visiart/home.dart';
 import 'package:visiart/signUp/signup.dart';
+import 'localization/AppLocalization.dart';
 import 'splashscreen.dart';
 
 void main() => runApp(MyApp());
@@ -14,12 +16,21 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return new MaterialApp(
-        theme: ThemeData(
-          primarySwatch: Colors.deepPurple,
-        ),
-        debugShowCheckedModeBanner: false,
-        initialRoute: "/",
-        routes: _routes,
+      supportedLocales: [
+      Locale('en', 'US'),
+      Locale('fr', 'FR'),
+      ],
+      localizationsDelegates: [
+        AppLocalizations.delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+      ],
+      theme: ThemeData(
+        primarySwatch: Colors.deepPurple,
+      ),
+      debugShowCheckedModeBanner: false,
+      initialRoute: "/",
+      routes: _routes,
         //home: new SplashScreen(),
     );
   }

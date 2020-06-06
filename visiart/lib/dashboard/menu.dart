@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:visiart/events/eventsList.dart';
 import 'package:visiart/dashboard/dashboard.dart';
 import 'package:visiart/chatRooms/roomsList.dart';
+import 'package:visiart/localization/AppLocalization.dart';
 
 class MenuBoardScreen extends StatefulWidget {
   @override
@@ -19,10 +20,10 @@ class _MenuBoardScreenState extends State<MenuBoardScreen> {
   ];
 
   ListTile _account() => ListTile(
-    title: Text('Mon Compte',
+    title: Text(AppLocalizations.of(context).translate('menu_myAccount'),
       style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
     ),
-    subtitle: Text('Vos données enregistrées',
+    subtitle: Text(AppLocalizations.of(context).translate('menu_storedData'),
       style: TextStyle(fontSize: 12, fontStyle: FontStyle.italic
       ),
     ),
@@ -31,10 +32,10 @@ class _MenuBoardScreenState extends State<MenuBoardScreen> {
   );
 
   ListTile _about() => ListTile(
-    title: Text('A Propos',
+    title: Text(AppLocalizations.of(context).translate('menu_about'),
       style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
     ),
-    subtitle: Text('Notre équipe, notre application',
+    subtitle: Text(AppLocalizations.of(context).translate('menu_aboutSubtitle'),
       style: TextStyle(fontSize: 12, fontStyle: FontStyle.italic
       ),
     ),
@@ -43,10 +44,10 @@ class _MenuBoardScreenState extends State<MenuBoardScreen> {
   );
 
   ListTile _paramsUser() => ListTile(
-    title: Text('Paramètres',
+    title: Text(AppLocalizations.of(context).translate('menu_settings'),
       style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
     ),
-    subtitle: Text('Données de l\'application',
+    subtitle: Text(AppLocalizations.of(context).translate('menu_settingsSubtitle'),
       style: TextStyle(fontSize: 12, fontStyle: FontStyle.italic
       ),
     ),
@@ -55,10 +56,10 @@ class _MenuBoardScreenState extends State<MenuBoardScreen> {
   );
 
   ListTile _logout() => ListTile(
-    title: Text('Déconnexion',
+    title: Text(AppLocalizations.of(context).translate('menu_logout'),
       style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
     ),
-    subtitle: Text('Bye Bye',
+    subtitle: Text(AppLocalizations.of(context).translate('menu_logoutSubtitle'),
       style: TextStyle(fontSize: 12, fontStyle: FontStyle.italic
       ),
     ),

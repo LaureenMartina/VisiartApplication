@@ -1,0 +1,44 @@
+{
+  "password": "Password",
+  "email": "Email",
+  "goBtn": "GO !",
+
+  "home_signUpLink": "Not signed in ? Join thousands of passionates !",
+  "home_slogan": "Add more ART to your life",
+
+  "signup_createAccount": "Create Account",
+  "signup_username": "Name / Pseudo",
+  "signup_pwdConfirmation": "Confirm",
+  "signup_createAccountAlt": "Or create an account with :",
+
+  "menu_myAccount": "My Account",
+  "menu_storedData": "Your saved data",
+  "menu_about": "About",
+  "menu_aboutSubtitle": "Our team, our app",
+  "menu_settings": "Settongs",
+  "menu_settingsSubtitle": "Application's data",
+  "menu_logout": "Logout",
+  "menu_logoutSubtitle": "Bye Bye !",
+
+  "userInterest_userInterest": "Your points of interest",
+  "userInterest_museum": "Museum",
+  "userInterest_exposition": "Exposition",
+  "userInterest_cineam": "Cinema",
+  "userInterest_painting": "Painting",
+  "userInterest_atheleticEvent": "Athletic Events",
+  "userInterest_music": "Music",
+  "userInterest_gig": "Gigs",
+  "userInterest_dance": "Dance",
+  "userInterest_modernArt": "Modern Art",
+  "userInterest_Theater": "Theatre",
+  "userInterest_drawing": "Drawing",
+  "userInterest_design": "Design",
+  "userInterest_literature": "Literature",
+  "userInterest_show": "Spectacles",
+  "userInterest_photo": "Photography",
+  "userInterest_tellUsWhatYouLike": "Tell us what you like",
+  "userInterest_select": "Select one or more point of interest",
+  "userInterest_move": "Are you ready to move ?",
+  "userInterest_save": "Save"
+
+}

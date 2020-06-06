@@ -1,0 +1,44 @@
+{
+  "password": "Mot de passe",
+  "email": "Email",
+  "goBtn": "GO !",
+
+  "home_signUpLink": "Pas encore inscrit ? Rejoignez les passionnés !",
+  "home_slogan": "Mettez de l'ART dans vos vies",
+
+  "signup_createAccount": "Créer un Compte",
+  "signup_username": "Nom / Pseudo",
+  "signup_pwdConfirmation": "Confirmation",
+  "signup_createAccountAlt": "Ou créer un compte avec :",
+
+  "menu_myAccount": "Mon Compte",
+  "menu_storedData": "Vos données enregistrées",
+  "menu_about": "À Propos",
+  "menu_aboutSubtitle": "Notre équipe, notre application",
+  "menu_settings": "Paramètres",
+  "menu_settingsSubtitle": "Données de l\\'application",
+  "menu_logout": "Déconnexion",
+  "menu_logoutSubtitle": "Bye Bye !",
+
+  "userInterest_userInterest": "Vos Centres d\\'intérêts",
+  "userInterest_museum": "Musée",
+  "userInterest_exposition": "Exposition",
+  "userInterest_cineam": "Cinéma",
+  "userInterest_painting": "Peinture",
+  "userInterest_atheleticEvent": "Évènement Athlétique",
+  "userInterest_music": "Musique",
+  "userInterest_gig": "Concert",
+  "userInterest_dance": "Dance",
+  "userInterest_modernArt": "Art Moderne",
+  "userInterest_Theater": "Théatre",
+  "userInterest_drawing": "Dessin",
+  "userInterest_design": "Design",
+  "userInterest_literature": "Littérature",
+  "userInterest_show": "Spectacles",
+  "userInterest_photo": "Photographie",
+  "userInterest_tellUsWhatYouLike": "Dites nous ce que vous aimez",
+  "userInterest_select": "Sélectionnez un ou plusieurs domaines qui vous intéressent",
+  "userInterest_move": "Etes-vous prêt(e) à vous déplacer ?",
+  "userInterest_save": "Enregistrer"
+
+}
