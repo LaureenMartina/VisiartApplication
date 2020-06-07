@@ -10,6 +10,7 @@ import 'package:visiart/chatRooms/roomsList.dart';
 import 'package:visiart/models/Room_message.dart';
 import 'package:flutter/foundation.dart';
 import 'package:visiart/config/SharedPref.dart';
+import 'package:visiart/models/User.dart';
 
 SharedPref sharedPref = SharedPref();
 
@@ -42,6 +43,8 @@ class RoomsChatPage extends StatefulWidget {
 
 class _RoomsChatPageState extends State<RoomsChatPage> {
     Room room;
+    var _userid;
+    //var roomId;
 
     _RoomsChatPageState(Room room) {
       this.room = room;
@@ -53,14 +56,17 @@ class _RoomsChatPageState extends State<RoomsChatPage> {
 
     @override
     void initState() {
-        //_fetchRoomMessages();
-       
-         setState(() {
+        
+          sharedPref.readInteger("userId").then((value) => {
+            setState(() {
+                this._userid = value;
+            })
+          });
+        setState(() {
           this.messageList.addAll(this.room.roomMessages);
         });
         super.initState();
     }
-  
 
     Future<List<RoomMessage>> _fetchRoomMessages() async {
       final roomAPIUrl = 'http://91.121.165.149/room-messages'; //Rajouter id
@@ -93,23 +99,23 @@ class _RoomsChatPageState extends State<RoomsChatPage> {
                 'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNTg3ODk5MjY5LCJleHAiOjE1OTA0OTEyNjl9.vKilU-EeAiD3jlqyTV6H4WCNc9BMjjEmFDWyKH9wJh4',
         },
         body: {
-            'visible' : false
+            'display' : false
         }
             );
     }
 
     void disableRoom(roomId) {
-            http.put(
-                'http://91.121.165.149/rooms/'+roomId,
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json',
-                    'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNTg3ODk5MjY5LCJleHAiOjE1OTA0OTEyNjl9.vKilU-EeAiD3jlqyTV6H4WCNc9BMjjEmFDWyKH9wJh4',
-                },
-        body: {
-            'visible' : false
-        }
-            );
+        http.put(
+            'http://91.121.165.149/rooms/'+roomId,
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+                'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNTg3ODk5MjY5LCJleHAiOjE1OTA0OTEyNjl9.vKilU-EeAiD3jlqyTV6H4WCNc9BMjjEmFDWyKH9wJh4',
+            },
+            body: {
+                'enable' : false
+            }
+        );
 
     }
 
@@ -117,7 +123,7 @@ class _RoomsChatPageState extends State<RoomsChatPage> {
 
         if (textEditingController.text.trim().isNotEmpty) {
 
-            var _userid = await sharedPref.readInteger("userId");
+            this._userid = await sharedPref.readInteger("userId");
             var _token = await sharedPref.read("token");
             RoomMessage newMessage = RoomMessage(
                 content: textEditingController.text.trim(),
@@ -157,21 +163,75 @@ class _RoomsChatPageState extends State<RoomsChatPage> {
         }
     }
 
+    Future<List<User>> _getAllUsers() async {
+        final roomAPIUrl = 'http://91.121.165.149/rooms';
+        final response = await http.get(roomAPIUrl, headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'Authorization':
+            'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNTkxMTE5MTcwLCJleHAiOjE1OTM3MTExNzB9.f1tCL0PmSCdsU9whCbf_26CRlMa1VTa3urwO7GOdyk8',
+        });
+
+        if (response.statusCode == 200) {
+            
+            List jsonResponse = json.decode(response.body);
+            return jsonResponse.map((user) => new User.fromJson(user)).toList();
+        } else {
+            throw Exception('Failed to load users from API');
+        }
+    }
+
+
+    void showAddMembersModal(int roomId, BuildContext context) async {
+        showDialog(
+            context: context,
+            child: new AlertDialog(
+                title: const Text("Ajouter un ami"),
+                content: TextFormField(
+                keyboardType: TextInputType.text,
+                decoration: new InputDecoration(
+                  hintText: 'Nom de votre ami à ajouter',
+                  //labelText: 'Nom du salon'
+                ),
+              ),
+                actions: [
+                new FlatButton(
+                  child: const Text("Valider"),
+                  onPressed: () => {
+                      //Faire la requête serverside
+                      Navigator.of(context, rootNavigator: true).pop(context)
+                      //Navigator.pop(context)
+                    },
+                ),
+              ],
+            ),
+        );
+    }
+
     AppBar buildAppBar(context) {
         return AppBar(
             title: Text(this.room.name),
             actions: <Widget>[
                 // action button
                 IconButton(
-                    icon: Icon(Icons.settings),
+                    icon: Icon(Icons.add),
                     onPressed: () {
-                        //
+                        showAddMembersModal(room.id, context);
+                    },
+                ),
+                IconButton(
+                    icon: Icon(Icons.lock),
+                    onPressed: () {
+                        disableRoom(room.id);
+                        Navigator.push(context, 
+                            MaterialPageRoute(builder: (context) => RoomsListPage()),
+                        );
                     },
                 ),
                 IconButton(
                     icon: Icon(Icons.delete),
                     onPressed: () {
-                        //deleteRoom(room.id);
+                        deleteRoom(room.id);
                         Navigator.push(context, 
                             MaterialPageRoute(builder: (context) => RoomsListPage()),
                         );
@@ -180,9 +240,9 @@ class _RoomsChatPageState extends State<RoomsChatPage> {
             ],
         );
     }
-
-
-      
+                        
+                        
+                              
     Widget buildMessageTextField() {
         return Container(    
             child: Container(
@@ -209,7 +269,7 @@ class _RoomsChatPageState extends State<RoomsChatPage> {
                         addNewMessage();
                     },
                     onTap: () {
-                       /*  Timer(
+                        /*  Timer(
                         Duration(milliseconds: 300),
                         () => _controller.jumpTo(_controller.position.maxScrollExtent)); */
                     },
@@ -231,17 +291,9 @@ class _RoomsChatPageState extends State<RoomsChatPage> {
             ),
         );
     }
-
-    /* void initListMessage(room) {
-      this.messageList.clear();
-      setState(() {
-        this.messageList.addAll(room.roomMessages);
-      });
-    } */
     
     @override
     Widget build(BuildContext context) {
-        
         return new Scaffold(
             appBar: buildAppBar(context),
             body: Stack(
@@ -250,7 +302,7 @@ class _RoomsChatPageState extends State<RoomsChatPage> {
                         children: <Widget>[
                         // _appBar(),
                         Flexible(
-                            child: _roomsListMeesageView(this.messageList),
+                            child: _roomsListMeesageView(this.messageList, this._userid),
                         ),
                         buildMessageTextField(),
                         ],
@@ -259,16 +311,26 @@ class _RoomsChatPageState extends State<RoomsChatPage> {
             ),
         );
     }
+                        
 }
 
-ListView _roomsListMeesageView(data) {
-   /*  print("data");
-    print(data[0].id); */
+ListView _roomsListMeesageView(data, userId) {
     return ListView.builder(
         itemCount: data.length,
         itemBuilder: (context, index) {
-            return ListTile(
+            /* return ListTile(
                 title: Text(data[index].content),
+            ); */ 
+            var currentUserId =  data[index].userId;
+            
+            return Container(
+                 color:  data[index].userId == userId
+                    ? Theme.of(context).accentColor : Colors.green, 
+                //color: Theme.of(context).accentColor,
+                child: ListTile(
+                    title: Text(data[index].content),
+                ),
             );
+
     });
 }
