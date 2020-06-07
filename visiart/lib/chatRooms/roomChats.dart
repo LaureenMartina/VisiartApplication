@@ -8,60 +8,80 @@ import 'package:visiart/chatRooms/Room.dart';
 import 'package:http/http.dart' as http;
 import 'package:visiart/chatRooms/roomsList.dart';
 import 'package:visiart/models/Room_message.dart';
+import 'package:flutter/foundation.dart';
+import 'package:visiart/config/SharedPref.dart';
 
-void main() => runApp(new RoomsChatsScreen());
+SharedPref sharedPref = SharedPref();
+
+//void main() => runApp(new RoomsChatsScreen());
 
 
 class RoomsChatsScreen extends StatelessWidget {
   // This widget is the root of your application.
+  final Room room;
+  RoomsChatsScreen({Key key, @required this.room}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return new MaterialApp(
-      title: 'Nom du salon',
+      title: room.name,
       theme: new ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: new RoomsChatPage(title: 'Nom du salon'),
+      home: new RoomsChatPage(room: room),
     );
   }
 }
 
 class RoomsChatPage extends StatefulWidget {
-  RoomsChatPage({Key key, this.title}) : super(key: key);
-  final String title;
+  RoomsChatPage({Key key, this.room}) : super(key: key);
+  final Room room;
 
   @override
-  _RoomsChatPageState createState() => new _RoomsChatPageState();
+  _RoomsChatPageState createState() => new _RoomsChatPageState(room);
 }
 
 class _RoomsChatPageState extends State<RoomsChatPage> {
-  // Declare a field that holds the Todo.
-    //final Room room;
+    Room room;
 
-    // In the constructor, require a Todo.
-    //RoomsChatsScreen(this.room) : super(this.room);
+    _RoomsChatPageState(Room room) {
+      this.room = room;
+    }
 
     ScrollController _controller = ScrollController(initialScrollOffset: 50.0);
-
     TextEditingController textEditingController = new TextEditingController();
-    List<RoomMessage> messageList = [
-        RoomMessage(
-            id: 1,
-            content: 'C\'est moi',
-            userId: 26
-        ),
-        RoomMessage(
-            id: 2,
-            content: 'Ceci est un message',
-            userId: 10
-        ),
-        RoomMessage(
-            id: 3,
-            content: 'est un tr super message',
-            userId: 10
-        ),
-        
-    ];
+    List<RoomMessage> messageList = [];
+
+    @override
+    void initState() {
+        //_fetchRoomMessages();
+       
+         setState(() {
+          this.messageList.addAll(this.room.roomMessages);
+        });
+        super.initState();
+    }
+  
+
+    Future<List<RoomMessage>> _fetchRoomMessages() async {
+      final roomAPIUrl = 'http://91.121.165.149/room-messages'; //Rajouter id
+      final response = await http.get(roomAPIUrl, headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          'Authorization':
+          'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNTkxMTE5MTcwLCJleHAiOjE1OTM3MTExNzB9.f1tCL0PmSCdsU9whCbf_26CRlMa1VTa3urwO7GOdyk8',
+      });
+
+      if (response.statusCode == 200) {
+          List jsonResponse = json.decode(response.body);
+          var list = jsonResponse.map((roomMessages) => new RoomMessage.fromJson(roomMessages)).toList();
+          setState(() {
+            this.messageList.addAll(list);
+          });
+        return list;
+      } else {
+        throw Exception('Failed to load rooms from API');
+      }
+  }
 
     //RoomsChatsScreen createState() => RoomsChatsScreen(room: room);
     void deleteRoom(roomId) {
@@ -93,11 +113,40 @@ class _RoomsChatPageState extends State<RoomsChatPage> {
 
     }
 
-    void addNewMessage() {
+    void addNewMessage() async {
+
         if (textEditingController.text.trim().isNotEmpty) {
+
+            var _userid = await sharedPref.readInteger("userId");
+            var _token = await sharedPref.read("token");
             RoomMessage newMessage = RoomMessage(
                 content: textEditingController.text.trim(),
+                userId: _userid
+            ); 
+            var data = {
+                "content": textEditingController.text.trim(),
+                "user": {
+                    "id": _userid
+                },
+                "room": {
+                    "id": this.room.id
+                }, 
+            };
+            final response = await http.post(
+                'http://91.121.165.149/room-messages',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                    'Authorization': 'Bearer $_token',
+                },
+                body: json.encode(data)
             );
+
+            if (response.statusCode == 200) {
+                //
+            } else {
+                throw Exception('Failed to post message from API');
+            }
 
             setState(() {
                 messageList.add(newMessage);
@@ -110,7 +159,7 @@ class _RoomsChatPageState extends State<RoomsChatPage> {
 
     AppBar buildAppBar(context) {
         return AppBar(
-            title: Text("Nom de la room"),
+            title: Text(this.room.name),
             actions: <Widget>[
                 // action button
                 IconButton(
@@ -182,9 +231,17 @@ class _RoomsChatPageState extends State<RoomsChatPage> {
             ),
         );
     }
+
+    /* void initListMessage(room) {
+      this.messageList.clear();
+      setState(() {
+        this.messageList.addAll(room.roomMessages);
+      });
+    } */
     
     @override
     Widget build(BuildContext context) {
+        
         return new Scaffold(
             appBar: buildAppBar(context),
             body: Stack(
@@ -215,36 +272,3 @@ ListView _roomsListMeesageView(data) {
             );
     });
 }
-
-
-  /* 
-    @override
-    Widget build(BuildContext context) {
-    // Use the Todo to create the UI.
-    return MaterialApp(
-			home: Scaffold(
-				appBar: AppBar(
-                    title: Text(room.name),
-                    actions: <Widget>[
-                        // action button
-                        IconButton(
-                            icon: Icon(Icons.settings),
-                            onPressed: () {
-                                //
-                            },
-                        ),
-                        IconButton(
-                            icon: Icon(Icons.delete),
-                            onPressed: () {
-                                deleteRoom(room.id);
-                                Navigator.push(context, 
-                                    MaterialPageRoute(builder: (context) => RoomsListPage()),
-                                );
-                            },
-                        ),
-                    ],
-				),
-			),
-		);
-  	} 
-      */

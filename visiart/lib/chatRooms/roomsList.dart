@@ -44,25 +44,25 @@ class _RoomsListPageState extends State<RoomsListPage> {
   }
 
   Future<List<Room>> _fetchRooms() async {
-        final roomAPIUrl = 'http://91.121.165.149/rooms';
-        final response = await http.get(roomAPIUrl, headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-        'Authorization':
-            'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNTkxMTE5MTcwLCJleHAiOjE1OTM3MTExNzB9.f1tCL0PmSCdsU9whCbf_26CRlMa1VTa3urwO7GOdyk8',
-        });
+    final roomAPIUrl = 'http://91.121.165.149/rooms';
+    final response = await http.get(roomAPIUrl, headers: {
+    'Content-Type': 'application/json',
+    'Accept': 'application/json',
+    'Authorization':
+        'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNTkxMTE5MTcwLCJleHAiOjE1OTM3MTExNzB9.f1tCL0PmSCdsU9whCbf_26CRlMa1VTa3urwO7GOdyk8',
+    });
 
-        if (response.statusCode == 200) {
-            List jsonResponse = json.decode(response.body);
-            this.duplicateItems = jsonResponse.map((room) => new Room.fromJson(room)).toList();
-            setState(() {
-              items.addAll(duplicateItems);
-            });
-        	return jsonResponse.map((room) => new Room.fromJson(room)).toList();
-        } else {
-          throw Exception('Failed to load rooms from API');
-        }
+    if (response.statusCode == 200) {
+        List jsonResponse = json.decode(response.body);
+        this.duplicateItems = jsonResponse.map((room) => new Room.fromJson(room)).toList();
+        setState(() {
+          items.addAll(duplicateItems);
+        });
+      return jsonResponse.map((room) => new Room.fromJson(room)).toList();
+    } else {
+      throw Exception('Failed to load rooms from API');
     }
+  }
 
   void filterSearchResults(String query) {
     List<Room> dummySearchList = List<Room>();
@@ -93,7 +93,7 @@ class _RoomsListPageState extends State<RoomsListPage> {
         //Scaffold.of(context).showSnackBar(SnackBar(content: Text(title))),
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => RoomsChatsScreen()),  
+          MaterialPageRoute(builder: (context) => RoomsChatsScreen(room: room)),  
           //MaterialPageRoute(builder: (context) => RoomDetails()),
         ),
     child: new Card(
