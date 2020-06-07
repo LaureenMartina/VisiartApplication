@@ -1,8 +1,9 @@
 import 'dart:ui';
+
 import 'package:flutter/material.dart';
-import 'package:visiart/events/eventsList.dart';
-import 'package:visiart/dashboard/dashboard.dart';
 import 'package:visiart/chatRooms/roomsList.dart';
+import 'package:visiart/dashboard/dashboard.dart';
+import 'package:visiart/events/eventsList.dart';
 import 'package:visiart/localization/AppLocalization.dart';
 
 class MenuBoardScreen extends StatefulWidget {
@@ -19,6 +20,10 @@ class _MenuBoardScreenState extends State<MenuBoardScreen> {
     EventsListScreen()
   ];
 
+  void _navigateToAccount() {
+    Navigator.pushNamed(context, 'account');
+  }
+
   ListTile _account() => ListTile(
     title: Text(AppLocalizations.of(context).translate('menu_myAccount'),
       style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
@@ -28,7 +33,7 @@ class _MenuBoardScreenState extends State<MenuBoardScreen> {
       ),
     ),
     leading: Icon(Icons.face, size: 40, color: Colors.teal[300]),
-    onTap: () {  },
+    onTap: () { _navigateToAccount(); },
   );
 
   ListTile _about() => ListTile(

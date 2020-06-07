@@ -25,6 +25,7 @@ Future<void> showAlert(
                 Navigator.of(context).pop();
               } else {
                 f.call();
+                Navigator.of(context).pop();
               }
             },
           ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:visiart/account/account.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:visiart/awardsUser/awardsList.dart';
 import 'package:visiart/customFormUser/userInterests.dart';
@@ -6,6 +7,7 @@ import 'package:visiart/dashboard/menu.dart';
 import 'package:visiart/events/eventsList.dart';
 import 'package:visiart/home.dart';
 import 'package:visiart/signUp/signup.dart';
+
 import 'localization/AppLocalization.dart';
 import 'splashscreen.dart';
 
@@ -43,6 +45,7 @@ var _routes = <String, WidgetBuilder> {
   "inscription": (BuildContext context) => SignUpScreen(),
   "dashboard": (BuildContext context) => MenuBoardScreen(),
   "awards": (BuildContext context) => AwardsListScreen(),
+  "account": (BuildContext context) => AccountScreen(),
   //"drawing": (BuildContext context) => Draw(), //merge with the drawing branch before
   "events": (BuildContext context) => EventsListScreen(),
   //"tchat": (BuildContext context) => RoomsChatsScreen(), // Flo
