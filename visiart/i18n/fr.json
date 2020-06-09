@@ -2,9 +2,19 @@
   "password": "Mot de passe",
   "email": "Email",
   "goBtn": "GO !",
+<<<<<<< HEAD
   "warning": "Attention !",
   "close": "Fermer",
   "save": "Enregistrer",
+=======
+  "display": "Affiché ?",
+  "private": "Privé ?",
+  "yes": "OUI",
+  "no": "NON",
+  "rooms": "Salons",
+  "add": "Ajouter",
+  "validate": "Valider",
+>>>>>>> Ajout des infos utilisateur sur les messages
 
   "home_signUpLink": "Pas encore inscrit ? Rejoignez les passionnés !",
   "home_slogan": "Mettez de l'ART dans vos vies",
@@ -31,6 +41,13 @@
   "userInterest_tellUsWhatYouLike": "Dites nous ce que vous aimez",
   "userInterest_select": "Sélectionnez un ou plusieurs domaines qui vous intéressent",
   "userInterest_move": "Etes-vous prêt(e) à vous déplacer ?",
-  "userInterest_save": "Enregistrer"
+  "userInterest_save": "Enregistrer",
+
+  "roomsList_roomsList": "Liste des salons",
+
+  "roomsCreate_hobbyChoice": "Choisir le hobby",
+  "roomsCreate_addRomm": "Ajout d'un salon",
+
+  "roomsChats_addFriend": "Ajouter un ami"
 
 }

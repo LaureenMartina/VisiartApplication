@@ -5,8 +5,12 @@ import 'package:flutter/material.dart';
 import 'package:visiart/chatRooms/Room.dart';
 import 'package:visiart/chatRooms/roomChats.dart';
 import 'package:visiart/chatRooms/roomCreate.dart';
+import 'package:visiart/config/SharedPref.dart';
+import 'package:visiart/localization/AppLocalization.dart';
 
 void main() => runApp(new RoomsList());
+
+SharedPref sharedPref = SharedPref();
 
 class RoomsList extends StatelessWidget {
   // This widget is the root of your application.
@@ -17,7 +21,7 @@ class RoomsList extends StatelessWidget {
       theme: new ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: new RoomsListPage(title: 'Liste des salons'),
+      home: new RoomsListPage(title: AppLocalizations.of(context).translate("roomsList_roomsList")),
     );
   }
 }
@@ -45,11 +49,12 @@ class _RoomsListPageState extends State<RoomsListPage> {
 
   Future<List<Room>> _fetchRooms() async {
     final roomAPIUrl = 'http://91.121.165.149/rooms';
+    var _token = await sharedPref.read("token");
     final response = await http.get(roomAPIUrl, headers: {
     'Content-Type': 'application/json',
     'Accept': 'application/json',
     'Authorization':
-        'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNTkxMTE5MTcwLCJleHAiOjE1OTM3MTExNzB9.f1tCL0PmSCdsU9whCbf_26CRlMa1VTa3urwO7GOdyk8',
+        'Bearer $_token',
     });
 
     if (response.statusCode == 200) {
@@ -96,11 +101,15 @@ class _RoomsListPageState extends State<RoomsListPage> {
           MaterialPageRoute(builder: (context) => RoomsChatsScreen(room: room)),  
           //MaterialPageRoute(builder: (context) => RoomDetails()),
         ),
-    child: new Card(
+    /* child: new Card(
       //I am the clickable child
       child: new Column(
         children: <Widget>[
           //new Image.network(video[index]),
+          new BoxDecoration(
+            color: Theme.of(context).buttonColor,
+            borderRadius: BorderRadius.circular(8.0)
+          ),
           new Padding(padding: new EdgeInsets.all(3.0)),
           new Text(
             room.name,
@@ -109,14 +118,24 @@ class _RoomsListPageState extends State<RoomsListPage> {
           ),
         ],
       ),
-    ),
+    ), */
+    child: Container(
+        padding: EdgeInsets.all(12.0),
+        margin: EdgeInsets.all(5.0),
+        decoration: BoxDecoration(
+          color: Colors.deepPurple[300],
+          borderRadius: BorderRadius.circular(23.0),
+          
+        ),
+        child: Text(room.name),
+      ),
   );
 
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
       appBar: new AppBar(
-        title: new Text('Salons'),
+        title: new Text(AppLocalizations.of(context).translate("rooms")),
       ),
       body: Container(
         child: Column(
@@ -150,7 +169,7 @@ class _RoomsListPageState extends State<RoomsListPage> {
               ),
             ),
             RaisedButton(
-              child: Text('Ajouter un salon', style: TextStyle(fontSize: 20)),
+              child: Text(AppLocalizations.of(context).translate("add"), style: TextStyle(fontSize: 20)),
               onPressed: () {
                       Navigator.push(
                         context,

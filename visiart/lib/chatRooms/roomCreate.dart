@@ -8,6 +8,7 @@ import 'package:http/http.dart' as http;
 import 'package:visiart/chatRooms/roomsList.dart';
 import 'package:visiart/config/SharedPref.dart';
 import 'package:visiart/models/Hobby.dart';
+import 'package:visiart/localization/AppLocalization.dart';
 
 
 SharedPref sharedPref = SharedPref();
@@ -29,8 +30,8 @@ class _RoomsCreateScreenState extends State<RoomsCreateScreen> {
 
   List<Hobby> listHobbies = [];
   var selectedHobby;
-  var selectedPrivateMessage = "NON";
-  var selectedDisplayMessage = "OUI";
+  var selectedPrivateMessage = "";
+  var selectedDisplayMessage = "";
   var selectedPrivateBool = false;
   var selectedDisplayBOOL = true;
   @override
@@ -42,6 +43,18 @@ class _RoomsCreateScreenState extends State<RoomsCreateScreen> {
 
   Future<http.Response> createRoom(String newRoomName, String newRoomThematic) async {
     var token = await sharedPref.read('token');
+    var userId = await sharedPref.readInteger("userId");
+    var data = {
+        'name': newRoomName,
+        'display' : selectedDisplayBOOL.toString(),
+        'private' : selectedPrivateBool.toString(),
+        "hobbies": [{
+            "id": this._data.roomThematic
+        }], 
+        "users": [{
+            "id": userId
+        }], 
+    };
     final response = await http.post(
         'http://91.121.165.149/rooms',
         headers: {
@@ -49,13 +62,14 @@ class _RoomsCreateScreenState extends State<RoomsCreateScreen> {
             'Accept': 'application/json',
             'Authorization': 'Bearer $token',
         },
-        body: jsonEncode(<String, dynamic>{
+        body: json.encode(data)
+        /* jsonEncode(<String, dynamic>{
             'name': newRoomName,
             'hobbies' : selectedHobby,
             'display' : selectedDisplayBOOL.toString(),
             'private' : selectedPrivateBool.toString(),
 
-        }),
+        }) */
     );
     if (response.statusCode == 200) {
         Navigator.push(
@@ -98,9 +112,12 @@ class _RoomsCreateScreenState extends State<RoomsCreateScreen> {
   Widget build(BuildContext context) {
     final Size screenSize = MediaQuery.of(context).size;
 
+    selectedPrivateMessage = AppLocalizations.of(context).translate("no");
+    selectedDisplayMessage = AppLocalizations.of(context).translate("yes");
+
     return new Scaffold(
       appBar: new AppBar(
-        title: new Text('Ajout d\'un salon'),
+        title: new Text(AppLocalizations.of(context).translate("roomsCreate_addRomm")),
       ),
       body: new Container(
         padding: new EdgeInsets.all(20.0),
@@ -111,7 +128,7 @@ class _RoomsCreateScreenState extends State<RoomsCreateScreen> {
               new TextFormField(
                 keyboardType: TextInputType.text,
                 decoration: new InputDecoration(
-                  hintText: 'Nom du salon',
+                  hintText: 'name',
                   //labelText: 'Nom du salon'
                 ),
                 onSaved: (String value) {
@@ -119,11 +136,11 @@ class _RoomsCreateScreenState extends State<RoomsCreateScreen> {
                 }
               ),
               new DropdownButton<String>(
-                hint: Text("choisir le hobby"),
+                hint: Text(AppLocalizations.of(context).translate("roomsCreate_hobbyChoice")),
                 value: this.selectedHobby == null ? null : selectedHobby,
                 items: this.listHobbies.map((Hobby hobby) {
                   return new DropdownMenuItem<String>(
-                    value: hobby.name,
+                    value: hobby.id.toString(),
                     child: new Text(hobby.name),
                   );
                 }).toList(),
@@ -135,9 +152,9 @@ class _RoomsCreateScreenState extends State<RoomsCreateScreen> {
                 },
               ),
               new DropdownButton<String>(
-                hint: Text("Affiché ?"),
+                hint: Text(AppLocalizations.of(context).translate("display")),
                 value: this.selectedDisplayMessage == null ? null : selectedDisplayMessage,
-                items: <String>['OUI', 'NON']
+                items: <String>[AppLocalizations.of(context).translate("yes"), AppLocalizations.of(context).translate("no")]
                     .map<DropdownMenuItem<String>>((String value) {
                   return DropdownMenuItem<String>(
                     value: value,
@@ -145,24 +162,24 @@ class _RoomsCreateScreenState extends State<RoomsCreateScreen> {
                   );
                 }).toList(),
                 onChanged: (_value) {
-                  if(_value == "OUI") {
+                  if(_value == AppLocalizations.of(context).translate("yes")) {
                     setState(() {
                       selectedDisplayBOOL = true;
-                      selectedDisplayMessage = "OUI";
+                      selectedDisplayMessage = AppLocalizations.of(context).translate("yes");
                     });
                   } else {
                     setState(() {
                       selectedDisplayBOOL = false;
-                      selectedDisplayMessage = "NON";
+                      selectedDisplayMessage = AppLocalizations.of(context).translate("no");
                     });
                   }
                   
                 },
               ),
               new DropdownButton<String>(
-                hint: Text("Privé ?"),
+                hint: Text(AppLocalizations.of(context).translate("private")),
                 value: this.selectedPrivateMessage == null ? null : selectedPrivateMessage,
-                items: <String>['OUI', 'NON']
+                items: <String>[AppLocalizations.of(context).translate("yes"), AppLocalizations.of(context).translate("no")]
                     .map<DropdownMenuItem<String>>((String value) {
                   return DropdownMenuItem<String>(
                     value: value,
@@ -170,15 +187,15 @@ class _RoomsCreateScreenState extends State<RoomsCreateScreen> {
                   );
                 }).toList(),
                 onChanged: (_value) {
-                  if(_value == "OUI") {
+                  if(_value == AppLocalizations.of(context).translate("yes")) {
                     setState(() {
                       selectedPrivateBool = true;
-                      selectedPrivateMessage = "OUI";
+                      selectedPrivateMessage = AppLocalizations.of(context).translate("yes");
                     });
                   } else {
                     setState(() {
                       selectedPrivateBool = false;
-                      selectedPrivateMessage = "NON";
+                      selectedPrivateMessage = AppLocalizations.of(context).translate("no");
                     });
                   }
                   
@@ -198,7 +215,7 @@ class _RoomsCreateScreenState extends State<RoomsCreateScreen> {
                 width: screenSize.width,
                 child: new RaisedButton(
                   child: new Text(
-                    'Créer un salon',
+                    AppLocalizations.of(context).translate("add"),
                     style: new TextStyle(
                       color: Colors.white
                     ),
