@@ -4,6 +4,7 @@ import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:visiart/localization/AppLocalization.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart';
 import 'package:visiart/customFormUser/userInterests.dart';
@@ -99,7 +100,7 @@ class _HomeState extends State<HomeScreen> {
       },
       decoration: InputDecoration(
           contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
-          hintText: "Email",
+          hintText: AppLocalizations.of(context).translate("email"),
           border:
               OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))),
     );
@@ -115,7 +116,7 @@ class _HomeState extends State<HomeScreen> {
       },
       decoration: InputDecoration(
           contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
-          hintText: "Mot de passe",
+          hintText: AppLocalizations.of(context).translate("password"),
           border:
               OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))),
     );
@@ -128,7 +129,7 @@ class _HomeState extends State<HomeScreen> {
         onPressed: () {
           _onCLickLoginButton();
         },
-        child: Text("GO !",
+        child: Text(AppLocalizations.of(context).translate('goBtn'),
             textAlign: TextAlign.center,
             style: TextStyle(fontFamily: 'Montserrat', fontSize: 18.0)
                 .copyWith(color: Colors.white, fontWeight: FontWeight.bold)),
@@ -163,7 +164,7 @@ class _HomeState extends State<HomeScreen> {
                       padding: EdgeInsets.only(top: 100),
                       child: Align(
                         alignment: Alignment.center,
-                        child: Text("Mettez de l'ART dans vos vies",
+                        child: Text(AppLocalizations.of(context).translate('home_slogan'),
                             style:
                                 TextStyle(color: Colors.white, fontSize: 20)),
                       ),
@@ -196,7 +197,7 @@ class _HomeState extends State<HomeScreen> {
                 text: TextSpan(
                   children: [
                     TextSpan(
-                      text: 'Pas encore inscrit ? Rejoignez les passionnés !',
+                      text: AppLocalizations.of(context).translate('home_signUpLink'),
                       style: TextStyle(
                           color: Colors.blue, fontStyle: FontStyle.italic),
                       recognizer: TapGestureRecognizer()

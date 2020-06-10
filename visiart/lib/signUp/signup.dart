@@ -10,6 +10,7 @@ import 'package:visiart/config/SharedPref.dart';
 import 'package:visiart/config/config.dart';
 import 'package:visiart/customFormUser/userInterests.dart';
 import 'package:visiart/home.dart';
+import 'package:visiart/localization/AppLocalization.dart';
 import 'package:visiart/utils/AlertUtils.dart';
 import 'package:visiart/utils/FormUtils.dart';
 
@@ -152,7 +153,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
       decoration: InputDecoration(
           icon: Icon(Icons.person),
           contentPadding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
-          hintText: "Nom / Pseudo",
+          hintText: AppLocalizations.of(context).translate("signup_username"),
           border:
           OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))),
     );
@@ -169,7 +170,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
       decoration: InputDecoration(
           icon: Icon(Icons.email),
           contentPadding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
-          hintText: "Email",
+          hintText: AppLocalizations.of(context).translate("email"),
           border:
           OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))),
     );
@@ -186,7 +187,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
       decoration: InputDecoration(
           icon: Icon(Icons.lock),
           contentPadding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
-          hintText: "Mot de passe",
+          hintText: AppLocalizations.of(context).translate('password'),
           border:
           OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))),
     );
@@ -203,7 +204,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
       decoration: InputDecoration(
           icon: Icon(Icons.lock),
           contentPadding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
-          hintText: "Confirmation",
+          hintText: AppLocalizations.of(context).translate('signup_pwdConfirmation'),
           border:
           OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))),
     );
@@ -216,7 +217,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
         onPressed: () {
           _onClickCreateAccountButton();
         },
-        child: Text("GO !",
+        child: Text(AppLocalizations.of(context).translate('goBtn'),
             textAlign: TextAlign.center,
             style: TextStyle(fontFamily: 'Montserrat', fontSize: 18.0)
                 .copyWith(color: Colors.white, fontWeight: FontWeight.bold)),
@@ -240,7 +241,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   Positioned(
                     child: Container(
                       child: Center(
-                        child: Text("Créer un Compte",
+                        child: Text(AppLocalizations.of(context).translate("signup_createAccount"),
                             style:
                             TextStyle(color: Colors.white, fontSize: 30)),
                       ),
@@ -277,7 +278,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 text: TextSpan(
                   children: [
                     TextSpan(
-                      text: 'Ou créer un compte avec :',
+                      text: AppLocalizations.of(context).translate("signup_createAccountAlt"),
                       style: TextStyle(color: Colors.black87),
                       recognizer: TapGestureRecognizer()
                         ..onTap = () {

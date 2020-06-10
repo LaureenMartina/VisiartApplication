@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:progress_button/progress_button.dart';
 import 'package:visiart/config/config.dart' as globals;
+import 'package:visiart/localization/AppLocalization.dart';
 import 'package:visiart/models/ModalAwards.dart';
 
 class UserInterestsScreen extends StatefulWidget {
@@ -19,7 +20,8 @@ class _UserInterestsScreenState extends State<UserInterestsScreen> {
         backgroundColor: Colors.deepOrange[200],
         brightness: Brightness.light,
         elevation: 2,
-        title: Text('Vos Centres d\'intérêts', style: TextStyle(color: Colors.black87),),
+        title: Text(AppLocalizations.of(context).translate('userInterest_userInterest'),
+          style: TextStyle(color: Colors.black87),),
       ),
       body: _bodyScreen(context),
       backgroundColor: Colors.grey[200],
@@ -43,8 +45,21 @@ Widget _bodyScreen(BuildContext context) {
   );
 
   List<String> nameChips = [
-    "Museum", "Exposition", "Cinema", "Painting", "Athletic Event", "Music", "Concert",
-    "Dance", "Modern Art", "Theater", "Drawing", "Design", "Literature", "Spectacle", "Photography",
+    AppLocalizations.of(context).translate("userInterest_museum"),
+    AppLocalizations.of(context).translate("userInterest_exposition"),
+    AppLocalizations.of(context).translate("userInterest_cineam"),
+    AppLocalizations.of(context).translate("userInterest_painting"),
+    AppLocalizations.of(context).translate("userInterest_atheleticEvent"),
+    AppLocalizations.of(context).translate("userInterest_music"),
+    AppLocalizations.of(context).translate("userInterest_gig"),
+    AppLocalizations.of(context).translate("userInterest_dance"),
+    AppLocalizations.of(context).translate("userInterest_modernArt"),
+    AppLocalizations.of(context).translate("userInterest_Theater"),
+    AppLocalizations.of(context).translate("userInterest_drawing"),
+    AppLocalizations.of(context).translate("userInterest_design"),
+    AppLocalizations.of(context).translate("userInterest_literature"),
+    AppLocalizations.of(context).translate("userInterest_show"),
+    AppLocalizations.of(context).translate("userInterest_photo")
   ];
 
   void _setAwardsFirstConnexion() {
@@ -66,7 +81,7 @@ Widget _bodyScreen(BuildContext context) {
           height: 100,
           child: Padding(
             padding: EdgeInsets.only(top: 20.0),
-            child: Text("Dites nous ce que vous aimez",
+            child: Text(AppLocalizations.of(context).translate('userInterest_tellUsWhatYouLike'),
                 style: TextStyle(
                     color: Colors.deepOrange[200],
                     fontSize: 25,
@@ -82,7 +97,7 @@ Widget _bodyScreen(BuildContext context) {
           height: 40,
           child: Padding(
             padding: EdgeInsets.only(left: 15, right: 15),
-            child: Text("Sélectionnez un ou plusieurs domaines qui vous intéressent",
+            child: Text(AppLocalizations.of(context).translate('userInterest_select'),
                 style: TextStyle(color: Colors.black87, fontSize: 14)
             ),
           ),
@@ -118,7 +133,7 @@ Widget _bodyScreen(BuildContext context) {
                 padding: EdgeInsets.only(left: 15, right: 40),
                 child: Align(
                   alignment: Alignment.centerLeft,
-                  child: Text("Etes-vous prêt(e) à vous déplacer ?"),
+                  child: Text(AppLocalizations.of(context).translate('userInterest_move')),
                 ),
               ),
               Container(
@@ -144,7 +159,7 @@ Widget _bodyScreen(BuildContext context) {
         child: Padding(
           padding: EdgeInsets.only(left: 30, right: 30, top: 10),
           child: ProgressButton(
-            child: Text("Enregistrer",
+            child: Text(AppLocalizations.of(context).translate('userInterest_save'),
               style: TextStyle(color: Colors.black87, fontSize: 18),
             ),
             buttonState: ButtonState.normal,
