@@ -7,6 +7,7 @@ const String API_REGISTER = API_BASE_URL + "/auth/local/register";
 const String API_LOGIN = API_BASE_URL + "/auth/local";
 const String API_USERS_ME = API_BASE_URL + "/users/me";
 const String API_USERS = API_BASE_URL + "/users";
+const String API_HOBBIES = API_BASE_URL + "/hobbies";
 
 const API_HEADERS = {
   'Content-Type': 'application/json',

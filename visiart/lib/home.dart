@@ -83,12 +83,13 @@ class _HomeState extends State<HomeScreen> {
         _navigateToDashboard();
       }
     } else {
-      debugPrint("COUCOU: " + "c'est pas 200");
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    _emailController.text = 'cedric@gmail.com';
+    _passwordController.text = 'azerty';
     final emailField = TextFormField(
       style: TextStyle(fontFamily: 'Montserrat', fontSize: 20.0),
       keyboardType: TextInputType.emailAddress,
