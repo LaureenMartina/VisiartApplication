@@ -4,11 +4,11 @@ import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:visiart/dashboard/menu.dart';
 import 'package:visiart/localization/AppLocalization.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart';
 import 'package:visiart/customFormUser/userInterests.dart';
-import 'package:visiart/dashboard/dashboard.dart';
 import 'package:visiart/utils/FormUtils.dart';
 
 import 'config/SharedPref.dart';
@@ -30,10 +30,6 @@ class _HomeState extends State<HomeScreen> {
 
   void _navigateToSignUpScreen() {
     Navigator.pushNamed(context, 'inscription');
-    /*Navigator.pushReplacement(
-      context, MaterialPageRoute(
-            builder: (BuildContext context) => SignUpScreen() )
-    );*/
   }
 
   void _navigateToUserInterestsScreen() {
@@ -43,7 +39,7 @@ class _HomeState extends State<HomeScreen> {
 
   void _navigateToDashboard() {
     Navigator.of(context).pushReplacement(
-      new MaterialPageRoute(builder: (context) => DashboardScreen()));
+      new MaterialPageRoute(builder: (context) => MenuBoardScreen()));
   }
 
   void _onCLickLoginButton() {
@@ -88,8 +84,6 @@ class _HomeState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    _emailController.text = 'cedric@gmail.com';
-    _passwordController.text = 'azerty';
     final emailField = TextFormField(
       style: TextStyle(fontFamily: 'Montserrat', fontSize: 20.0),
       keyboardType: TextInputType.emailAddress,
