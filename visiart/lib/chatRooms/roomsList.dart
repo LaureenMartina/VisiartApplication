@@ -2,11 +2,12 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
-import 'package:visiart/chatRooms/Room.dart';
+import 'package:visiart/models/Room.dart';
 import 'package:visiart/chatRooms/roomChats.dart';
 import 'package:visiart/chatRooms/roomCreate.dart';
 import 'package:visiart/config/SharedPref.dart';
 import 'package:visiart/localization/AppLocalization.dart';
+import 'package:visiart/models/Room_message.dart';
 
 void main() => runApp(new RoomsList());
 
@@ -40,6 +41,7 @@ class _RoomsListPageState extends State<RoomsListPage> {
   List<Room> duplicateItems;
 
   var items = List<Room>();
+  var _userId;
 
   @override
   void initState() {
@@ -47,9 +49,33 @@ class _RoomsListPageState extends State<RoomsListPage> {
     super.initState();
   }
 
+  int sortListRoomForUser(Room a, Room b) {
+    bool isAUserMessage = false;
+    bool isBUserMessage = false;
+    for (var item in a.roomMessages) {
+      if (item.userId == this._userId) {
+        isAUserMessage = true;
+      }
+    }
+    for (var item in b.roomMessages) {
+      if (item.userId == this._userId) {
+        isBUserMessage = true;
+      }
+    }
+    if (isAUserMessage) {
+      return -1;
+    } else if (isBUserMessage) {
+      return 1;
+    } else {
+      return 0;
+    }
+  }
+
   Future<List<Room>> _fetchRooms() async {
     final roomAPIUrl = 'http://91.121.165.149/rooms';
     var _token = await sharedPref.read("token");
+    this._userId = await sharedPref.readInteger("userId");
+    
     final response = await http.get(roomAPIUrl, headers: {
     'Content-Type': 'application/json',
     'Accept': 'application/json',
@@ -60,6 +86,7 @@ class _RoomsListPageState extends State<RoomsListPage> {
     if (response.statusCode == 200) {
         List jsonResponse = json.decode(response.body);
         this.duplicateItems = jsonResponse.map((room) => new Room.fromJson(room)).toList();
+        this.duplicateItems.sort(sortListRoomForUser);
         setState(() {
           items.addAll(duplicateItems);
         });

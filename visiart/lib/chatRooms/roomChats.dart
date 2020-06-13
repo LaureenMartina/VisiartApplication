@@ -4,7 +4,7 @@ import 'dart:ui';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:visiart/chatRooms/Room.dart';
+import 'package:visiart/models/Room.dart';
 import 'package:http/http.dart' as http;
 import 'package:visiart/chatRooms/roomsList.dart';
 import 'package:visiart/localization/AppLocalization.dart';
@@ -76,7 +76,8 @@ class _RoomsChatPageState extends State<RoomsChatPage> {
     }
 
     Future<List<RoomMessage>> _fetchRoomMessages() async {
-      final roomAPIUrl = 'http://91.121.165.149/room-messages'; //Rajouter id
+      //final roomAPIUrl = 'http://91.121.165.149/room-messages'; //Rajouter id
+      final roomAPIUrl = 'http://91.121.165.149/room-messages?room='+this.room.id.toString();
       final response = await http.get(roomAPIUrl, headers: {
           'Content-Type': 'application/json',
           'Accept': 'application/json',
@@ -87,7 +88,10 @@ class _RoomsChatPageState extends State<RoomsChatPage> {
       if (response.statusCode == 200) {
           List jsonResponse = json.decode(response.body);
           var list = jsonResponse.map((roomMessages) => new RoomMessage.fromMainJson(roomMessages)).toList();
-          for (var roomMessage in list) {
+          this.setState(() {
+            this.messageList.addAll(list);
+          });
+          /* for (var roomMessage in list) {
 
             if (roomMessage.roomId == this.room.id) {
               this.setState(() {
@@ -95,7 +99,7 @@ class _RoomsChatPageState extends State<RoomsChatPage> {
               });
             }
           }
-          
+           */
         return list;
       } else {
         throw Exception('Failed to load rooms from API');

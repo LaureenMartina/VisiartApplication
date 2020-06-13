@@ -3,7 +3,7 @@ import 'dart:ui';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:visiart/chatRooms/Room.dart';
+import 'package:visiart/models/Room.dart';
 import 'package:http/http.dart' as http;
 
 class RoomsUpdateScreen extends StatefulWidget { 
