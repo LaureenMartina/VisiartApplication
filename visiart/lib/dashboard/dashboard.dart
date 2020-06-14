@@ -12,19 +12,6 @@ class DashboardScreen extends StatefulWidget {
 class _DashboardScreenState extends State<DashboardScreen> {
   List<String> nameCards = ["Trophées", "Dessins"];
 
-  /*@override
-  void initState() {
-    super.initState();
-    //_triggerAwards();
-  }
-
-  void _triggerAwards() {
-    setState(() {
-      print("Hello popup !!");
-      if(isEnabled) ModalAwards();
-    });
-  }*/
-
   final getNameUser = Align(
     alignment: Alignment.topCenter,
     child: Padding(
@@ -150,7 +137,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   @override
   Widget build(BuildContext context) {
-    //_triggerAwards();
     return Scaffold(
       body: ListView(
         shrinkWrap: true,

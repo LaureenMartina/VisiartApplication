@@ -10,11 +10,11 @@ class MenuBoardScreen extends StatefulWidget {
 }
 
 class _MenuBoardScreenState extends State<MenuBoardScreen> {
-  int _selectedIndex = 0;
+  int _selectedIndex = 1;
 
   final List<Widget> _children = [
-    DashboardScreen(),
     RoomsListPage(),
+    DashboardScreen(),
     EventsListScreen()
   ];
 
@@ -72,7 +72,9 @@ class _MenuBoardScreenState extends State<MenuBoardScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Visiart'),
+        centerTitle: true,
         elevation: 5.0,
+        backgroundColor: Colors.deepPurple[800],
       ),
       drawer: Drawer(
         child: ListView(
@@ -113,15 +115,24 @@ class _MenuBoardScreenState extends State<MenuBoardScreen> {
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            title: Text('Home'),
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.forum),
+            icon: Icon(
+              Icons.forum, 
+              color: Colors.lightBlue,
+            ),
             title: Text('Salons'),
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.local_play),
+            icon: Icon(
+              Icons.home,
+              color: Colors.brown
+            ),
+            title: Text('Home'),
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(
+              Icons.local_play,
+              color: Colors.deepOrange,
+            ),
             title: Text('Events'),
           ),
         ],

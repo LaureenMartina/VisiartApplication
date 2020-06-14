@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
@@ -6,6 +7,7 @@ import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:visiart/config/SharedPref.dart';
 import 'package:visiart/config/config.dart';
 import 'package:http/http.dart' as http;
+import 'package:visiart/events/eventDetails.dart';
 import 'package:visiart/models/Event.dart';
 
 SharedPref sharedPref = SharedPref();
@@ -78,9 +80,10 @@ class _EventListState extends State<EventList> {
 
   Future<List<Event>> _fetchEvents() async {
       var token = await sharedPref.read("token");
+      var userLanguage = window.locale.languageCode;
       
       final response = await http.get(
-        API_EVENT, 
+        API_EVENT_LANG + userLanguage, 
         headers: {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
@@ -112,7 +115,11 @@ class _EventListState extends State<EventList> {
           margin: new EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
           child: ListTile(
             contentPadding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
-            onTap: () => {},
+            onTap: () => {
+              Navigator.of(context).push(
+                MaterialPageRoute(builder: (context) => EventDetails(specificEvent: events[index]))
+              )
+            },
             title: Text('${events[index].title}',
               style: TextStyle(
                 fontSize: 18.0,
