@@ -45,9 +45,9 @@ class _EventDetailsState extends State<EventDetails> {
   Widget build(BuildContext context) {
     //print("eventDetails: ${widget.specificEvent.id}");
     var city = widget.specificEvent.city;
+    var urlSite = widget.specificEvent.urlSite;
 
     return Scaffold(
-      //backgroundColor: Colors.white,
       body: Column(
         children: <Widget>[
           Stack(
@@ -163,7 +163,6 @@ class _EventDetailsState extends State<EventDetails> {
                             ),
                           ),
                           elevation: 5,
-                          //color: Colors.deepOrange[50],
                           shape: RoundedRectangleBorder(
                             borderRadius: new BorderRadius.circular(18.0),
                           ),
@@ -275,29 +274,30 @@ class _EventDetailsState extends State<EventDetails> {
                     ),
                     SizedBox(height: 8,),
                     //url site
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        RaisedButton.icon(
-                          icon: Icon(Icons.visibility),
-                          label: Text(
-                            infoSite,
-                            style: TextStyle(
-                              fontSize: 16
+                    if (urlSite != "")
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          RaisedButton.icon(
+                            icon: Icon(Icons.visibility),
+                            label: Text(
+                              infoSite,
+                              style: TextStyle(
+                                fontSize: 16
+                              ),
                             ),
+                            elevation: 5,
+                            color: Colors.deepOrange[100],
+                            colorBrightness: Brightness.light,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: new BorderRadius.circular(18.0),
+                            ),
+                            onPressed: () => {
+                              _launchedUrlSite("${widget.specificEvent.urlSite}")
+                            }
                           ),
-                          elevation: 5,
-                          color: Colors.deepOrange[100],
-                          colorBrightness: Brightness.light,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: new BorderRadius.circular(18.0),
-                          ),
-                          onPressed: () => {
-                            _launchedUrlSite("${widget.specificEvent.urlSite}")
-                          }
-                        ),
-                      ],
-                    ),
+                        ],
+                      ),
                     SizedBox(height: 35,),
                   ],
                 );
