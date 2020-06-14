@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:ui';
 
+import 'package:flappy_search_bar/flappy_search_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
@@ -25,7 +26,7 @@ class _EventsListScreenState extends State<EventsListScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.blueGrey[900],
+      backgroundColor: Colors.blueGrey[200],
       body: EventList(),
       floatingActionButton: SpeedDial(
         closeManually: true,
@@ -47,14 +48,6 @@ class _EventsListScreenState extends State<EventsListScreen> {
               print("récent");
             }
           ),
-          SpeedDialChild(
-            backgroundColor: Colors.blueAccent[200],
-            child: Icon(Icons.map),
-            label: 'Map',
-            onTap: () {
-              print("récent");
-            }
-          ),
         ],
       ),
     );
@@ -71,6 +64,7 @@ class _EventListState extends State<EventList> {
 
   var events = List<Event>();
   List<Event> futureEvent;
+  TextEditingController editingController = TextEditingController();
 
   @override
   void initState() {
@@ -106,101 +100,72 @@ class _EventListState extends State<EventList> {
 
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-      scrollDirection: Axis.vertical,
-      shrinkWrap: true,
-      itemCount: events.length,
-      itemBuilder: (context, index) {
-        return Card(
-          margin: new EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
-          child: ListTile(
-            contentPadding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
-            onTap: () => {
-              Navigator.of(context).push(
-                MaterialPageRoute(builder: (context) => EventDetails(specificEvent: events[index]))
-              )
+    return Column(
+      children: <Widget>[
+        Padding(
+          padding: EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 5),
+          child: TextField(
+            onChanged: (value) {
+              //search(value);
             },
-            title: Text('${events[index].title}',
-              style: TextStyle(
-                fontSize: 18.0,
-                color: Colors.black,
-                fontWeight: FontWeight.bold,
-              )
-            ),
-            subtitle: Text('${events[index].description}',
-              style: TextStyle(
-                fontSize: 16.0,
+            controller: editingController,
+            decoration: InputDecoration(
+              filled: true,
+              fillColor: Colors.white,
+              //labelText: "Search",
+              hintText: "Search",
+              prefixIcon: Icon(Icons.search),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.all(Radius.circular(25.0)),
               ),
-              maxLines: 3,
-              overflow: TextOverflow.ellipsis,
             ),
-            leading: ConstrainedBox(
-              constraints: BoxConstraints(
-                minWidth: 100,
-                minHeight: 100,
-                maxWidth: 100,
-                maxHeight: 100,
-              ),
-              child: Image.network('${events[index].image}', fit: BoxFit.cover),
-            ),
-            trailing: Icon(Icons.keyboard_arrow_right, size: 50.0, color: Colors.blueGrey[500]),
           ),
-        );
-      },
+        ),
+        Expanded(
+          child: ListView.builder(
+          scrollDirection: Axis.vertical,
+          shrinkWrap: true,
+          itemCount: events.length,
+          itemBuilder: (context, index) {
+            return Card(
+              margin: new EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
+              child: ListTile(
+                contentPadding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
+                onTap: () => {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(builder: (context) => EventDetails(specificEvent: events[index]))
+                  )
+                },
+                title: Text('${events[index].title}',
+                  style: TextStyle(
+                    fontSize: 18.0,
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold,
+                  )
+                ),
+                subtitle: Text('${events[index].description}',
+                  style: TextStyle(
+                    fontSize: 16.0,
+                  ),
+                  maxLines: 3,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                leading: ConstrainedBox(
+                  constraints: BoxConstraints(
+                    minWidth: 100,
+                    minHeight: 100,
+                    maxWidth: 100,
+                    maxHeight: 100,
+                  ),
+                  child: Image.network('${events[index].image}', fit: BoxFit.cover),
+                ),
+                trailing: Icon(Icons.keyboard_arrow_right, size: 50.0, color: Colors.blueGrey[500]),
+              ),
+            );
+          },
+        ),
+        ),
+      ],
     );
-
-    // return CustomScrollView(
-    //   slivers: <Widget>[
-    //     SliverList(
-    //       delegate: SliverChildBuilderDelegate((context, index) {
-    //         return Container(
-    //           alignment: Alignment.center,
-    //           height: 180,
-    //           color: Colors.red[100 * (index % 10)],
-    //           child: Row(
-    //             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-    //             //crossAxisAlignment: CrossAxisAlignment.start,
-    //             children: <Widget>[          
-    //               Expanded(
-    //                 child: Column(
-    //                   crossAxisAlignment: CrossAxisAlignment.start,
-    //                   children: <Widget>[
-    //                     Row(
-    //                       children: <Widget>[
-    //                         Expanded(
-    //                           child: Container(
-    //                             margin: const EdgeInsets.only(top: 12, bottom: 10, left: 12),
-    //                             child: Text("TITLE EVENT $index",
-    //                               style: TextStyle(
-    //                                 fontSize: 18.0,
-    //                                 color: Colors.black,
-    //                                 fontWeight: FontWeight.bold,
-    //                               ),
-    //                             ),
-    //                           ),
-    //                         ),
-    //                       ],
-    //                     ),
-    //                     Container(
-    //                       margin: EdgeInsets.only(right: 10, left: 12),
-    //                       child: Text("Description event : aaaaaaaaaaaaaaaaa",
-    //                         style: TextStyle(
-    //                           fontSize: 16.0,
-    //                         ),
-    //                         maxLines: 3,
-    //                         overflow: TextOverflow.ellipsis,
-    //                       ),
-    //                     ),
-    //                   ],
-    //                 ),
-    //               ),
-    //             ],
-    //           ),
-    //         );
-    //       }, childCount: 10,
-    //       ),
-    //     ),
-    //   ],
-    // );
   }
 }
