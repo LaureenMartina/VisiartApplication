@@ -4,6 +4,7 @@ import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:visiart/dashboard/menu.dart';
 import 'package:visiart/localization/AppLocalization.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart';
@@ -31,10 +32,6 @@ class _HomeState extends State<HomeScreen> {
 
   void _navigateToSignUpScreen() {
     Navigator.pushNamed(context, 'inscription');
-    /*Navigator.pushReplacement(
-      context, MaterialPageRoute(
-            builder: (BuildContext context) => SignUpScreen() )
-    );*/
   }
 
   void _navigateToUserInterestsScreen() {
@@ -44,7 +41,7 @@ class _HomeState extends State<HomeScreen> {
 
   void _navigateToDashboard() {
     Navigator.of(context).pushReplacement(
-      new MaterialPageRoute(builder: (context) => DashboardScreen()));
+      new MaterialPageRoute(builder: (context) => MenuBoardScreen()));
   }
 
   void _onCLickLoginButton() {
@@ -93,7 +90,7 @@ class _HomeState extends State<HomeScreen> {
       showAlert(context, "Error", errorMsg, "Close");
       throw Exception(errorMsg);
     } else {
-      throw Exception('Failed to Log In');
+      //throw Exception('Failed to Log In');
     }
   }
 
