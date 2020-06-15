@@ -7,6 +7,7 @@ const String API_REGISTER = API_BASE_URL + "/auth/local/register";
 const String API_LOGIN = API_BASE_URL + "/auth/local";
 const String API_EVENT = API_BASE_URL + "/events";
 const String API_EVENT_LANG = API_BASE_URL + "/events?_limit=50&language=";
+const String API_EVENT_CAROUSEL = API_BASE_URL + "/events?_limit=20&language=";
 
 const API_HEADERS = {
   'Content-Type': 'application/json',
