@@ -9,6 +9,8 @@ import 'package:visiart/localization/AppLocalization.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart';
 import 'package:visiart/customFormUser/userInterests.dart';
+import 'package:visiart/dashboard/dashboard.dart';
+import 'package:visiart/utils/AlertUtils.dart';
 import 'package:visiart/utils/FormUtils.dart';
 
 import 'config/SharedPref.dart';
@@ -43,6 +45,10 @@ class _HomeState extends State<HomeScreen> {
   }
 
   void _onCLickLoginButton() {
+    if (_emailController.text.isEmpty || _passwordController.text.isEmpty) {
+      showAlert(context, "Warning", "All fields must be filled", "Close");
+      return;
+    }
     _login(_emailController.text, _passwordController.text);
   }
 
@@ -78,7 +84,13 @@ class _HomeState extends State<HomeScreen> {
       } else {
         _navigateToDashboard();
       }
+    } else if (response.statusCode == 400){
+      String errorMsg = jsonResponse['message'][0]['messages'][0]['message'];
+      debugPrint("errormsg: " + errorMsg);
+      showAlert(context, "Error", errorMsg, "Close");
+      throw Exception(errorMsg);
     } else {
+      //throw Exception('Failed to Log In');
     }
   }
 
