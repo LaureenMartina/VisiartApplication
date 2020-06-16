@@ -34,6 +34,10 @@ class _RoomsCreateScreenState extends State<RoomsCreateScreen> {
   var selectedDisplayMessage = "";
   var selectedPrivateBool = false;
   var selectedDisplayBOOL = true;
+
+  var isPrivate = false;
+  var isDisplayed = false;
+
   @override
     void initState() {
       getListHobbies();
@@ -46,8 +50,8 @@ class _RoomsCreateScreenState extends State<RoomsCreateScreen> {
     var userId = await sharedPref.readInteger("userId");
     var data = {
         'name': newRoomName,
-        'display' : selectedDisplayBOOL.toString(),
-        'private' : selectedPrivateBool.toString(),
+        'display' : isDisplayed.toString(),
+        'private' : isPrivate.toString(),
         "hobbies": [{
             "id": this._data.roomThematic
         }], 
@@ -151,7 +155,33 @@ class _RoomsCreateScreenState extends State<RoomsCreateScreen> {
                   });
                 },
               ),
-              new DropdownButton<String>(
+              new Text("Afficher la room ?"),
+              new Switch(
+                
+                value: isDisplayed,
+                onChanged: (value){
+                  setState(() {
+                    isDisplayed=value;
+                  });
+                },
+                activeTrackColor: Colors.lightGreenAccent,
+                activeColor: Colors.green,
+                
+              ),
+              new Text("Room privée ?"),
+              new Switch(
+                
+                value: isPrivate,
+                onChanged: (value){
+                  setState(() {
+                    isPrivate=value;
+                  });
+                },
+                activeTrackColor: Colors.lightGreenAccent,
+                activeColor: Colors.green,
+                
+              ),
+              /* new DropdownButton<String>(
                 hint: Text(AppLocalizations.of(context).translate("display")),
                 value: this.selectedDisplayMessage == null ? null : selectedDisplayMessage,
                 items: <String>[AppLocalizations.of(context).translate("yes"), AppLocalizations.of(context).translate("no")]
@@ -200,7 +230,7 @@ class _RoomsCreateScreenState extends State<RoomsCreateScreen> {
                   }
                   
                 },
-              ),
+              ), */
               /* new TextFormField(
                 keyboardType: TextInputType.text,
                 decoration: new InputDecoration(

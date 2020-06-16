@@ -91,15 +91,6 @@ class _RoomsChatPageState extends State<RoomsChatPage> {
           this.setState(() {
             this.messageList.addAll(list);
           });
-          /* for (var roomMessage in list) {
-
-            if (roomMessage.roomId == this.room.id) {
-              this.setState(() {
-                this.messageList.add(roomMessage);
-              });
-            }
-          }
-           */
         return list;
       } else {
         throw Exception('Failed to load rooms from API');

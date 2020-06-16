@@ -128,33 +128,32 @@ class _RoomsListPageState extends State<RoomsListPage> {
           MaterialPageRoute(builder: (context) => RoomsChatsScreen(room: room)),  
           //MaterialPageRoute(builder: (context) => RoomDetails()),
         ),
-    /* child: new Card(
-      //I am the clickable child
-      child: new Column(
-        children: <Widget>[
-          //new Image.network(video[index]),
-          new BoxDecoration(
-            color: Theme.of(context).buttonColor,
-            borderRadius: BorderRadius.circular(8.0)
-          ),
-          new Padding(padding: new EdgeInsets.all(3.0)),
-          new Text(
-            room.name,
-            style: new TextStyle(
-                fontWeight: FontWeight.bold, color: Colors.black),
-          ),
-        ],
-      ),
-    ), */
-    child: Container(
-        padding: EdgeInsets.all(12.0),
-        margin: EdgeInsets.all(5.0),
-        decoration: BoxDecoration(
-          color: Colors.deepPurple[300],
-          borderRadius: BorderRadius.circular(23.0),
-          
+        child: Container(
+          padding: EdgeInsets.all(12.0),
+          margin: EdgeInsets.all(5.0),
+          child: Container(
+            padding: EdgeInsets.all(12.0),
+            decoration: BoxDecoration(
+              color: Colors.deepPurple[300],
+              borderRadius: BorderRadius.circular(23.0),
+              
+            ),
+            child: room.private? ListTile(
+              leading: Icon(Icons.lock),
+              title: Text(room.name),
+              subtitle: Text("Salon privé"),
+            ): ListTile(
+              leading: Icon(Icons.lock_open),
+              title: Text(room.name),
+              subtitle: Text("Salon publique"),
+            ),
+            /* ListTile(
+              leading: Icon(Icons.lock),
+              title: Text(room.name),
+              subtitle: Text("a subtitle here"),
+            ) */
+            //Text(room.name),
         ),
-        child: Text(room.name),
       ),
   );
 
