@@ -1,7 +1,15 @@
+import 'dart:convert';
 import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart';
+import 'package:visiart/config/SharedPref.dart';
+import 'package:visiart/config/config.dart';
+import 'package:visiart/models/Event.dart';
+
+SharedPref sharedPref = SharedPref();
 
 class DashboardScreen extends StatefulWidget {
 
@@ -10,20 +18,17 @@ class DashboardScreen extends StatefulWidget {
 }
 
 class _DashboardScreenState extends State<DashboardScreen> {
-  List<String> nameCards = ["Trophées", "Dessins"];
+  List<String> nameCards = ["Trophées", "Dessins"]; // TODO Translate
+  
+  var events = List<Event>();
+  List<Event> futureEvent;
+  TextEditingController editingController = TextEditingController();
 
-  /*@override
+  @override
   void initState() {
+    _fetchEvents();
     super.initState();
-    //_triggerAwards();
   }
-
-  void _triggerAwards() {
-    setState(() {
-      print("Hello popup !!");
-      if(isEnabled) ModalAwards();
-    });
-  }*/
 
   final getNameUser = Align(
     alignment: Alignment.topCenter,
@@ -75,40 +80,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
     ),
   );
 
-  final carouselActuality = CarouselSlider(
-    height: 150.0,
-    initialPage: 0,
-    enableInfiniteScroll: true,
-    reverse: false,
-    autoPlay: false,
-    //autoPlayInterval: Duration(minutes: 1),
-    //autoPlayAnimationDuration: Duration(milliseconds: 1000),
-    //autoPlayCurve: Curves.fastOutSlowIn,
-    items: [1,2,3,4,5].map((i) {
-      return Builder(
-        builder: (BuildContext context) {
-          return Container(
-            width: MediaQuery.of(context).size.width,
-            margin: EdgeInsets.symmetric(horizontal: 12.0),
-            decoration: BoxDecoration(
-              color: Colors.amber,
-              borderRadius: new BorderRadius.only(
-                  topLeft: const Radius.circular(30.0),
-                  topRight: const Radius.circular(30.0),
-                  bottomLeft: const Radius.circular(30.0),
-                  bottomRight: const Radius.circular(30.0)
-              ),
-            ),
-            child: Text('text $i',
-              style: TextStyle(fontSize: 16.0,),
-              textAlign: TextAlign.center,
-            ),
-          );
-        },
-      );
-    }).toList(),
-  );
-
   Card _awardsCard() => Card(
     elevation: 50,
     shape: RoundedRectangleBorder(
@@ -147,10 +118,39 @@ class _DashboardScreenState extends State<DashboardScreen> {
     ),
   );
 
+  Future<List<Event>> _fetchEvents() async {
+    var token = await sharedPref.read("token");
+    var userLanguage = window.locale.languageCode;
+    var year = DateFormat.y().format(DateTime.now());
+    var month = DateFormat.M().format(DateTime.now());
+    var dateEvent = year + "-" + month;
+
+    if(month.length < 2) month = "0" + month;
+    
+    final response = await http.get(
+      API_EVENT_CAROUSEL + userLanguage + "&startDate_contains=" + dateEvent,
+      headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Authorization':
+          'Bearer $token',
+      }
+    );
+
+    if (response.statusCode == 200) {
+        List jsonResponse = json.decode(response.body);
+        this.futureEvent = jsonResponse.map( (event) => new Event.fromJson(event) ).toList();
+        setState(() {
+          events.addAll(futureEvent);
+        });
+      return jsonResponse.map( (event) => new Event.fromJson(event) ).toList();
+    } else {
+      throw Exception('Failed to load events from API');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    //_triggerAwards();
     return Scaffold(
       body: ListView(
         shrinkWrap: true,
@@ -160,7 +160,38 @@ class _DashboardScreenState extends State<DashboardScreen> {
           Divider(color: Colors.grey,),
           sliderCalendarActivity,
           SizedBox(height: 20),
-          carouselActuality,
+          CarouselSlider(
+            height: 150.0,
+            initialPage: 0,
+            enableInfiniteScroll: true,
+            reverse: false,
+            autoPlay: false,
+            items: [1,2,3,4,5].map((i) {
+              return Builder(
+                builder: (BuildContext context) {
+                  return Container(
+                    width: MediaQuery.of(context).size.width,
+                    margin: EdgeInsets.symmetric(horizontal: 12.0),
+                    decoration: BoxDecoration(
+                      color: Colors.amber,
+                      borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(30.0),
+                          topRight: Radius.circular(30.0),
+                          bottomLeft: Radius.circular(30.0),
+                          bottomRight: Radius.circular(30.0)
+                      ),
+                    ),
+                    child: Text('text $i',
+                      style: TextStyle(fontSize: 16.0,),
+                      textAlign: TextAlign.center,
+                    ),
+                  );
+                },
+              );
+            }).toList(),
+          ),
+
+
           SizedBox(height: 15),
           Column(
             children: <Widget>[ 
