@@ -1,8 +1,11 @@
 import 'dart:convert';
+import 'dart:typed_data';
 import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:visiart/dashboard/menu.dart';
 import 'package:visiart/localization/AppLocalization.dart';
 import 'package:flutter/services.dart';
@@ -10,7 +13,6 @@ import 'package:http/http.dart';
 import 'package:visiart/customFormUser/userInterests.dart';
 import 'package:visiart/utils/AlertUtils.dart';
 import 'package:visiart/utils/FormUtils.dart';
-
 import 'config/SharedPref.dart';
 import 'config/config.dart';
 
@@ -20,6 +22,9 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeState extends State<HomeScreen> {
+
+  ImageProvider bgHome;
+
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
 
@@ -27,6 +32,17 @@ class _HomeState extends State<HomeScreen> {
   final _passwordFocus = FocusNode();
 
   final SharedPref _sharedPref = SharedPref();
+
+  final _auth = FirebaseAuth.instance;
+  final _googleSignIn = GoogleSignIn();
+
+  @override
+  void didChangeDependencies() async {
+    bgHome = AssetImage("assets/imgs/home.png");
+    await precacheImage(bgHome, context);
+    super.didChangeDependencies();
+  }
+
 
   void _navigateToSignUpScreen() {
     Navigator.pushNamed(context, 'inscription');
@@ -92,6 +108,79 @@ class _HomeState extends State<HomeScreen> {
     }
   }
 
+  Future<String> _signInWithGoogle() async {
+    final GoogleSignInAccount googleSignInAccount = await _googleSignIn.signIn();
+    final GoogleSignInAuthentication googleSignInAuthentication =
+    await googleSignInAccount.authentication;
+
+    final AuthCredential credential = GoogleAuthProvider.getCredential(
+      accessToken: googleSignInAuthentication.accessToken,
+      idToken: googleSignInAuthentication.idToken,
+    );
+
+    final AuthResult authResult = await _auth.signInWithCredential(credential);
+    final FirebaseUser user = authResult.user;
+
+    //assert(user.email != null);
+    assert(!user.isAnonymous);
+    assert(await user.getIdToken() != null);
+
+    final FirebaseUser currentUser = await _auth.currentUser();
+
+    var name = currentUser.displayName;
+    var email = currentUser.email;
+    var password = " "; // TODO empty if connexion is GMAIL
+
+    _createUser(name, name, email, password);
+
+    assert(user.uid == currentUser.uid);
+
+    return 'signInWithGoogle succeeded: $user';
+  }
+  
+  Future<void> _createUser(String newUsername, String newName, String newEmail, String newPassword) async {
+
+    Map data = {
+      'username': newUsername,
+      'name': newName,
+      'email': newEmail,
+      'password': newPassword
+    };
+
+    Response response = await post(
+      API_REGISTER,
+      headers: API_HEADERS,
+      body: json.encode(data),
+    );
+
+    Map<String, dynamic> jsonResponse = json.decode(response.body);
+
+    if (response.statusCode == 200) {
+      debugPrint("API_REGISTER ==> 200");
+      debugPrint(response.toString());
+      int id = jsonResponse['user']['id'];
+      print("id= $id");
+      String name = jsonResponse['user']['name'];
+      String email = jsonResponse['user']['email'];
+      String token = jsonResponse['jwt'];
+
+      _sharedPref.saveInteger("userId", id);
+      _sharedPref.save("name", name);
+      _sharedPref.save("email", email);
+      _sharedPref.save("token", token);
+
+      Navigator.pushNamed(context, 'hobbies');
+
+    } else if (response.statusCode == 400) {
+      String errorMsg = jsonResponse['message'][0]['messages'][0]['message'];
+      debugPrint("errormsg: " + errorMsg);
+      showAlert(context, "Error", errorMsg, "Close");
+      throw Exception(errorMsg);
+    } else {
+      throw Exception('Failed to create user from API');
+    }
+  }
+  
   @override
   Widget build(BuildContext context) {
     
@@ -157,7 +246,7 @@ class _HomeState extends State<HomeScreen> {
           Container(
             decoration: BoxDecoration(
               image: DecorationImage(
-                image: AssetImage('assets/imgs/home.png'),
+                image: AssetImage("assets/imgs/home.png"),
                 fit: BoxFit.cover
               ),
             ),
@@ -272,31 +361,27 @@ class _HomeState extends State<HomeScreen> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: <Widget>[
-                    Container(
-                      width: 200,
-                      decoration: BoxDecoration(
-                        color: Colors.white70,
-                        borderRadius: BorderRadius.circular(30)
-                      ),
-                      child: CircleAvatar(
-                        radius: 25,
-                        backgroundColor: Colors.white10,
-                        child: IconButton(
-                          icon: Image.asset("assets/icons/google.png"),
-                          color: Colors.blue,
-                          iconSize: 50,
-                          tooltip: 'Gmail',
-                          onPressed: () {
-                            /*_signInWithGoogle().whenComplete(() {
-                              Navigator.of(context).push(
-                                MaterialPageRoute(
-                                  builder: (context) {
-                                    return UserInterestsScreen();
-                                  },
-                                ),
-                              );
-                            });*/
-                          },
+                    GestureDetector(
+                      onTap: () {
+                        _signInWithGoogle().whenComplete(() {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) {
+                                return UserInterestsScreen();
+                              },
+                            ),
+                          );
+                        });
+                      },
+                      child: Container(
+                        width: 200,
+                        height: 40,
+                        decoration: BoxDecoration(
+                          color: Colors.white54,
+                          borderRadius: BorderRadius.circular(30),
+                          image: DecorationImage(
+                            image: AssetImage("assets/icons/google.png"),
+                          )
                         ),
                       ),
                     ),
@@ -310,7 +395,7 @@ class _HomeState extends State<HomeScreen> {
                   text: TextSpan(
                     text: AppLocalizations.of(context).translate('home_signUpLink'),
                     style: TextStyle(
-                        color: Colors.white, fontWeight: FontWeight.bold, fontStyle: FontStyle.italic, fontSize: 16, letterSpacing: 1,
+                        color: Colors.black87, fontWeight: FontWeight.bold, fontStyle: FontStyle.italic, fontSize: 16, letterSpacing: 1,
                     ),
                     recognizer: TapGestureRecognizer()
                       ..onTap = () {

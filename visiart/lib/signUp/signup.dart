@@ -1,15 +1,9 @@
 import 'dart:convert';
-
 import 'package:email_validator/email_validator.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import 'package:http/http.dart';
 import 'package:visiart/config/SharedPref.dart';
 import 'package:visiart/config/config.dart';
-import 'package:visiart/customFormUser/userInterests.dart';
-import 'package:visiart/home.dart';
 import 'package:visiart/localization/AppLocalization.dart';
 import 'package:visiart/utils/AlertUtils.dart';
 import 'package:visiart/utils/FormUtils.dart';
@@ -32,10 +26,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
   final _pwdConfFocus = FocusNode();
 
   SharedPref sharedPref = SharedPref();
-  final _auth = FirebaseAuth.instance;
-  final _googleSignIn = GoogleSignIn();
-
-
 
   void _onClickCreateAccountButton() {
     if (_nameController.text.isEmpty ||
@@ -59,44 +49,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
         _passwordController.text);
   }
 
-
-  Future<String> _signInWithGoogle() async {
-    final GoogleSignInAccount googleSignInAccount = await _googleSignIn.signIn();
-    final GoogleSignInAuthentication googleSignInAuthentication =
-    await googleSignInAccount.authentication;
-
-    final AuthCredential credential = GoogleAuthProvider.getCredential(
-      accessToken: googleSignInAuthentication.accessToken,
-      idToken: googleSignInAuthentication.idToken,
-    );
-
-    final AuthResult authResult = await _auth.signInWithCredential(credential);
-    final FirebaseUser user = authResult.user;
-
-    //assert(user.email != null);
-    assert(!user.isAnonymous);
-    assert(await user.getIdToken() != null);
-
-    final FirebaseUser currentUser = await _auth.currentUser();
-
-    var name = currentUser.displayName;
-    var email = currentUser.email;
-    var password = " "; // TODO empty if connexion is GMAIL
-
-    _createUser(name, name, email, password);
-
-    assert(user.uid == currentUser.uid);
-
-    return 'signInWithGoogle succeeded: $user';
-  }
-
-  void _displayIdFromSharedPrefs() async {
-    var _id = await sharedPref.readInteger("userId");
-    print("_id -> $_id");
-  }
-
-  Future<void> _createUser(String newUsername, String newName, String newEmail,
-      String newPassword) async {
+  Future<void> _createUser(String newUsername, String newName, String newEmail, String newPassword) async {
 
     Map data = {
       'username': newUsername,
@@ -272,53 +225,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 ),
               ),
             ),
-            Padding(
-              padding:
-              EdgeInsets.only(left: 20, right: 20, top: 15, bottom: 10),
-              child: RichText(
-                text: TextSpan(
-                  children: [
-                    TextSpan(
-                      text: AppLocalizations.of(context).translate("signup_createAccountAlt"),
-                      style: TextStyle(color: Colors.black87),
-                      recognizer: TapGestureRecognizer()
-                        ..onTap = () {
-                          HomeScreen();
-                        },
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: <Widget>[
-                IconButton(
-                  icon: Image.asset("assets/icons/gmail.png"),
-                  iconSize: 50,
-                  tooltip: 'link to Gmail',
-                  onPressed: () {
-                    _signInWithGoogle().whenComplete(() {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) {
-                            return UserInterestsScreen();
-                          },
-                        ),
-                      );
-                    });
-                  },
-                ),
-                /*IconButton(
-                  icon: Image.asset("assets/icons/fb.png"),
-                  iconSize: 50,
-                  tooltip: 'link to Facebook',
-                  onPressed: () {
-                    _displayIdFromSharedPrefs();
-                  },
-                ),*/
-              ],
-            )
           ],
         ),
       ),
