@@ -142,6 +142,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   @override
   Widget build(BuildContext context) {
+    
     final nameField = TextFormField(
       controller: _nameController,
       textInputAction: TextInputAction.next,
@@ -308,14 +309,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     });
                   },
                 ),
-                IconButton(
+                /*IconButton(
                   icon: Image.asset("assets/icons/fb.png"),
                   iconSize: 50,
                   tooltip: 'link to Facebook',
                   onPressed: () {
                     _displayIdFromSharedPrefs();
                   },
-                ),
+                ),*/
               ],
             )
           ],

@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:ui';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -9,7 +8,6 @@ import 'package:visiart/localization/AppLocalization.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart';
 import 'package:visiart/customFormUser/userInterests.dart';
-import 'package:visiart/dashboard/dashboard.dart';
 import 'package:visiart/utils/AlertUtils.dart';
 import 'package:visiart/utils/FormUtils.dart';
 
@@ -96,6 +94,7 @@ class _HomeState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    
     final emailField = TextFormField(
       style: TextStyle(fontFamily: 'Montserrat', fontSize: 20.0),
       keyboardType: TextInputType.emailAddress,
@@ -106,10 +105,12 @@ class _HomeState extends State<HomeScreen> {
         fieldFocusChange(context, _emailFocus, _passwordFocus);
       },
       decoration: InputDecoration(
-          contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
-          hintText: AppLocalizations.of(context).translate("email"),
-          border:
-              OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))),
+        filled: true,
+        fillColor: Colors.white70,
+        contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
+        hintText: AppLocalizations.of(context).translate("email"),
+        hintStyle: TextStyle(color: Colors.black87),
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))),
     );
 
     final passwordField = TextFormField(
@@ -122,102 +123,205 @@ class _HomeState extends State<HomeScreen> {
         _onCLickLoginButton();
       },
       decoration: InputDecoration(
-          contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
-          hintText: AppLocalizations.of(context).translate("password"),
-          border:
-              OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))),
-    );
-
-    final loginButon = Material(
-      elevation: 5.0,
-      borderRadius: BorderRadius.circular(30.0),
-      color: Color(0xff01A0C7),
-      child: MaterialButton(
-        onPressed: () {
-          _onCLickLoginButton();
-        },
-        child: Text(AppLocalizations.of(context).translate('goBtn'),
-            textAlign: TextAlign.center,
-            style: TextStyle(fontFamily: 'Montserrat', fontSize: 18.0)
-                .copyWith(color: Colors.white, fontWeight: FontWeight.bold)),
+        filled: true,
+        fillColor: Colors.white70,
+        contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
+        hintText: AppLocalizations.of(context).translate("password"),
+        hintStyle: TextStyle(color: Colors.black87),
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))
       ),
     );
 
+    final loginButon = SizedBox(
+      width: double.infinity,
+      child: Material(
+        elevation: 8.0,
+        borderRadius: BorderRadius.circular(30.0),
+        color: Colors.orange[300],
+        child: MaterialButton(
+          onPressed: () {
+            _onCLickLoginButton();
+          },
+          child: Text(AppLocalizations.of(context).translate('goBtn'),
+            textAlign: TextAlign.center,
+            style: TextStyle(fontFamily: 'Montserrat', fontSize: 18.0)
+                .copyWith(color: Colors.white, fontWeight: FontWeight.bold)),
+        ),
+      ));
+
     return Scaffold(
       resizeToAvoidBottomPadding: false,
-      body: Container(
-        child: Column(
-          children: <Widget>[
-            Container(
-              height: 250,
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                    image: AssetImage('assets/imgs/pattern.png'),
-                    fit: BoxFit.fill),
+      body: Stack(
+        children: <Widget>[
+          // background image
+          Container(
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage('assets/imgs/home.png'),
+                fit: BoxFit.cover
               ),
-              child: Stack(
+            ),
+          ),
+          // Header
+          Column(
+            children: <Widget>[
+              // Title
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  Positioned(
+                  Padding(
+                    padding: EdgeInsets.only(top: 60),
                     child: Container(
-                      child: Center(
-                        child: Text("Visiart",
-                            style:
-                                TextStyle(color: Colors.white, fontSize: 60)),
-                      ),
-                    ),
-                  ),
-                  Positioned(
-                    child: Container(
-                      padding: EdgeInsets.only(top: 100),
-                      child: Align(
-                        alignment: Alignment.center,
-                        child: Text(AppLocalizations.of(context).translate('home_slogan'),
-                            style:
-                                TextStyle(color: Colors.white, fontSize: 20)),
+                      child: Text(
+                        "Visiart",
+                        style:
+                          TextStyle(
+                            //fontFamily: 'Montserrat',
+                            color: Colors.black, 
+                            fontSize: 60,
+                            letterSpacing: 2.5,
+                            decoration: TextDecoration.overline,
+                            decorationStyle: TextDecorationStyle.solid,
+                            decorationColor: Colors.black12,
+                            decorationThickness: 2,
+                            shadows: [
+                              Shadow(
+                                color: Colors.red[200],
+                                blurRadius: 5,
+                                offset: Offset(3.5, 0.0),
+                              ),
+                              Shadow(
+                                color: Colors.orange[200],
+                                blurRadius: 5,
+                                offset: Offset(3.5, 0.0),
+                              ),
+                            ],
+                          ),
                       ),
                     ),
                   ),
                 ],
               ),
-            ),
-            Container(
-              color: Colors.white,
-              child: Padding(
-                padding: const EdgeInsets.all(20.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    SizedBox(height: 20.0),
-                    emailField,
-                    SizedBox(height: 20.0),
-                    passwordField,
-                    SizedBox(height: 15.0),
-                    loginButon,
-                  ],
+              // Slogan
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Padding(
+                    padding: EdgeInsets.only(top: 20),
+                    child: Container(
+                      child: Align(
+                        alignment: Alignment.center,
+                          child: Text(AppLocalizations.of(context).translate('home_slogan'),
+                            style:
+                              TextStyle(
+                                color: Colors.black,
+                                fontSize: 22,
+                                fontStyle: FontStyle.italic,
+                                letterSpacing: 2,
+                                shadows: [
+                                  Shadow(
+                                    color: Colors.red[200],
+                                    blurRadius: 5,
+                                    offset: Offset(1, 0.0),
+                                  ),
+                                  Shadow(
+                                    color: Colors.orange[200],
+                                    blurRadius: 5,
+                                    offset: Offset(1, 0.0),
+                                  ),
+                                ],
+                              ),
+                          ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              // Fields Connexion
+              Padding(
+                padding: EdgeInsets.only(top: 70.0, left: 20.0, right: 20.0),
+                child: Container(
+                  //child: Padding(
+                    //padding: EdgeInsets.all(0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        SizedBox(height: 20.0),
+                        emailField,
+                        SizedBox(height: 20.0),
+                        passwordField,
+                        SizedBox(height: 30.0),
+                        loginButon,
+                      ],
+                    ),
+                  //),
                 ),
               ),
-            ),
-            Padding(
-              padding: EdgeInsets.all(20),
-              child: RichText(
-                text: TextSpan(
-                  children: [
-                    TextSpan(
-                      text: AppLocalizations.of(context).translate('home_signUpLink'),
-                      style: TextStyle(
-                          color: Colors.blue, fontStyle: FontStyle.italic),
-                      recognizer: TapGestureRecognizer()
-                        ..onTap = () {
-                          _navigateToSignUpScreen();
-                        },
+              // OU Gmail
+              Padding(
+                padding: EdgeInsets.only(top: 20.0),
+                child: Text("Continuer avec :", 
+                  style: TextStyle(
+                    color: Colors.white, fontWeight: FontWeight.bold , fontStyle: FontStyle.italic, fontSize: 16, letterSpacing: 2,
+                  ),
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.only(top: 15),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: <Widget>[
+                    Container(
+                      width: 200,
+                      decoration: BoxDecoration(
+                        color: Colors.white70,
+                        borderRadius: BorderRadius.circular(30)
+                      ),
+                      child: CircleAvatar(
+                        radius: 25,
+                        backgroundColor: Colors.white10,
+                        child: IconButton(
+                          icon: Image.asset("assets/icons/google.png"),
+                          color: Colors.blue,
+                          iconSize: 50,
+                          tooltip: 'Gmail',
+                          onPressed: () {
+                            /*_signInWithGoogle().whenComplete(() {
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (context) {
+                                    return UserInterestsScreen();
+                                  },
+                                ),
+                              );
+                            });*/
+                          },
+                        ),
+                      ),
                     ),
                   ],
+                )
+              ),
+              // Text new inscription
+              Padding(
+                padding: EdgeInsets.only(top: 30),
+                child: RichText(
+                  text: TextSpan(
+                    text: AppLocalizations.of(context).translate('home_signUpLink'),
+                    style: TextStyle(
+                        color: Colors.white, fontWeight: FontWeight.bold, fontStyle: FontStyle.italic, fontSize: 16, letterSpacing: 1,
+                    ),
+                    recognizer: TapGestureRecognizer()
+                      ..onTap = () {
+                        _navigateToSignUpScreen();
+                      },
+                  ),
                 ),
               ),
-            ),
-          ],
-        ),
+            ],
+          ),
+        ],
       ),
     );
   }
