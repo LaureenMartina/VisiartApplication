@@ -37,8 +37,13 @@ class _HomeState extends State<HomeScreen> {
   final _googleSignIn = GoogleSignIn();
 
   @override
-  void didChangeDependencies() async {
+  void initState() {
+    super.initState();
     bgHome = AssetImage("assets/imgs/home.png");
+  }
+
+  @override
+  void didChangeDependencies() async {
     await precacheImage(bgHome, context);
     super.didChangeDependencies();
   }
