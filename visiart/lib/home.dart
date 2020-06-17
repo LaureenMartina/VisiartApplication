@@ -137,7 +137,7 @@ class _HomeState extends State<HomeScreen> {
 
     return 'signInWithGoogle succeeded: $user';
   }
-  
+
  void _createUser(String newUsername, String newName, String newEmail, String newPassword) async {
 
     Map data = {
@@ -176,10 +176,9 @@ class _HomeState extends State<HomeScreen> {
       throw Exception('Failed to create user from API');
     }
   }
-  
+
   @override
   Widget build(BuildContext context) {
-    
     final emailField = TextFormField(
       style: TextStyle(fontFamily: 'Montserrat', fontSize: 20.0),
       keyboardType: TextInputType.emailAddress,
@@ -262,7 +261,7 @@ class _HomeState extends State<HomeScreen> {
                         style:
                           TextStyle(
                             //fontFamily: 'Montserrat',
-                            color: Colors.black, 
+                            color: Colors.black,
                             fontSize: 60,
                             letterSpacing: 2.5,
                             decoration: TextDecoration.overline,
@@ -346,7 +345,7 @@ class _HomeState extends State<HomeScreen> {
               // OU Gmail
               Padding(
                 padding: EdgeInsets.only(top: 20.0),
-                child: Text("Continuer avec :", 
+                child: Text("Continuer avec :",
                   style: TextStyle(
                     color: Colors.white, fontWeight: FontWeight.bold , fontStyle: FontStyle.italic, fontSize: 16, letterSpacing: 2,
                   ),
