@@ -12,7 +12,7 @@ class Event {
   //final Map<int, int> geoJson;
   final String startDate;
   final String endDate;
-  final String postalcode;
+  final int postalcode;
   final String location;
   final String urlSite;
   final String labelSite;
