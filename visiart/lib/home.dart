@@ -83,12 +83,7 @@ class _HomeState extends State<HomeScreen> {
     Map<String, dynamic> jsonResponse = json.decode(response.body);
 
     if (response.statusCode == 200) {
-      debugPrint("200");
-      //print("res -> $jsonResponse");
-      //print('token: ${jsonResponse['jwt']}');
-      //print('userId: ${jsonResponse['user']['id']}');
       int id = jsonResponse['user']['id'];
-      print("id= $id");
       String username = jsonResponse['user']['username'];
       String email = jsonResponse['user']['email'];
       String token = jsonResponse['jwt'];
@@ -105,7 +100,7 @@ class _HomeState extends State<HomeScreen> {
       }
     } else if (response.statusCode == 400){
       String errorMsg = jsonResponse['message'][0]['messages'][0]['message'];
-      debugPrint("errormsg: " + errorMsg);
+      //debugPrint("errormsg: " + errorMsg);
       showAlert(context, "Error", errorMsg, "Close");
       throw Exception(errorMsg);
     } else {
