@@ -18,7 +18,7 @@ class EventDetails extends StatefulWidget {
 class _EventDetailsState extends State<EventDetails> {
 
   var infoSite = "Plus d'informations sur le site officiel";
-  var infoGeoloc = "Où ?";
+  //var infoGeoloc = "";
   var favorite = false;
   var specificEvent = List<Event>();
 
@@ -90,7 +90,7 @@ class _EventDetailsState extends State<EventDetails> {
                     // Favorite Btn
                     CircleAvatar(
                       radius: 26,
-                      backgroundColor: Colors.red[50], 
+                      backgroundColor: Colors.white70, 
                       child: IconButton(
                         icon: (favorite ? Icon(Icons.favorite) : Icon(Icons.favorite_border)),
                         color: Colors.red[500],
@@ -107,6 +107,7 @@ class _EventDetailsState extends State<EventDetails> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
+                    //Title
                     Flexible( 
                       flex: 0,
                       child: Container(
@@ -154,23 +155,32 @@ class _EventDetailsState extends State<EventDetails> {
                                 fontSize: 18,
                               ),
                             ),
-                        SizedBox(width: 200,),
-                        RaisedButton.icon(
-                          icon: Icon(Icons.room),
-                          label: Text(infoGeoloc,
-                            style: TextStyle(
-                              fontSize: 16
-                            ),
-                          ),
-                          elevation: 5,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: new BorderRadius.circular(18.0),
-                          ),
-                          onPressed: () => {}
-                        ),
+                        //SizedBox(width: 200,),
                       ],
-                    ),
+                    ), 
                   ],
+                ),
+              ),
+              // btn Géolocalisation
+              Positioned(
+                top: 250,
+                left: 350,
+                child: Material(
+                  color: Colors.transparent,
+                  child: Center(
+                    child: Ink(
+                      decoration: const ShapeDecoration(
+                        color: Colors.white70,
+                        shape: CircleBorder(),
+                      ),
+                      child: IconButton(
+                        iconSize: 35,
+                        icon: Icon(Icons.room),
+                        color: Colors.green[900],
+                        onPressed: () {},
+                      ),
+                    ),
+                  ),
                 ),
               ),
             ],
