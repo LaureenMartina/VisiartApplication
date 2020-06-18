@@ -161,10 +161,7 @@ class _HomeState extends State<HomeScreen> {
     Map<String, dynamic> jsonResponse = json.decode(response.body);
 
     if (response.statusCode == 200) {
-      debugPrint("API_REGISTER ==> 200");
-      debugPrint(response.toString());
       int id = jsonResponse['user']['id'];
-      print("id= $id");
       String name = jsonResponse['user']['name'];
       String email = jsonResponse['user']['email'];
       String token = jsonResponse['jwt'];
@@ -178,7 +175,6 @@ class _HomeState extends State<HomeScreen> {
 
     } else if (response.statusCode == 400) {
       String errorMsg = jsonResponse['message'][0]['messages'][0]['message'];
-      debugPrint("errormsg: " + errorMsg);
       showAlert(context, "Error", errorMsg, "Close");
       throw Exception(errorMsg);
     } else {
