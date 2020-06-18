@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:visiart/chatRooms/roomsList.dart';
+import 'package:visiart/config/SharedPref.dart';
 import 'package:visiart/dashboard/dashboard.dart';
 import 'package:visiart/events/eventsList.dart';
 import 'package:visiart/localization/AppLocalization.dart';
@@ -13,6 +14,9 @@ class MenuBoardScreen extends StatefulWidget {
 
 class _MenuBoardScreenState extends State<MenuBoardScreen> {
   int _selectedIndex = 1;
+  String _username = "";
+  String _mail = "";
+  String _pictureText = "";
 
   final List<Widget> _children = [
     RoomsListPage(),
@@ -72,6 +76,22 @@ class _MenuBoardScreenState extends State<MenuBoardScreen> {
     onTap: () {  },
   );
 
+  void _setupInfo() async {
+    _username = await SharedPref().read("name");
+    _mail = await SharedPref().read("email");
+    if (_username.length >= 2){
+      _pictureText = _username.substring(0, 2);
+    } else {
+      _pictureText = _username.substring(0, 1);
+    }
+    setState(() {});
+  }
+  
+  @override
+  void initState() {
+    _setupInfo();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -86,16 +106,16 @@ class _MenuBoardScreenState extends State<MenuBoardScreen> {
         child: ListView(
           children: <Widget>[
             UserAccountsDrawerHeader(
-              accountName: Text('Exemple Machin',
+              accountName: Text(_username,
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: Colors.white, letterSpacing: 2),
               ),
-              accountEmail: Text('exemple.machin@gmail.com',
+              accountEmail: Text(_mail,
                 style: TextStyle(fontSize: 12, color: Colors.cyanAccent[100]),
               ),
               currentAccountPicture: CircleAvatar(
                 backgroundColor: Colors.white,
                 foregroundColor: Colors.indigo[900],
-                child: Text("EM"),
+                child: Text(_pictureText),
               ),
               decoration: BoxDecoration(
                 image: DecorationImage(
