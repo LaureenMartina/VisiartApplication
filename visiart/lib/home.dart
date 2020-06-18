@@ -143,7 +143,7 @@ class _HomeState extends State<HomeScreen> {
     return 'signInWithGoogle succeeded: $user';
   }
   
-  Future<void> _createUser(String newUsername, String newName, String newEmail, String newPassword) async {
+ void _createUser(String newUsername, String newName, String newEmail, String newPassword) async {
 
     Map data = {
       'username': newUsername,
