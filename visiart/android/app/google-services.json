@@ -10,7 +10,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:649227774986:android:6db4895846b5ea5bb703f3",
         "android_client_info": {
-          "package_name": "com.example.visiart"
+          "package_name": "com.visiart"
         }
       },
       "oauth_client": [
@@ -18,7 +18,7 @@
           "client_id": "649227774986-aulf2hkukro5r888d3b92m2aed5ndptf.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.example.visiart",
+            "package_name": "com.visiart",
             "certificate_hash": "cfc1ff34ec9ce680fd436d4c868f21c620a20807"
           }
         },
