@@ -49,7 +49,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
         _passwordController.text);
   }
 
-  Future<void> _createUser(String newUsername, String newName, String newEmail, String newPassword) async {
+  void _createUser(String newUsername, String newName, String newEmail, String newPassword) async {
 
     Map data = {
       'username': newUsername,
