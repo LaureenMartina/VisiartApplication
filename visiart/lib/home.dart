@@ -139,7 +139,12 @@ class _HomeState extends State<HomeScreen> {
     var email = currentUser.email;
     var password = " "; // TODO empty if connexion is GMAIL
 
-    _createUser(name, name, email, password);
+    if (email == null) {
+      _createUser(name, name, email, password);
+    } else {
+      _login(email, password);
+    }
+
 
     assert(user.uid == currentUser.uid);
 
