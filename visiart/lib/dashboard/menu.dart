@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:visiart/chatRooms/roomsList.dart';
+import 'package:visiart/config/SharedPref.dart';
 import 'package:visiart/dashboard/dashboard.dart';
 import 'package:visiart/events/eventsList.dart';
 import 'package:visiart/localization/AppLocalization.dart';
@@ -13,6 +14,7 @@ class MenuBoardScreen extends StatefulWidget {
 
 class _MenuBoardScreenState extends State<MenuBoardScreen> {
   int _selectedIndex = 1;
+  SharedPref _sharedPref = SharedPref();
 
   final List<Widget> _children = [
     RoomsListPage(),
@@ -22,6 +24,10 @@ class _MenuBoardScreenState extends State<MenuBoardScreen> {
 
   void _navigateToAccount() {
     Navigator.pushNamed(context, 'account');
+  }
+
+  void _navigateToLogin() {
+    Navigator.pushNamed(context, 'connexion');
   }
 
   ListTile _account() => ListTile(
@@ -69,7 +75,10 @@ class _MenuBoardScreenState extends State<MenuBoardScreen> {
       ),
     ),
     leading: Icon(Icons.launch, size: 40, color: Colors.brown[900],),
-    onTap: () {  },
+    onTap: () {  
+      _sharedPref.remove("token");
+      _navigateToLogin();
+    },
   );
 
 

@@ -38,6 +38,7 @@ class _HomeState extends State<HomeScreen> {
 
   @override
   void initState() {
+    _checkIfAlreadyLogged();
     super.initState();
     bgHome = AssetImage("assets/imgs/home.png");
   }
@@ -48,6 +49,13 @@ class _HomeState extends State<HomeScreen> {
     super.didChangeDependencies();
   }
 
+  void _checkIfAlreadyLogged() {
+    _sharedPref.read("token").then((token) => {
+      if (token != null) {
+        _navigateToDashboard()
+      }
+    });
+  }
 
   void _navigateToSignUpScreen() {
     Navigator.pushNamed(context, 'inscription');
