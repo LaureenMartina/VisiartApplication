@@ -102,6 +102,7 @@ class _HomeState extends State<HomeScreen> {
       _sharedPref.save("token", token);
       List<dynamic> hobbies = jsonResponse['user']['hobbies'];
       if (hobbies.isEmpty) {
+        //_sharedPref.saveBool("curiousBadgeEnabled", true);
         _navigateToUserInterestsScreen();
       } else {
         _navigateToDashboard();
@@ -403,7 +404,7 @@ class _HomeState extends State<HomeScreen> {
                   text: TextSpan(
                     text: AppLocalizations.of(context).translate('home_signUpLink'),
                     style: TextStyle(
-                        color: Colors.black87, fontWeight: FontWeight.bold, fontStyle: FontStyle.italic, fontSize: 16, letterSpacing: 1,
+                        color: Colors.black87, fontWeight: FontWeight.bold, fontStyle: FontStyle.italic, fontSize: 14, letterSpacing: 1,
                     ),
                     recognizer: TapGestureRecognizer()
                       ..onTap = () {

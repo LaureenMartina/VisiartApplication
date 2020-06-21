@@ -1,10 +1,12 @@
 import 'dart:convert';
 import 'package:email_validator/email_validator.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:visiart/config/SharedPref.dart';
 import 'package:visiart/config/config.dart';
 import 'package:visiart/localization/AppLocalization.dart';
+import 'package:visiart/signUp/privacyPolicy.dart';
 import 'package:visiart/utils/AlertUtils.dart';
 import 'package:visiart/utils/FormUtils.dart';
 
@@ -15,6 +17,8 @@ class SignUpScreen extends StatefulWidget {
 }
 
 class _SignUpScreenState extends State<SignUpScreen> {
+  bool valueCheckbox = false;
+
   final _nameController = TextEditingController();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
@@ -93,6 +97,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
     }
   }
 
+  void _navigateToRGPD() { //Replacement
+    Navigator.of(context).push(
+        new MaterialPageRoute(builder: (context) => PrivacyPolicy()));
+  }
+  
   @override
   Widget build(BuildContext context) {
     
@@ -219,6 +228,32 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     passwordField,
                     SizedBox(height: 20.0),
                     passwordConfirmationField,
+                    SizedBox(height: 15.0),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Checkbox(
+                          value: valueCheckbox,
+                          onChanged: (bool value) {
+                            setState(() {
+                                valueCheckbox = value;
+                            });
+                          },
+                        ),
+                        RichText(
+                          text: TextSpan(
+                            text: "Politique de Confidentialité",//AppLocalizations.of(context).translate('home_signUpLink'),
+                            style: TextStyle(
+                                color: Colors.blue[800], fontWeight: FontWeight.w600, fontStyle: FontStyle.italic, fontSize: 14, letterSpacing: 1,
+                            ),
+                            recognizer: TapGestureRecognizer()
+                              ..onTap = () {
+                                _navigateToRGPD();
+                              },
+                          ),
+                        ),
+                      ],
+                    ),
                     SizedBox(height: 15.0),
                     createAccountButon,
                   ],

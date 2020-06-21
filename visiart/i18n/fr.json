@@ -14,6 +14,18 @@
   "signup_pwdConfirmation": "Confirmation",
   "signup_createAccountAlt": "Ou créer un compte avec :",
 
+  "rgpd_title": "Politique de Confidentialité",
+  "rgpd_aboutUsTitle": "Qui sommes-nous ?",
+  "rgpd_personnalDataTitle": "Utilisation des données personnelles collectées",
+  "rgpd_personnalDataTransmitionTitle": "Transmission de vos données personnelles",
+  "rgpd_persistanceDataTitle": "Persistance de vos données",
+  "rgpd_marketingOperationTitle": "Opération Marketing ou Commerciales",
+  "rgpd_aboutUs": "Nous sommes actuellement des étudiants de 5ème année à l'ESGI",
+  "rgpd_personnalData": "Lors de l'inscription à l'application Visiart, les informations portées sur le formulaire tels que le pseudo, le mail et le mot de passe sont obligatoires. Ces informations font l’objet d’un traitement informatisé destiné à alimenter votre espace utilisateur. Ces informations sont visibles par vous-même ainsi que par les gestionnaires de l'application. Depuis la loi 'informatique et libertés' du 6 janvier 1978 modifiée, vous bénéficiez d’un droit d’accès et de rectification aux informations qui vous concernent. Si vous souhaitez exercer ce droit et obtenir communication des informations vous concernant, veuillez vous adresser à teamDevEsgi@gmail.com",
+  "rgpd_personnalDataTransmition": "Lors d'un commentaire effectué dans l'espace de discussion, vos informations sont susceptibles d'être vérifiées par un service de détection de propos indésirables. Par ailleurs, afin d'améliorer au mieux notre application, Google Analytics collecte certaines de vos données (données non personnelles)",
+  "rgpd_persistanceData": "Lors d'une désinstallation complète de l'application, certaines de vos données obtenues durant l'utilisation de l'application peuvent être perdues",
+  "rgpd_marketingOperation": "Aucunes opérations de marketing ou actions commerciales effectuées",
+
   "menu_myAccount": "Mon Compte",
   "menu_storedData": "Vos données enregistrées",
   "menu_about": "À Propos",

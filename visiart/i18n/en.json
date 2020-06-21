@@ -14,6 +14,18 @@
   "signup_pwdConfirmation": "Confirm",
   "signup_createAccountAlt": "Or create an account with :",
 
+  "rgpd_title": "Privacy Policy",
+  "rgpd_aboutUsTitle": "Who are we?",
+  "rgpd_personnalDataTitle": "Use of personal data collected",
+  "rgpd_personnalDataTransmitionTitle": "Transmission of your personal data",
+  "rgpd_persistanceDataTitle": "Persistence of your data",
+  "rgpd_marketingOperationTitle": "Marketing or Commercial Operations",
+  "rgpd_aboutUs": "We are currently 5th year students at ESGI",
+  "rgpd_personnalData": "When registering for the Visiart application, the information on the form such as username, e-mail address and password are mandatory. This information is subject to computerized processing intended to feed your user space. This information is visible to you as well as to the application managers. Since the law 'informatique et libertés' of January 6th 1978 modified, you have the right to access and rectify any information concerning you. If you wish to exercise this right and obtain information about you, please contact teamDevEsgi@gmail.com",
+  "rgpd_personnalDataTransmition": "When you make a comment in the chat room, your information may be checked by a spam detection service. In addition, in order to improve our application, Google Analytics collects some of your data (non-personal data)",
+  "rgpd_persistanceData": "During a complete uninstallation of the application, some of your data obtained during the use of the application may be lost",
+  "rgpd_marketingOperation": "No marketing operations or commercial actions carried out",
+
   "menu_myAccount": "My Account",
   "menu_storedData": "Your saved data",
   "menu_about": "About",
