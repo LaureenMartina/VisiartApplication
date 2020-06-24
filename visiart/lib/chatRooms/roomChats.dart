@@ -62,19 +62,13 @@ class _RoomsChatPageState extends State<RoomsChatPage> {
 
     @override
     void initState() {
-        
-          sharedPref.readInteger("userId").then((value) => {
-            setState(() {
-                this._userid = value;
-            })
-          });
-          this._fetchRoomMessages();
-        /* setState(() {
-          this.messageList.addAll(this.room.roomMessages);
-        }); */
-        //this._fetchRoomMessages();
-
-        super.initState();
+      sharedPref.readInteger("userId").then((value) => {
+        setState(() {
+            this._userid = value;
+        })
+      });
+      this._fetchRoomMessages();
+      super.initState();
     }
 
     Future<List<RoomMessage>> _fetchRoomMessages() async {

@@ -203,7 +203,7 @@ class _RoomsListPageState extends State<RoomsListPage>  with SingleTickerProvide
         context,
         MaterialPageRoute(builder: (context) => RoomsChatsScreen(room: room)),
       ),
-      //Navigator.pushNamed(context, routeName)
+      //Navigator.pushNamed(context, "room_chats", arguments: RoomsChatsScreen(room: room)),
     child: Container(
       padding: EdgeInsets.all(12.0),
       margin: EdgeInsets.all(5.0),

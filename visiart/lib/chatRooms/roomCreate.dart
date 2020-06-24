@@ -54,9 +54,7 @@ class _RoomsCreateScreenState extends State<RoomsCreateScreen> {
         "hobbies": [{
             "id": this._data.roomThematic
         }], 
-        "users": [{
-            "id": userId
-        }], 
+        "user": userId, 
     };
     final response = await http.post(
         'http://91.121.165.149/rooms',
