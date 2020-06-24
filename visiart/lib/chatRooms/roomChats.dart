@@ -4,6 +4,7 @@ import 'dart:ui';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:visiart/chatRooms/roomUpdate.dart';
 import 'package:visiart/models/Room.dart';
 import 'package:http/http.dart' as http;
 import 'package:visiart/chatRooms/roomsList.dart';
@@ -12,6 +13,7 @@ import 'package:visiart/models/Room_message.dart';
 import 'package:flutter/foundation.dart';
 import 'package:visiart/config/SharedPref.dart';
 import 'package:visiart/models/User.dart';
+import 'package:visiart/config/config.dart' as globals;
 
 SharedPref sharedPref = SharedPref();
 
@@ -45,7 +47,7 @@ class RoomsChatPage extends StatefulWidget {
 class _RoomsChatPageState extends State<RoomsChatPage> {
     Room room;
     var _userid;
-    //var roomId;
+    var _userAdded;
 
     _RoomsChatPageState(Room room) {
       this.room = room;
@@ -77,12 +79,13 @@ class _RoomsChatPageState extends State<RoomsChatPage> {
 
     Future<List<RoomMessage>> _fetchRoomMessages() async {
       //final roomAPIUrl = 'http://91.121.165.149/room-messages'; //Rajouter id
-      final roomAPIUrl = 'http://91.121.165.149/room-messages?room='+this.room.id.toString();
+      final roomAPIUrl = globals.API_BASE_URL+'/room-messages?room='+this.room.id.toString();
+      var token = await sharedPref.read("token");
       final response = await http.get(roomAPIUrl, headers: {
           'Content-Type': 'application/json',
           'Accept': 'application/json',
           'Authorization':
-          'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNTkxMTE5MTcwLCJleHAiOjE1OTM3MTExNzB9.f1tCL0PmSCdsU9whCbf_26CRlMa1VTa3urwO7GOdyk8',
+          'Bearer $token',
       });
 
       if (response.statusCode == 200) {
@@ -98,34 +101,48 @@ class _RoomsChatPageState extends State<RoomsChatPage> {
   }
 
     //RoomsChatsScreen createState() => RoomsChatsScreen(room: room);
-    void deleteRoom(roomId) {
+    void deleteRoom(roomId) async {
+      var token = await sharedPref.read("token");
       http.put(
-            'http://91.121.165.149/rooms/'+roomId,
+            globals.API_BASE_URL+'/rooms/'+roomId,
             headers: {
                 'Content-Type': 'application/json',
                 'Accept': 'application/json',
-                'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNTg3ODk5MjY5LCJleHAiOjE1OTA0OTEyNjl9.vKilU-EeAiD3jlqyTV6H4WCNc9BMjjEmFDWyKH9wJh4',
+                'Authorization': 'Bearer $token',
         },
-        body: {
+        body: jsonEncode(<String, bool>{
             'display' : false
-        }
+        }),
       );
     }
 
     void disableRoom(roomId) async {
-      var _token = await sharedPref.read("token");
-        http.put(
-            'http://91.121.165.149/rooms/'+roomId,
-            headers: {
-                'Content-Type': 'application/json',
-                'Accept': 'application/json',
-                'Authorization': 'Bearer $_token',
-            },
-            body: {
-                'enable' : false
-            }
-        );
+      var token = await sharedPref.read("token"); 
+      http.put(
+        globals.API_BASE_URL+'/rooms/'+roomId.toString(),
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'Authorization': 'Bearer $token',
+        },
+        body: jsonEncode(<String, bool>{
+            'enable' : false
+        }),
+      );
 
+    }
+
+    void _addUserToPrivateRoom() async {
+      //Need route get userid by username
+      /* http.post(
+        'http://91.121.165.149/room-messages',
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'Authorization': 'Bearer $_token',
+        },
+        body: json.encode(data)
+      ); */
     }
 
     void addNewMessage() async {
@@ -134,7 +151,7 @@ class _RoomsChatPageState extends State<RoomsChatPage> {
 
             this._userid = await sharedPref.readInteger("userId");
 
-            var _token = await sharedPref.read("token");
+            var token = await sharedPref.read("token");
             RoomMessage newMessage = RoomMessage(
                 content: textEditingController.text.trim(),
                 userId: _userid
@@ -149,11 +166,11 @@ class _RoomsChatPageState extends State<RoomsChatPage> {
                 }, 
             };
             final response = await http.post(
-                'http://91.121.165.149/room-messages',
+                globals.API_BASE_URL+'/room-messages',
                 headers: {
                     'Content-Type': 'application/json',
                     'Accept': 'application/json',
-                    'Authorization': 'Bearer $_token',
+                    'Authorization': 'Bearer $token',
                 },
                 body: json.encode(data)
             );
@@ -176,19 +193,21 @@ class _RoomsChatPageState extends State<RoomsChatPage> {
         showDialog(
             context: context,
             child: new AlertDialog(
-                title: Text(AppLocalizations.of(context).translate("roomsChats_addFriend")),
+                title: Text('Ajout d\'un amie'),
                 content: TextFormField(
-                keyboardType: TextInputType.text,
-                decoration: new InputDecoration(
+                  keyboardType: TextInputType.text,
+                  decoration: new InputDecoration(
                   hintText: 'name',
                   //labelText: 'Nom du salon'
+                  ),
+                  onChanged: (value) => this._userAdded,
                 ),
-              ),
               actions: [
                 new FlatButton(
-                  child: Text(AppLocalizations.of(context).translate("validate")),
+                  child: Text('Valider'),
                   onPressed: () => {
                       //Faire la requête serverside
+                      _addUserToPrivateRoom(),
                       Navigator.of(context, rootNavigator: true).pop(context)
                       //Navigator.pop(context)
                     },
@@ -199,41 +218,60 @@ class _RoomsChatPageState extends State<RoomsChatPage> {
     }
 
     AppBar buildAppBar(context) {
-        return AppBar(
-            title: Text(this.room.name),
-            actions: <Widget>[
-                // action button
-                IconButton(
-                    icon: Icon(Icons.add),
-                    onPressed: () {
-                        showAddMembersModal(room.id, context);
-                    },
-                ),
-                IconButton(
-                    icon: Icon(Icons.lock),
-                    onPressed: () {
+        if(this._userid == this.room.userId) {
+          return AppBar(
+              title: Text(this.room.name),
+              actions: <Widget>[
+                  // action button
+                  IconButton(
+                      icon: Icon(Icons.add),
+                      onPressed: () {
+                          this.room.private ? showAddMembersModal(room.id, context): null;
+                      },
+                  ),
+                  IconButton(
+                      icon: Icon(Icons.mode_edit),
+                      onPressed: () {
+                          Navigator.push(context, 
+                              MaterialPageRoute(builder: (context) => RoomsUpdateScreen(room: this.room)),
+                          );
+                      },
+                  ),
+                  IconButton(
+                      icon: Icon(Icons.close),
+                      onPressed: () {
                         disableRoom(room.id);
                         Navigator.push(context, 
                             MaterialPageRoute(builder: (context) => RoomsListPage()),
                         );
-                    },
-                ),
-                IconButton(
-                    icon: Icon(Icons.delete),
-                    onPressed: () {
-                        deleteRoom(room.id);
-                        Navigator.push(context, 
-                            MaterialPageRoute(builder: (context) => RoomsListPage()),
-                        );
-                    },
-                ),
-            ],
-        );
+                        //Navigator.pushNamed(context, 'rooms');
+                      },
+                  ),
+                  IconButton(
+                      icon: Icon(Icons.delete),
+                      onPressed: () {
+                          deleteRoom(room.id);
+                          Navigator.push(context, 
+                              MaterialPageRoute(builder: (context) => RoomsListPage()),
+                          );
+                      },
+                  ),
+              ],
+          );
+        } else {
+          return AppBar(
+              title: Text(this.room.name),
+          );
+        }
+        
     }
                         
                         
                               
     Widget buildMessageTextField() {
+      if (this.room.enabled != null && !this.room.enabled) {
+        return Container();
+      }
         return Container(    
             child: Container(
             height: 50.0,      

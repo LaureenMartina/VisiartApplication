@@ -3,64 +3,67 @@ import 'dart:ui';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:visiart/chatRooms/roomChats.dart';
+import 'package:visiart/chatRooms/roomsList.dart';
+import 'package:visiart/config/SharedPref.dart';
+import 'package:visiart/localization/AppLocalization.dart';
 import 'package:visiart/models/Room.dart';
 import 'package:http/http.dart' as http;
+import 'package:visiart/config/config.dart' as globals;
 
+
+
+SharedPref sharedPref = SharedPref();
 class RoomsUpdateScreen extends StatefulWidget { 
+  RoomsUpdateScreen({Key key, this.room}) : super(key: key);
+  final Room room;
   @override
-  _RoomsUpdateScreenState createState() => _RoomsUpdateScreenState();
+  _RoomsUpdateScreenState createState() => _RoomsUpdateScreenState(room);
 }
 
-
-class _RoomsUpdateData {
+/* class _RoomsUpdateData {
   String roomName = '';
-  String roomThematic = '';
   Room roomToUpdate;
-}
+} */
 class _RoomsUpdateScreenState extends State<RoomsUpdateScreen> {
-
-   
+  Room room;
+  String newRoomName;
   final GlobalKey<FormState> _formKey = new GlobalKey<FormState>();
-  _RoomsUpdateData _data = new _RoomsUpdateData();
+  //_RoomsUpdateData _data = new _RoomsUpdateData();
+   _RoomsUpdateScreenState(Room room) {
+      this.room = room;
+    }
 
-  Future<http.Response> updateRoom(String newRoomName, String newRoomThematic) {
-    return http.post(
-        'http://91.121.165.149/rooms',
+  Future<http.Response> updateRoom(String newRoomName) async{
+    var token = await sharedPref.read("token");
+    return http.put(
+        globals.API_BASE_URL+'/rooms/'+this.room.id.toString(),
         headers: {
             'Content-Type': 'application/json',
             'Accept': 'application/json',
-            'Authorization': 'Bearer token',
+            'Authorization': 'Bearer $token',
         },
         body: jsonEncode(<String, String>{
             'name': newRoomName,
         }),
     );
   }
-
-  Room getRoom(){
-    return _RoomsUpdateData().roomToUpdate;
-  }
-
   void submit() {
     // First validate form.
     if (this._formKey.currentState.validate()) {
         _formKey.currentState.save(); // Save our form now.
-
-        
-        //print('Printing the data.');
-        //print('roomName: ${_data.roomName}');
-        //print('roomThematic: ${_data.roomThematic}');
-
-        this.updateRoom(_data.roomName, _data.roomThematic);
+        this.updateRoom(this.newRoomName);
     }
   }
   @override
   Widget build(BuildContext context) {
     final Size screenSize = MediaQuery.of(context).size;
-
+    
     return new Scaffold(
       appBar: new AppBar(
-        title: new Text('Ajout d\'un salon'),
+        title: new Text(
+          this.room.name
+        ),
       ),
       body: new Container(
         padding: new EdgeInsets.all(20.0),
@@ -70,36 +73,24 @@ class _RoomsUpdateScreenState extends State<RoomsUpdateScreen> {
             children: <Widget>[
               new TextFormField(
                 keyboardType: TextInputType.text,
-                decoration: new InputDecoration(
-                  hintText: 'Nom du salon',
-                  //labelText: 'Nom du salon'
-                ),
                 onSaved: (String value) {
-                  this._data.roomName = value;
-                }
-              ),
-              new TextFormField(
-                keyboardType: TextInputType.text,
-                controller: TextEditingController(text: _RoomsUpdateData().roomToUpdate.name),
-                decoration: new InputDecoration(
-                  hintText: _RoomsUpdateData().roomToUpdate.name,
-                  
-                  //labelText: ''
-                ),
-                onSaved: (String value) {
-                  this._data.roomThematic = value;
+                  this.newRoomName = value;
                 }
               ),
               new Container(
                 width: screenSize.width,
                 child: new RaisedButton(
                   child: new Text(
-                    'Modifier le salon',
+                    "Valid",
                     style: new TextStyle(
                       color: Colors.white
                     ),
                   ),
-                  onPressed: () => this.submit(),
+                  onPressed: () => {
+                    this.submit(),
+                    Navigator.pop(context)
+                    
+                  },
                   color: Colors.blue,
                 ),
                 margin: new EdgeInsets.only(
@@ -112,28 +103,4 @@ class _RoomsUpdateScreenState extends State<RoomsUpdateScreen> {
       ),
     );
   }
-  
-  
-  /*Widget build(BuildContext context) {
-    return Column(
-      children: <Widget>[
-        AppBar(
-          iconTheme: IconThemeData(
-            color: Colors.cyan, //change your color here
-          ),
-          title: Text("Ajout d'un salon"),
-          centerTitle: true,
-        ),
-        RaisedButton(
-          child: Text('Ajouter', style: TextStyle(fontSize: 20)),
-          onPressed: () {
-            //Do something
-          },
-          color: Colors.blue,
-          textColor: Colors.white
-        ),
-      ],
-    );
-  }
-  */
 }

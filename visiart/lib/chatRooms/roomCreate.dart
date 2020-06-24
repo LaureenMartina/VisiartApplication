@@ -39,13 +39,12 @@ class _RoomsCreateScreenState extends State<RoomsCreateScreen> {
   var isDisplayed = false;
 
   @override
-    void initState() {
-      getListHobbies();
-      
-      super.initState();
-    }
+  void initState() {
+    getListHobbies();
+    super.initState();
+  }
 
-  Future<http.Response> createRoom(String newRoomName, String newRoomThematic) async {
+  void createRoom(String newRoomName, String newRoomThematic) async {
     var token = await sharedPref.read('token');
     var userId = await sharedPref.readInteger("userId");
     var data = {
@@ -67,13 +66,6 @@ class _RoomsCreateScreenState extends State<RoomsCreateScreen> {
             'Authorization': 'Bearer $token',
         },
         body: json.encode(data)
-        /* jsonEncode(<String, dynamic>{
-            'name': newRoomName,
-            'hobbies' : selectedHobby,
-            'display' : selectedDisplayBOOL.toString(),
-            'private' : selectedPrivateBool.toString(),
-
-        }) */
     );
     if (response.statusCode == 200) {
         Navigator.push(
@@ -84,7 +76,7 @@ class _RoomsCreateScreenState extends State<RoomsCreateScreen> {
       throw Exception('Failed to post room from API');
     }
   }
-  Future<http.Response> getListHobbies() async{
+  void getListHobbies() async{
     var token = await sharedPref.read("token");
     final response = await http.get(
         'http://91.121.165.149/hobbies',
@@ -155,7 +147,7 @@ class _RoomsCreateScreenState extends State<RoomsCreateScreen> {
                   });
                 },
               ),
-              new Text("Afficher la room ?"),
+              new Text(AppLocalizations.of(context).translate("roomsCreate_showRomm")),
               new Switch(
                 
                 value: isDisplayed,
@@ -168,7 +160,7 @@ class _RoomsCreateScreenState extends State<RoomsCreateScreen> {
                 activeColor: Colors.green,
                 
               ),
-              new Text("Room privée ?"),
+              new Text(AppLocalizations.of(context).translate("roomsCreate_privateRomm")),
               new Switch(
                 
                 value: isPrivate,
@@ -181,71 +173,11 @@ class _RoomsCreateScreenState extends State<RoomsCreateScreen> {
                 activeColor: Colors.green,
                 
               ),
-              /* new DropdownButton<String>(
-                hint: Text(AppLocalizations.of(context).translate("display")),
-                value: this.selectedDisplayMessage == null ? null : selectedDisplayMessage,
-                items: <String>[AppLocalizations.of(context).translate("yes"), AppLocalizations.of(context).translate("no")]
-                    .map<DropdownMenuItem<String>>((String value) {
-                  return DropdownMenuItem<String>(
-                    value: value,
-                    child: Text(value),
-                  );
-                }).toList(),
-                onChanged: (_value) {
-                  if(_value == AppLocalizations.of(context).translate("yes")) {
-                    setState(() {
-                      selectedDisplayBOOL = true;
-                      selectedDisplayMessage = AppLocalizations.of(context).translate("yes");
-                    });
-                  } else {
-                    setState(() {
-                      selectedDisplayBOOL = false;
-                      selectedDisplayMessage = AppLocalizations.of(context).translate("no");
-                    });
-                  }
-                  
-                },
-              ),
-              new DropdownButton<String>(
-                hint: Text(AppLocalizations.of(context).translate("private")),
-                value: this.selectedPrivateMessage == null ? null : selectedPrivateMessage,
-                items: <String>[AppLocalizations.of(context).translate("yes"), AppLocalizations.of(context).translate("no")]
-                    .map<DropdownMenuItem<String>>((String value) {
-                  return DropdownMenuItem<String>(
-                    value: value,
-                    child: Text(value),
-                  );
-                }).toList(),
-                onChanged: (_value) {
-                  if(_value == AppLocalizations.of(context).translate("yes")) {
-                    setState(() {
-                      selectedPrivateBool = true;
-                      selectedPrivateMessage = AppLocalizations.of(context).translate("yes");
-                    });
-                  } else {
-                    setState(() {
-                      selectedPrivateBool = false;
-                      selectedPrivateMessage = AppLocalizations.of(context).translate("no");
-                    });
-                  }
-                  
-                },
-              ), */
-              /* new TextFormField(
-                keyboardType: TextInputType.text,
-                decoration: new InputDecoration(
-                  hintText: 'Thème du salon',
-                  //labelText: ''
-                ),
-                onSaved: (String value) {
-                  this._data.roomThematic = value;
-                }
-              ), */
               new Container(
                 width: screenSize.width,
                 child: new RaisedButton(
                   child: new Text(
-                    AppLocalizations.of(context).translate("add"),
+                    AppLocalizations.of(context).translate("validate"),
                     style: new TextStyle(
                       color: Colors.white
                     ),
@@ -263,28 +195,4 @@ class _RoomsCreateScreenState extends State<RoomsCreateScreen> {
       ),
     );
   }
-  
-  
-  /*Widget build(BuildContext context) {
-    return Column(
-      children: <Widget>[
-        AppBar(
-          iconTheme: IconThemeData(
-            color: Colors.cyan, //change your color here
-          ),
-          title: Text("Ajout d'un salon"),
-          centerTitle: true,
-        ),
-        RaisedButton(
-          child: Text('Ajouter', style: TextStyle(fontSize: 20)),
-          onPressed: () {
-            //Do something
-          },
-          color: Colors.blue,
-          textColor: Colors.white
-        ),
-      ],
-    );
-  }
-  */
 }

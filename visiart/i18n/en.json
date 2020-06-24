@@ -14,6 +14,7 @@
   "rooms": "Rooms",
   "add": "Add",
   "validate": "Validate",
+  "none": "None",
 
 >>>>>>> Ajout des infos utilisateur sur les messages
 
@@ -45,9 +46,15 @@
   "userInterest_save": "Save",
 
   "roomsList_roomsList": "Rooms list",
+  "roomsList_roomsPublic": "Public room",
+  "roomsList_roomsPrivate": "Private room",
 
   "roomsCreate_hobbyChoice": "Choose the hobby",
+  "roomsCreate_roomName": "room name",
   "roomsCreate_addRomm": "Add a room",
+  "roomsCreate_updateRomm": "Update a room",
+  "roomsCreate_showRomm": "Show the room ?",
+  "roomsCreate_privateRomm": "Is it a private room ?",
 
   "roomsChats_addFriend": "Add a friend"
 
