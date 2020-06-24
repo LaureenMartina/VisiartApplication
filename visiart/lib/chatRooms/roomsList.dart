@@ -22,11 +22,11 @@ class RoomsList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return new MaterialApp(
-      title: AppLocalizations.of(context).translate("roomsList_roomsList"),
+      title: "Liste des salons",
       theme: new ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: new RoomsListPage(title: AppLocalizations.of(context).translate("roomsList_roomsList")),
+      home: new RoomsListPage(title: "Liste des salons"),
     );
   }
 }
@@ -197,11 +197,11 @@ class _RoomsListPageState extends State<RoomsListPage>  with SingleTickerProvide
     }
   }
 
-  GestureDetector _rowPublic(Room room, IconData icon) => GestureDetector(
+  GestureDetector _rowPublic(Room room, IconData icon, String dateLastMsgViewed) => GestureDetector(
     onTap: () => 
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => RoomsChatsScreen(room: room)),
+        MaterialPageRoute(builder: (context) => RoomsChatsScreen(room: room), maintainState: true),
       ),
       //Navigator.pushNamed(context, "room_chats", arguments: RoomsChatsScreen(room: room)),
     child: Container(
@@ -219,13 +219,14 @@ class _RoomsListPageState extends State<RoomsListPage>  with SingleTickerProvide
             child: ListTile(
               leading: Icon(Icons.chat),
               title: Text(room.name),
-              trailing: room.roomMessages != null && room.roomMessages.isNotEmpty && room.roomMessages.last != null && room.roomMessages.last.userId != this._userId 
+              //trailing: room.roomMessages != null && room.roomMessages.isNotEmpty && room.roomMessages.last != null && room.roomMessages.last.userId != this._userId 
+              trailing: dateLastMsgViewed != null && room.roomMessages.isNotEmpty && room.roomMessages.last != null && room.roomMessages.last.date != dateLastMsgViewed 
               ? Badge(
                 badgeContent: null,
                 badgeColor: Colors.green[300],
                 padding: EdgeInsets.all(10),
               ) : null,
-              //subtitle: Text(AppLocalizations.of(context).translate("roomsList_roomsPublic")),
+              //subtitle: Text("Salon public"),
             ),
           ),
         ],
@@ -236,15 +237,13 @@ class _RoomsListPageState extends State<RoomsListPage>  with SingleTickerProvide
 
   @override
   Widget build(BuildContext context) {
-    print("context");
-    print(context);
     this.myTabs = <Tab>[
-      Tab(text: AppLocalizations.of(context).translate("roomsList_roomsPublic")),
-      Tab(text: AppLocalizations.of(context).translate("roomsList_roomsPrivate")),
+      Tab(text: "Salon public"),
+      Tab(text: "Salon privée"),
     ];
     return new Scaffold(
       appBar: AppBar(
-        title: new Text(AppLocalizations.of(context).translate("rooms")),
+        title: new Text("Salons"),
         centerTitle: true,
         automaticallyImplyLeading: false,
         bottom: TabBar(
@@ -256,7 +255,7 @@ class _RoomsListPageState extends State<RoomsListPage>  with SingleTickerProvide
         TabBarView(
           controller: _tabController,
           children: myTabs.map((Tab tab) {
-            if (tab.text.contains(AppLocalizations.of(context).translate("roomsList_roomsPublic"))) {
+            if (tab.text.contains("Salon public")) {
               return Container(
                 child: Column(
                   children: <Widget>[
@@ -302,14 +301,15 @@ class _RoomsListPageState extends State<RoomsListPage>  with SingleTickerProvide
                         shrinkWrap: true,
                         itemCount: _publicRooms.length,
                         itemBuilder: (context, index) {
-                          return _rowPublic(_publicRooms[index], Icons.work);
+
+                          return _rowPublic(_publicRooms[index], Icons.work, null);
                         },
                         
                       ),
                       
                     ),
                     RaisedButton(
-                      child: Text(AppLocalizations.of(context).translate("add"), style: TextStyle(fontSize: 20)),
+                      child: Text("Ajouter", style: TextStyle(fontSize: 20)),
                       onPressed: () {
                           Navigator.push(
                             context,
@@ -332,12 +332,12 @@ class _RoomsListPageState extends State<RoomsListPage>  with SingleTickerProvide
                         shrinkWrap: true,
                         itemCount: _listUserRoomsPrivate.length,
                         itemBuilder: (context, index) {
-                          return _rowPublic(_listUserRoomsPrivate[index].room, Icons.work);
+                          return _rowPublic(_listUserRoomsPrivate[index].room, Icons.work, null);
                         },
                       ),
                     ),
                     RaisedButton(
-                      child: Text(AppLocalizations.of(context).translate("add"), style: TextStyle(fontSize: 20)),
+                      child: Text("Ajouter", style: TextStyle(fontSize: 20)),
                       onPressed: () {
                           Navigator.push(
                             context,

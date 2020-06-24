@@ -85,6 +85,7 @@ class _RoomsChatPageState extends State<RoomsChatPage> {
       if (response.statusCode == 200) {
           List jsonResponse = json.decode(response.body);
           var list = jsonResponse.map((roomMessages) => new RoomMessage.fromMainJson(roomMessages)).toList();
+          sharedPref.save("lastMessageViewed_room_"+this.room.id.toString(), list.last.date);
           this.setState(() {
             this.messageList.addAll(list);
           });
@@ -112,7 +113,7 @@ class _RoomsChatPageState extends State<RoomsChatPage> {
 
     void disableRoom(roomId) async {
       var token = await sharedPref.read("token"); 
-      http.put(
+      await http.put(
         globals.API_BASE_URL+'/rooms/'+roomId.toString(),
         headers: {
             'Content-Type': 'application/json',
@@ -170,7 +171,8 @@ class _RoomsChatPageState extends State<RoomsChatPage> {
             );
 
             if (response.statusCode == 200) {
-                //
+              newMessage = RoomMessage.fromMainJson(json.decode(response.body));
+              sharedPref.save("lastMessageVieweRoom_"+this.room.id.toString(), newMessage.date);
             } else {
                 throw Exception('Failed to post message from API');
             }
@@ -235,10 +237,10 @@ class _RoomsChatPageState extends State<RoomsChatPage> {
                       icon: Icon(Icons.close),
                       onPressed: () {
                         disableRoom(room.id);
-                        /* Navigator.push(context, 
+                        Navigator.push(context, 
                             MaterialPageRoute(builder: (context) => RoomsListPage()),
-                        ); */
-                        Navigator.pop(context);
+                        );
+                        //Navigator.pop(context);
                       },
                   ),
                   IconButton(
@@ -362,7 +364,9 @@ ListView _roomsListMeesageView(data, userId, allMessage) {
                     ),
                     child: ListTile(
                         title: Text(data[index].content),
-                        subtitle: Text(data[index].username+data[index].date.toString()),
+                        subtitle: 
+                        data[index].username != null && data[index].date != null ? 
+                        Text(data[index].username+data[index].date):Text(""),
                     ),
                 );
             } else {
