@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:visiart/account/account.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:visiart/awardsUser/awardsList.dart';
+import 'package:visiart/chatRooms/roomChats.dart';
 import 'package:visiart/chatRooms/roomsList.dart';
 import 'package:visiart/customFormUser/userInterests.dart';
 import 'package:visiart/dashboard/menu.dart';
@@ -50,7 +51,7 @@ var _routes = <String, WidgetBuilder> {
   //"drawing": (BuildContext context) => Draw(), //merge with the drawing branch before
   "events": (BuildContext context) => EventsListScreen(),
   "rooms": (BuildContext context) => RoomsListPage(),
-  //"tchat": (BuildContext context) => RoomsChatsScreen(), // Flo
+  "room_chats": (BuildContext context) => RoomsChatPage(),
 };
 
 /*class MyApp extends StatelessWidget {

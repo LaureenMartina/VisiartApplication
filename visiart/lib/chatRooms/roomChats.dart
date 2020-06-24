@@ -241,10 +241,10 @@ class _RoomsChatPageState extends State<RoomsChatPage> {
                       icon: Icon(Icons.close),
                       onPressed: () {
                         disableRoom(room.id);
-                        Navigator.push(context, 
+                        /* Navigator.push(context, 
                             MaterialPageRoute(builder: (context) => RoomsListPage()),
-                        );
-                        //Navigator.pushNamed(context, 'rooms');
+                        ); */
+                        Navigator.pop(context);
                       },
                   ),
                   IconButton(

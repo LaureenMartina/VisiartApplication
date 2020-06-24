@@ -199,12 +199,11 @@ class _RoomsListPageState extends State<RoomsListPage>  with SingleTickerProvide
 
   GestureDetector _rowPublic(Room room, IconData icon) => GestureDetector(
     onTap: () => 
-        //Scaffold.of(context).showSnackBar(SnackBar(content: Text(title))),
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => RoomsChatsScreen(room: room)),  
-        //MaterialPageRoute(builder: (context) => RoomDetails()),
+        MaterialPageRoute(builder: (context) => RoomsChatsScreen(room: room)),
       ),
+      //Navigator.pushNamed(context, routeName)
     child: Container(
       padding: EdgeInsets.all(12.0),
       margin: EdgeInsets.all(5.0),

@@ -2,11 +2,9 @@
   "password": "Password",
   "email": "Email",
   "goBtn": "GO !",
-<<<<<<< HEAD
   "warning": "Warning !",
   "close": "Close",
   "save": "Save",
-=======
   "display": "Display ?",
   "private": "Private ?",
   "yes": "YES",
@@ -16,7 +14,6 @@
   "validate": "Validate",
   "none": "None",
 
->>>>>>> Ajout des infos utilisateur sur les messages
 
   "home_signUpLink": "Not signed in ? Join thousands of passionates !",
   "home_slogan": "Add more ART to your life",
