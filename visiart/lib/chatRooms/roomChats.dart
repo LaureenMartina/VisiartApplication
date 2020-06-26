@@ -86,7 +86,9 @@ class _RoomsChatPageState extends State<RoomsChatPage> {
       if (response.statusCode == 200) {
           List jsonResponse = json.decode(response.body);
           var list = jsonResponse.map((roomMessages) => new RoomMessage.fromMainJson(roomMessages)).toList();
-          sharedPref.save("lastDateMessageVieweRoom_"+this.room.id.toString(), list.last.date);
+          if(list.isNotEmpty) {
+            sharedPref.save("lastDateMessageVieweRoom_"+this.room.id.toString(), list.last.date);
+          }
           this.setState(() {
             this.messageList.addAll(list);
           });
@@ -224,7 +226,10 @@ class _RoomsChatPageState extends State<RoomsChatPage> {
                       icon: Icon(Icons.add),
                       onPressed: () {
                           //this.room.private ? showAddMembersModal(room.id, context): null;
-                          this.room.private ? Navigator.pushReplacement(context, 
+                          print("object");
+                          print(this.room.private);
+                          print(this.room.id);
+                          this.room.private ? Navigator.push(context, 
                             MaterialPageRoute(builder: (context) => RoomAddUser(room: this.room))
                           ): null;
                       },

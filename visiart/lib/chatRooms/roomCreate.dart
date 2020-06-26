@@ -186,9 +186,12 @@ class _RoomsCreateScreenState extends State<RoomsCreateScreen> {
                 margin: new EdgeInsets.only(
                   top: 20.0
                 ),
-              )
+              ),
             ],
+
+            
           ),
+          
         )
       ),
     );

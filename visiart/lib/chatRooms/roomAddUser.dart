@@ -10,6 +10,7 @@ import 'package:visiart/chatRooms/roomCreate.dart';
 import 'package:visiart/config/SharedPref.dart';
 import 'package:visiart/localization/AppLocalization.dart';
 import 'package:visiart/models/Room_message.dart';
+import 'package:visiart/models/User.dart';
 import 'package:visiart/models/UserRoomPrivate.dart';
 import 'package:visiart/config/config.dart' as globals;
 
@@ -27,7 +28,7 @@ class RoomAddUser extends StatelessWidget {
       theme: new ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: new RoomAddUserPage(),
+      home: new RoomAddUserPage(room: room),
     );
   }
 }
@@ -44,9 +45,10 @@ class RoomAddUserPage extends StatefulWidget{
 class _RoomAddUserPageState extends State<RoomAddUserPage>  with SingleTickerProviderStateMixin{ TextEditingController editingController = TextEditingController();
 
   var _listUserRoomsPrivate = List<UserRoomPrivate>();
+  var _listUserToAdd = List<User>();
   var _userId;
   var _userIdToAddId;
-  var _usernameToSearch;
+  String _usernameToSearch;
   Room room;
   final GlobalKey<FormState> _formKey = new GlobalKey<FormState>();
 
@@ -61,12 +63,70 @@ class _RoomAddUserPageState extends State<RoomAddUserPage>  with SingleTickerPro
   @override
   void initState() {
     super.initState();
+    print("_RoomAddUserPageState");
+    print(this.room);
     sharedPref.readInteger("userId").then((value) => {
         setState(() {
             this._userId = value;
         })
       });
   }
+
+  void _searchUsersByUsername() async {
+
+    if (this._usernameToSearch != null && this._usernameToSearch.isNotEmpty) {
+      var token = await sharedPref.read("token");
+      final roomAPIUrl = globals.API_BASE_URL+'/users?username_contains='
+      +this._usernameToSearch.toString()
+      +"&user_room_privates_null=true";
+      
+      final response = await http.get(roomAPIUrl, headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Authorization':
+          'Bearer $token',
+      });
+
+      if (response.statusCode == 200) {
+        
+          List jsonResponse = json.decode(response.body);
+          setState(() {
+            this._listUserToAdd.clear();
+            this._listUserToAdd.addAll(jsonResponse.map((user) => new User.fromJson(user)).toList());
+          });
+      } else {
+        throw Exception('Failed to load user rooms from API');
+      }
+    } else {
+      setState(() {
+        this._listUserToAdd.clear();
+      });
+    }
+  }
+
+  void addUserToPrivateRoom(int userId) async {
+    var token = await sharedPref.read("token");
+    var data = {
+        'user': userId.toString(),
+        'room' : this.room.id.toString(),
+    };
+    final response = await http.post(
+      'http://91.121.165.149/user-room-privates',
+      headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          'Authorization': 'Bearer $token',
+      },
+      body: json.encode(data)
+    );
+
+    if (response.statusCode == 200) {
+      //Toast ajout utilisateur 
+    } else {
+      throw Exception("Can't add user to private room");
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     
@@ -79,9 +139,7 @@ class _RoomAddUserPageState extends State<RoomAddUserPage>  with SingleTickerPro
       ),
       body: new Container(
         padding: new EdgeInsets.all(20.0),
-        child: new Form(
-          key: this._formKey,
-          child: new ListView(
+        child: new Column(
             children: <Widget>[
               new TextFormField(
                 keyboardType: TextInputType.text,
@@ -89,7 +147,7 @@ class _RoomAddUserPageState extends State<RoomAddUserPage>  with SingleTickerPro
                   hintText: 'name',
                   //labelText: 'Nom du salon'
                 ),
-                onSaved: (String value) {
+                onChanged: (String value) {
                   this._usernameToSearch = value;
                 }
               ),
@@ -102,17 +160,47 @@ class _RoomAddUserPageState extends State<RoomAddUserPage>  with SingleTickerPro
                       color: Colors.white
                     ),
                   ),
-                  onPressed: () => null,//this.submit(),
+                  onPressed: () => _searchUsersByUsername(),
                   color: Colors.blue,
                 ),
                 margin: new EdgeInsets.only(
                   top: 20.0
                 ),
+              ),
+              Expanded(
+                child: SizedBox(
+                  height: 200.0,
+                  child: new ListView.builder(
+                    itemCount: this._listUserToAdd.length,
+                    padding: const EdgeInsets.only(top: 10.0),
+                    itemBuilder: (context, index) {
+                      //return new Text(this._listUserToAdd[index].name);
+                      return new Row(
+                        children: <Widget>[
+                          Expanded(
+                            child: Text(_listUserToAdd[index].username),
+                          ),
+                          IconButton(
+                            icon: Icon(Icons.add),
+                            tooltip: 'Ajout de l\'utilisateur',
+                            onPressed: () {
+                              addUserToPrivateRoom(_listUserToAdd[index].id);
+                              setState(() {
+                                _listUserToAdd.removeAt(index);
+                              });
+                            },
+                          ),
+                        ],
+                      );
+                      
+                    }
+                  )
+
+                ),
               )
             ],
           ),
-        )
-      ),
+        ), 
     );
   }
 }
