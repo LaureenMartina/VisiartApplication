@@ -4,6 +4,7 @@ import 'dart:ui';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:visiart/chatRooms/roomAddUser.dart';
 import 'package:visiart/chatRooms/roomUpdate.dart';
 import 'package:visiart/models/Room.dart';
 import 'package:http/http.dart' as http;
@@ -85,7 +86,7 @@ class _RoomsChatPageState extends State<RoomsChatPage> {
       if (response.statusCode == 200) {
           List jsonResponse = json.decode(response.body);
           var list = jsonResponse.map((roomMessages) => new RoomMessage.fromMainJson(roomMessages)).toList();
-          sharedPref.save("lastMessageViewed_room_"+this.room.id.toString(), list.last.date);
+          sharedPref.save("lastDateMessageVieweRoom_"+this.room.id.toString(), list.last.date);
           this.setState(() {
             this.messageList.addAll(list);
           });
@@ -172,7 +173,7 @@ class _RoomsChatPageState extends State<RoomsChatPage> {
 
             if (response.statusCode == 200) {
               newMessage = RoomMessage.fromMainJson(json.decode(response.body));
-              sharedPref.save("lastMessageVieweRoom_"+this.room.id.toString(), newMessage.date);
+              sharedPref.save("lastDateMessageVieweRoom_"+this.room.id.toString(), newMessage.date);
             } else {
                 throw Exception('Failed to post message from API');
             }
@@ -222,7 +223,10 @@ class _RoomsChatPageState extends State<RoomsChatPage> {
                   IconButton(
                       icon: Icon(Icons.add),
                       onPressed: () {
-                          this.room.private ? showAddMembersModal(room.id, context): null;
+                          //this.room.private ? showAddMembersModal(room.id, context): null;
+                          this.room.private ? Navigator.pushReplacement(context, 
+                            MaterialPageRoute(builder: (context) => RoomAddUser(room: this.room))
+                          ): null;
                       },
                   ),
                   IconButton(
@@ -342,15 +346,6 @@ ListView _roomsListMeesageView(data, userId, allMessage) {
     return ListView.builder(
         itemCount: data.length,
         itemBuilder: (context, index) {
-            //var username = allMessage.indexWhere(data[index]);
-            /* var username;
-            
-            Iterable<RoomMessage> result = allMessage.where( (roomMessage) {
-              return roomMessage.id == data[index].id;
-            });
-            
-            debugPrint("username : " +  result.toString()); */
-            //var username = "test";
             if (data[index].userId == userId) {
                 return Container(
                     //color:  Theme.of(context).accentColor, 

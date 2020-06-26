@@ -64,11 +64,12 @@ class _RoomsListPageState extends State<RoomsListPage>  with SingleTickerProvide
     _fetchUserRoomsPrivate();
     _tabController = TabController(vsync: this, length: myTabs.length);
   }
+
   @override
- void dispose() {
-   _tabController.dispose();
-   super.dispose();
- }
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
+  }
 
   void _getListHobbies() async{
     var token = await sharedPref.read("token");
@@ -129,6 +130,11 @@ class _RoomsListPageState extends State<RoomsListPage>  with SingleTickerProvide
         List jsonResponse = json.decode(response.body);
         this.duplicateItems = jsonResponse.map((room) => new Room.fromJson(room)).toList();
         this.duplicateItems.sort(sortListRoomForUser);
+        this.duplicateItems.forEach((room) {
+          sharedPref.read("lastDateMessageVieweRoom_"+room.id.toString()).then((value) =>
+              room.lastDate = value
+            );
+         });
         setState(() {
           _publicRooms.addAll(duplicateItems);
         });
@@ -162,19 +168,15 @@ class _RoomsListPageState extends State<RoomsListPage>  with SingleTickerProvide
 
   void filterSearchResults() {
     List<Room> dummySearchList = List<Room>();
-    print("in filter results");
-    print(selectedHobby);
-    if (selectedHobby != '0') {
+    if (selectedHobby != null && selectedHobby != '0') {
        duplicateItems.forEach((element) {
         if(element.hobbies.isNotEmpty && selectedHobby.toString() == element.hobbies.first.id.toString()){
-          print("all hobby id : "+element.hobbies.first.id.toString());
           dummySearchList.add(element);
         }
       });
     } else {
       dummySearchList.addAll(duplicateItems);
     }
-
     if(this._query != null && this._query.isNotEmpty) {
       //Search bar none empty
       List<Room> dummyListData = List<Room>();
@@ -220,7 +222,8 @@ class _RoomsListPageState extends State<RoomsListPage>  with SingleTickerProvide
               leading: Icon(Icons.chat),
               title: Text(room.name),
               //trailing: room.roomMessages != null && room.roomMessages.isNotEmpty && room.roomMessages.last != null && room.roomMessages.last.userId != this._userId 
-              trailing: dateLastMsgViewed != null && room.roomMessages.isNotEmpty && room.roomMessages.last != null && room.roomMessages.last.date != dateLastMsgViewed 
+              trailing: room.lastDate != null && room.roomMessages.isNotEmpty && room.roomMessages.last != null &&  
+              DateTime.parse(room.roomMessages.last.date).isAfter(DateTime.parse(room.lastDate))
               ? Badge(
                 badgeContent: null,
                 badgeColor: Colors.green[300],
@@ -301,12 +304,12 @@ class _RoomsListPageState extends State<RoomsListPage>  with SingleTickerProvide
                         shrinkWrap: true,
                         itemCount: _publicRooms.length,
                         itemBuilder: (context, index) {
-
+                          /* print("room");
+                          print(_publicRooms[0].roomMessages.last.date);
+                          print(_publicRooms[0].lastDate); */
                           return _rowPublic(_publicRooms[index], Icons.work, null);
                         },
-                        
                       ),
-                      
                     ),
                     RaisedButton(
                       child: Text("Ajouter", style: TextStyle(fontSize: 20)),
@@ -332,6 +335,12 @@ class _RoomsListPageState extends State<RoomsListPage>  with SingleTickerProvide
                         shrinkWrap: true,
                         itemCount: _listUserRoomsPrivate.length,
                         itemBuilder: (context, index) {
+                          /* return FutureBuilder(
+                            future: sharedPref.read("lastDateMessageVieweRoom_"+_listUserRoomsPrivate[index].room.id.toString()),
+                            builder: (context, lastDate) {
+                              return _rowPublic(_listUserRoomsPrivate[index].room, Icons.work, lastDate.data.toString());
+                            },
+                          ); */
                           return _rowPublic(_listUserRoomsPrivate[index].room, Icons.work, null);
                         },
                       ),

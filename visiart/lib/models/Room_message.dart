@@ -18,12 +18,16 @@ class RoomMessage {
       userId = json['user'];
     }
 
+    var parsedDate = DateTime.parse(json['created_at']);
+    
+    var formatter = new DateFormat('yyyy-MM-dd HH:mm:ss');
    
 
     return RoomMessage(
       id: json['id'],
       content: json['content'],
-      userId: userId
+      userId: userId,
+      date: formatter.format(parsedDate)
     );
   }
 
@@ -43,7 +47,7 @@ class RoomMessage {
     }
     var parsedDate = DateTime.parse(json['created_at']);
     
-    var formatter = new DateFormat('yyyy-MM-dd');
+    var formatter = new DateFormat('yyyy-MM-dd HH:mm:ss');
     return RoomMessage(
       id: json['id'],
       content: json['content'],

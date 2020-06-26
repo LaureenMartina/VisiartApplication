@@ -11,11 +11,12 @@ class Room {
   final bool private;
   final bool enabled;
   final bool display;
+  String lastDate;
 
   final List<RoomMessage> roomMessages;
   final List<Hobby> hobbies;
 
-  Room({this.private, this.enabled, this.display, this.id, this.name, this.userId, this.hobbyId, this.roomMessages, this.hobbies});
+  Room({this.private, this.enabled, this.display, this.id, this.name, this.userId, this.hobbyId, this.roomMessages, this.hobbies, this.lastDate});
 
   factory Room.fromJson(Map<String, dynamic> json) {
     var list = json['room_messages'] as List;
@@ -48,6 +49,7 @@ class Room {
       userId: userId,
       roomMessages: messageList,
       hobbies: currentListHobbies,
+      lastDate: null,
     );
   }
 }
