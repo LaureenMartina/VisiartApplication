@@ -151,29 +151,21 @@ class _RoomsChatPageState extends State<RoomsChatPage> {
     }
 
     void _unlinkThisRoom() async {
-      print("_unlinkThisRoom");
-      print(this.userRoomPrivate);
-      /* final roomAPIUrl = globals.API_BASE_URL+'/room-messages?room='+this.room.id.toString();
+      final roomAPIUrl = globals.API_BASE_URL+'/user-room-privates/'+this.userRoomPrivate.id.toString();
       var token = await sharedPref.read("token");
-      final response = await http.get(roomAPIUrl, headers: {
+      final response = await http.put(roomAPIUrl, headers: {
           'Content-Type': 'application/json',
           'Accept': 'application/json',
-          'Authorization':
-          'Bearer $token',
+          'Authorization':'Bearer $token',
       });
 
       if (response.statusCode == 200) {
-          List jsonResponse = json.decode(response.body);
-          var list = jsonResponse.map((roomMessages) => new RoomMessage.fromMainJson(roomMessages)).toList();
-          if(list.isNotEmpty) {
-            sharedPref.save("lastDateMessageVieweRoom_"+this.room.id.toString(), list.last.date);
-          }
-          this.setState(() {
-            this.messageList.addAll(list);
-          });
+          Navigator.push(context, 
+            MaterialPageRoute(builder: (context) => RoomsListPage()),
+          );
       } else {
-        throw Exception('Failed to load rooms from API');
-      } */
+        throw Exception('Failed to delete private room from API');
+      }
     }
 
     void addNewMessage() async {

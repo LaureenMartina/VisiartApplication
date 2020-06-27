@@ -115,7 +115,7 @@ class _RoomsListPageState extends State<RoomsListPage>  with SingleTickerProvide
   }
 
   Future<List<Room>> _fetchRooms() async {
-    final roomAPIUrl = globals.API_BASE_URL+'/rooms?private=false';
+    final roomAPIUrl = globals.API_BASE_URL+'/rooms?private=false&display=true';
     var token = await sharedPref.read("token");
     this._userId = await sharedPref.readInteger("userId");
     
@@ -147,7 +147,7 @@ class _RoomsListPageState extends State<RoomsListPage>  with SingleTickerProvide
   void _fetchUserRoomsPrivate() async {
     var token = await sharedPref.read("token");
     this._userId = await sharedPref.readInteger("userId");
-    final roomAPIUrl = globals.API_BASE_URL+'/user-room-privates?user.id='+_userId.toString();
+    final roomAPIUrl = globals.API_BASE_URL+'/user-room-privates?room.display=true&user.id='+_userId.toString();
     
     final response = await http.get(roomAPIUrl, headers: {
     'Content-Type': 'application/json',
@@ -252,7 +252,7 @@ class _RoomsListPageState extends State<RoomsListPage>  with SingleTickerProvide
           Container(
             padding: EdgeInsets.all(12.0),
             decoration: BoxDecoration(
-              color: this._userId==userRoomPrivate.room.id? Colors.deepPurple[300]:Colors.green[300],
+              color: this._userId==userRoomPrivate.room.userId? Colors.deepPurple[300]:Colors.green[300],
               borderRadius: BorderRadius.circular(23.0),
               
             ),
