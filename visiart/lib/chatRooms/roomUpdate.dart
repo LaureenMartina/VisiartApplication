@@ -35,7 +35,7 @@ class _RoomsUpdateScreenState extends State<RoomsUpdateScreen> {
     }
 
   Future<http.Response> updateRoom(String newRoomName) async{
-    var token = await sharedPref.read("token");
+    var token = await sharedPref.read(globals.API_TOKEN_KEY);
     return http.put(
         globals.API_BASE_URL+'/rooms/'+this.room.id.toString(),
         headers: {

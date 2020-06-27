@@ -65,7 +65,7 @@ class _RoomAddUserPageState extends State<RoomAddUserPage>  with SingleTickerPro
     super.initState();
     print("_RoomAddUserPageState");
     print(this.room);
-    sharedPref.readInteger("userId").then((value) => {
+    sharedPref.readInteger(globals.API_USER_ID_KEY).then((value) => {
         setState(() {
             this._userId = value;
         })
@@ -75,7 +75,7 @@ class _RoomAddUserPageState extends State<RoomAddUserPage>  with SingleTickerPro
   void _searchUsersByUsername() async {
 
     if (this._usernameToSearch != null && this._usernameToSearch.isNotEmpty) {
-      var token = await sharedPref.read("token");
+      var token = await sharedPref.read(globals.API_TOKEN_KEY);
       final roomAPIUrl = globals.API_BASE_URL+'/users?username_contains='
       +this._usernameToSearch.toString()
       +"&user_room_privates_null=true";
@@ -105,7 +105,7 @@ class _RoomAddUserPageState extends State<RoomAddUserPage>  with SingleTickerPro
   }
 
   void addUserToPrivateRoom(int userId) async {
-    var token = await sharedPref.read("token");
+    var token = await sharedPref.read(globals.API_TOKEN_KEY);
     var data = {
         'user': userId.toString(),
         'room' : this.room.id.toString(),

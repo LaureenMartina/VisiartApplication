@@ -68,7 +68,7 @@ class _RoomsChatPageState extends State<RoomsChatPage> {
 
     @override
     void initState() {
-      sharedPref.readInteger("userId").then((value) => {
+      sharedPref.readInteger(globals.API_USER_ID_KEY).then((value) => {
         setState(() {
             this._userid = value;
         })
@@ -80,7 +80,7 @@ class _RoomsChatPageState extends State<RoomsChatPage> {
     Future<List<RoomMessage>> _fetchRoomMessages() async {
       //final roomAPIUrl = 'http://91.121.165.149/room-messages'; //Rajouter id
       final roomAPIUrl = globals.API_BASE_URL+'/room-messages?room='+this.room.id.toString();
-      var token = await sharedPref.read("token");
+      var token = await sharedPref.read(globals.API_TOKEN_KEY);
       final response = await http.get(roomAPIUrl, headers: {
           'Content-Type': 'application/json',
           'Accept': 'application/json',
@@ -105,7 +105,7 @@ class _RoomsChatPageState extends State<RoomsChatPage> {
 
     //RoomsChatsScreen createState() => RoomsChatsScreen(room: room);
     void deleteRoom(roomId) async {
-      var token = await sharedPref.read("token");
+      var token = await sharedPref.read(globals.API_TOKEN_KEY);
       http.put(
             globals.API_BASE_URL+'/rooms/'+roomId,
             headers: {
@@ -120,7 +120,7 @@ class _RoomsChatPageState extends State<RoomsChatPage> {
     }
 
     void disableRoom(roomId) async {
-      var token = await sharedPref.read("token"); 
+      var token = await sharedPref.read(globals.API_TOKEN_KEY); 
       await http.put(
         globals.API_BASE_URL+'/rooms/'+roomId.toString(),
         headers: {
@@ -135,7 +135,7 @@ class _RoomsChatPageState extends State<RoomsChatPage> {
 
     }
     void enableRoom(roomId) async {
-      var token = await sharedPref.read("token"); 
+      var token = await sharedPref.read(globals.API_TOKEN_KEY); 
       await http.put(
         globals.API_BASE_URL+'/rooms/'+roomId.toString(),
         headers: {
@@ -152,7 +152,7 @@ class _RoomsChatPageState extends State<RoomsChatPage> {
 
     void _unlinkThisRoom() async {
       final roomAPIUrl = globals.API_BASE_URL+'/user-room-privates/'+this.userRoomPrivate.id.toString();
-      var token = await sharedPref.read("token");
+      var token = await sharedPref.read(globals.API_TOKEN_KEY);
       final response = await http.put(roomAPIUrl, headers: {
           'Content-Type': 'application/json',
           'Accept': 'application/json',
@@ -172,9 +172,9 @@ class _RoomsChatPageState extends State<RoomsChatPage> {
 
         if (textEditingController.text.trim().isNotEmpty) {
 
-            this._userid = await sharedPref.readInteger("userId");
+            this._userid = await sharedPref.readInteger(globals.API_USER_ID_KEY);
 
-            var token = await sharedPref.read("token");
+            var token = await sharedPref.read(globals.API_TOKEN_KEY);
             RoomMessage newMessage = RoomMessage(
                 content: textEditingController.text.trim(),
                 userId: _userid

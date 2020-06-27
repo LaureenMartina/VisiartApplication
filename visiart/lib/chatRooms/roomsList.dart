@@ -72,7 +72,7 @@ class _RoomsListPageState extends State<RoomsListPage>  with SingleTickerProvide
   }
 
   void _getListHobbies() async{
-    var token = await sharedPref.read("token");
+    var token = await sharedPref.read(globals.API_TOKEN_KEY);
     final response = await http.get(
         globals.API_BASE_URL+'/hobbies',
         headers: {
@@ -114,10 +114,10 @@ class _RoomsListPageState extends State<RoomsListPage>  with SingleTickerProvide
     }
   }
 
-  Future<List<Room>> _fetchRooms() async {
+  void _fetchRooms() async {
     final roomAPIUrl = globals.API_BASE_URL+'/rooms?private=false&display=true';
-    var token = await sharedPref.read("token");
-    this._userId = await sharedPref.readInteger("userId");
+    var token = await sharedPref.read(globals.API_TOKEN_KEY);
+    this._userId = await sharedPref.readInteger(globals.API_USER_ID_KEY);
     
     final response = await http.get(roomAPIUrl, headers: {
     'Content-Type': 'application/json',
@@ -138,15 +138,15 @@ class _RoomsListPageState extends State<RoomsListPage>  with SingleTickerProvide
         setState(() {
           _publicRooms.addAll(duplicateItems);
         });
-      return jsonResponse.map((room) => new Room.fromJson(room)).toList();
+      //return jsonResponse.map((room) => new Room.fromJson(room)).toList();
     } else {
       throw Exception('Failed to load rooms from API');
     }
   }
 
   void _fetchUserRoomsPrivate() async {
-    var token = await sharedPref.read("token");
-    this._userId = await sharedPref.readInteger("userId");
+    var token = await sharedPref.read(globals.API_TOKEN_KEY);
+    this._userId = await sharedPref.readInteger(globals.API_USER_ID_KEY);
     final roomAPIUrl = globals.API_BASE_URL+'/user-room-privates?room.display=true&user.id='+_userId.toString();
     
     final response = await http.get(roomAPIUrl, headers: {

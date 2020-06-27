@@ -9,6 +9,7 @@ import 'package:visiart/chatRooms/roomsList.dart';
 import 'package:visiart/config/SharedPref.dart';
 import 'package:visiart/models/Hobby.dart';
 import 'package:visiart/localization/AppLocalization.dart';
+import 'package:visiart/config/config.dart' as globals;
 
 
 SharedPref sharedPref = SharedPref();
@@ -46,7 +47,7 @@ class _RoomsCreateScreenState extends State<RoomsCreateScreen> {
 
   void createRoom(String newRoomName, String newRoomThematic) async {
     var token = await sharedPref.read('token');
-    var userId = await sharedPref.readInteger("userId");
+    var userId = await sharedPref.readInteger(globals.API_USER_ID_KEY);
     var data = {
         'name': newRoomName,
         'display' : isDisplayed.toString(),
@@ -76,7 +77,7 @@ class _RoomsCreateScreenState extends State<RoomsCreateScreen> {
     }
   }
   void getListHobbies() async{
-    var token = await sharedPref.read("token");
+    var token = await sharedPref.read(globals.API_TOKEN_KEY);
     final response = await http.get(
         'http://91.121.165.149/hobbies',
         headers: {
