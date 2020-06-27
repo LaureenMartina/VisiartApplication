@@ -47,11 +47,25 @@ dependencies:
   intl: ^0.16.1
   loading: ^1.0.2
   delayed_display: ^1.0.3
+  flutter_colorpicker: any
+  path_provider: ^0.5.0
+  video_player: ^0.10.11
+  camera: ^0.5.4+2
+  flutter_launcher_icons: ^0.7.5
+  arkit_plugin: ^0.3.0
+  flutter_3d_obj: ^0.0.6
+  arcore_flutter_plugin: ^0.0.5+1
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
 
+flutter_icons:
+  android: true
+  ios: true
+  image_path: "assets/imgs/logo.png"
+  image_path_ios: "assets/imgs/logo.png"
+  image_path_android: "assets/imgs/logo.png"
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

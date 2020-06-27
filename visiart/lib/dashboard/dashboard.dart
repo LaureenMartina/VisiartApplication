@@ -11,6 +11,8 @@ import 'package:loading/loading.dart';
 import 'package:visiart/config/SharedPref.dart';
 import 'package:visiart/config/config.dart';
 import 'package:visiart/models/Event.dart';
+import 'package:visiart/awardsUser/awardsList.dart';
+import 'package:visiart/drawingsUser/drawing.dart';
 
 SharedPref sharedPref = SharedPref();
 
@@ -130,12 +132,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
     ),
     color: Colors.teal[700],
     child: Padding(
-      padding: EdgeInsets.only(top:60, left: 20),
+      padding: EdgeInsets.only(top:55, left: 20),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
-          Text("Vos \nDessins AR", style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold, color: Colors.white)),
+          Text("Vos\nDessins AR", style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold, color: Colors.white)),
           SizedBox(height: 4),
         ],
       ),
@@ -235,7 +237,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                     Expanded(
                                       child: Text('${index.title}',
                                         style: TextStyle(
-                                          fontSize: 20, fontWeight: FontWeight.bold,
+                                          fontSize: 18, fontWeight: FontWeight.bold,
                                           color: Colors.white,
                                         ),
                                         textAlign: TextAlign.center,
@@ -277,17 +279,18 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                     Column(
                                       children: <Widget>[
                                         Padding(
-                                          padding: EdgeInsets.only(top: 5, right: 25.0),
+                                          padding: EdgeInsets.only(top: 5, right: 15.0),
                                           child: Container(
                                             child: Text(infoDate + '${index.startDate}',
                                               style: TextStyle(
-                                                fontSize: 20, fontWeight: FontWeight.bold,
+                                                fontSize: 16, fontWeight: FontWeight.bold,
                                                 color: Colors.blueGrey[800],
                                               ),
                                               textAlign: TextAlign.center,
                                             ),
                                           ),
                                         ),
+                                        // icon
                                         Padding(
                                           padding: EdgeInsets.only(top: 13, right: 20),
                                           child: Icon(
@@ -298,8 +301,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                         ),
                                       ],
                                     ),
-                                    // icon
-                                    
                                   ],
                                 ),
                               ),
@@ -365,11 +366,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         padding: EdgeInsets.only(right: 10),
                         child: GestureDetector(
                           onTap: () {
-                            Navigator.pushNamed(context, 'awards'); // TODO change to drawing
-                            /*Navigator.push(
-                              context, MaterialPageRoute(
-                                builder: (BuildContext context) => AwardsListScreen() )
-                            );*/
+                            Navigator.pushNamed(context, 'drawing'); // TODO change to drawing
+                            // Navigator.push(
+                            //   context, MaterialPageRoute(
+                            //     builder: (BuildContext context) => Draw() )
+                            // );
                           },
                           child: _drawingCard(),
                         ),
