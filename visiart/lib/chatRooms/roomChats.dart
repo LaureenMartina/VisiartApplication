@@ -15,6 +15,7 @@ import 'package:flutter/foundation.dart';
 import 'package:visiart/config/SharedPref.dart';
 import 'package:visiart/models/User.dart';
 import 'package:visiart/config/config.dart' as globals;
+import 'package:visiart/models/UserRoomPrivate.dart';
 
 SharedPref sharedPref = SharedPref();
 
@@ -24,7 +25,8 @@ SharedPref sharedPref = SharedPref();
 class RoomsChatsScreen extends StatelessWidget {
   // This widget is the root of your application.
   final Room room;
-  RoomsChatsScreen({Key key, @required this.room}) : super(key: key);
+  final UserRoomPrivate userRoomPrivate;
+  RoomsChatsScreen({Key key, @required this.room, this.userRoomPrivate}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return new MaterialApp(
@@ -32,26 +34,29 @@ class RoomsChatsScreen extends StatelessWidget {
       theme: new ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: new RoomsChatPage(room: room),
+      home: new RoomsChatPage(room: room, userRoomPrivate: userRoomPrivate),
     );
   }
 }
 
 class RoomsChatPage extends StatefulWidget {
-  RoomsChatPage({Key key, this.room}) : super(key: key);
+  RoomsChatPage({Key key, this.room, this.userRoomPrivate}) : super(key: key);
   final Room room;
+  final UserRoomPrivate userRoomPrivate;
 
   @override
-  _RoomsChatPageState createState() => new _RoomsChatPageState(room);
+  _RoomsChatPageState createState() => new _RoomsChatPageState(room, userRoomPrivate);
 }
 
 class _RoomsChatPageState extends State<RoomsChatPage> {
     Room room;
+    UserRoomPrivate userRoomPrivate;
     var _userid;
     var _userAdded;
 
-    _RoomsChatPageState(Room room) {
+    _RoomsChatPageState(Room room, UserRoomPrivate userRoomPrivate) {
       this.room = room;
+      this.userRoomPrivate = userRoomPrivate;
     }
 
     ScrollController _controller = ScrollController(initialScrollOffset: 50.0);
@@ -124,23 +129,51 @@ class _RoomsChatPageState extends State<RoomsChatPage> {
             'Authorization': 'Bearer $token',
         },
         body: jsonEncode(<String, bool>{
-            'enable' : false
+            'enabled' : false
+        }),
+      );
+
+    }
+    void enableRoom(roomId) async {
+      var token = await sharedPref.read("token"); 
+      await http.put(
+        globals.API_BASE_URL+'/rooms/'+roomId.toString(),
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'Authorization': 'Bearer $token',
+        },
+        body: jsonEncode(<String, bool>{
+            'enabled' : true
         }),
       );
 
     }
 
-    void _addUserToPrivateRoom() async {
-      //Need route get userid by username
-      /* http.post(
-        'http://91.121.165.149/room-messages',
-        headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json',
-            'Authorization': 'Bearer $_token',
-        },
-        body: json.encode(data)
-      ); */
+    void _unlinkThisRoom() async {
+      print("_unlinkThisRoom");
+      print(this.userRoomPrivate);
+      /* final roomAPIUrl = globals.API_BASE_URL+'/room-messages?room='+this.room.id.toString();
+      var token = await sharedPref.read("token");
+      final response = await http.get(roomAPIUrl, headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          'Authorization':
+          'Bearer $token',
+      });
+
+      if (response.statusCode == 200) {
+          List jsonResponse = json.decode(response.body);
+          var list = jsonResponse.map((roomMessages) => new RoomMessage.fromMainJson(roomMessages)).toList();
+          if(list.isNotEmpty) {
+            sharedPref.save("lastDateMessageVieweRoom_"+this.room.id.toString(), list.last.date);
+          }
+          this.setState(() {
+            this.messageList.addAll(list);
+          });
+      } else {
+        throw Exception('Failed to load rooms from API');
+      } */
     }
 
     void addNewMessage() async {
@@ -174,6 +207,7 @@ class _RoomsChatPageState extends State<RoomsChatPage> {
             );
 
             if (response.statusCode == 200) {
+              //TODO add badge 
               newMessage = RoomMessage.fromMainJson(json.decode(response.body));
               sharedPref.save("lastDateMessageVieweRoom_"+this.room.id.toString(), newMessage.date);
             } else {
@@ -188,50 +222,19 @@ class _RoomsChatPageState extends State<RoomsChatPage> {
                     () => _controller.jumpTo(_controller.position.maxScrollExtent)); */
         }
     }
-    void showAddMembersModal(int roomId, BuildContext context) async {
-        showDialog(
-            context: context,
-            child: new AlertDialog(
-                title: Text('Ajout d\'un amie'),
-                content: TextFormField(
-                  keyboardType: TextInputType.text,
-                  decoration: new InputDecoration(
-                  hintText: 'name',
-                  //labelText: 'Nom du salon'
-                  ),
-                  onChanged: (value) => this._userAdded,
-                ),
-              actions: [
-                new FlatButton(
-                  child: Text('Valider'),
-                  onPressed: () => {
-                      //Faire la requête serverside
-                      _addUserToPrivateRoom(),
-                      Navigator.of(context, rootNavigator: true).pop(context)
-                      //Navigator.pop(context)
-                    },
-                ),
-              ],
-            ),
-        );
-    }
 
-    AppBar buildAppBar(context) {
-        if(this._userid == this.room.userId) {
-          return AppBar(
+    AppBar _privateRoomOwner() {
+      return AppBar(
               title: Text(this.room.name),
               actions: <Widget>[
                   // action button
                   IconButton(
+                    tooltip: "Ajouter des utilisateur à cette room",
                       icon: Icon(Icons.add),
                       onPressed: () {
-                          //this.room.private ? showAddMembersModal(room.id, context): null;
-                          print("object");
-                          print(this.room.private);
-                          print(this.room.id);
-                          this.room.private ? Navigator.push(context, 
+                          Navigator.push(context, 
                             MaterialPageRoute(builder: (context) => RoomAddUser(room: this.room))
-                          ): null;
+                          );
                       },
                   ),
                   IconButton(
@@ -242,10 +245,160 @@ class _RoomsChatPageState extends State<RoomsChatPage> {
                           );
                       },
                   ),
-                  IconButton(
+                  room.enabled != null && room.enabled ? IconButton(
                       icon: Icon(Icons.close),
                       onPressed: () {
                         disableRoom(room.id);
+                        Navigator.push(context, 
+                            MaterialPageRoute(builder: (context) => RoomsListPage()),
+                        );
+                        //Navigator.pop(context);
+                      },
+                  ) :
+                  IconButton(
+                      icon: Icon(Icons.done),
+                      onPressed: () {
+                        enableRoom(room.id);
+                        Navigator.push(context, 
+                            MaterialPageRoute(builder: (context) => RoomsListPage()),
+                        );
+                        //Navigator.pop(context);
+                      },
+                  ),
+                  IconButton(
+                      icon: Icon(Icons.delete),
+                      onPressed: () {
+                          deleteRoom(room.id);
+                          Navigator.push(context, 
+                              MaterialPageRoute(builder: (context) => RoomsListPage()),
+                          );
+                      },
+                  ),
+              ],
+          );
+    }
+
+    AppBar _publicRoomOwner() {
+      return AppBar(
+              title: Text(this.room.name),
+              actions: <Widget>[
+                  // action button
+                  IconButton(
+                      icon: Icon(Icons.mode_edit),
+                      onPressed: () {
+                          Navigator.push(context, 
+                              MaterialPageRoute(builder: (context) => RoomsUpdateScreen(room: this.room)),
+                          );
+                      },
+                  ),
+                  room.enabled != null && room.enabled ? IconButton(
+                      icon: Icon(Icons.close),
+                      onPressed: () {
+                        disableRoom(room.id);
+                        Navigator.push(context, 
+                            MaterialPageRoute(builder: (context) => RoomsListPage()),
+                        );
+                        //Navigator.pop(context);
+                      },
+                  ) :
+                  IconButton(
+                      icon: Icon(Icons.done),
+                      onPressed: () {
+                        enableRoom(room.id);
+                        Navigator.push(context, 
+                            MaterialPageRoute(builder: (context) => RoomsListPage()),
+                        );
+                        //Navigator.pop(context);
+                      },
+                  ),
+                  IconButton(
+                      icon: Icon(Icons.delete),
+                      onPressed: () {
+                          deleteRoom(room.id);
+                          Navigator.push(context, 
+                              MaterialPageRoute(builder: (context) => RoomsListPage()),
+                          );
+                      },
+                  ),
+              ],
+          );
+    }
+    AppBar _privateRoom() {
+      return AppBar(
+              title: Text(this.room.name),
+              actions: <Widget>[
+                  // action button
+                  IconButton(
+                      icon: Icon(Icons.remove),
+                      tooltip: "Délier de cette room",
+                      onPressed: () {
+                          _unlinkThisRoom();
+                      },
+                  ),
+              ],
+          );
+    }
+    AppBar _publicRoom() {
+      return AppBar(
+          title: Text(this.room.name),
+      );
+    }
+
+    AppBar buildAppBar(context) {
+        if (this._userid == this.room.userId && this.room.private) { // Owner and private
+          return this._privateRoomOwner();
+        }
+        else if (this._userid == this.room.userId && !this.room.private) { // Owner and public
+          return this._publicRoomOwner();
+        }
+        else if (this._userid != this.room.userId && this.room.private) { // Private
+          return this._privateRoom();
+        } else { //public
+          return this._publicRoom();
+        }
+        /* if(this._userid == this.room.userId) {
+          return AppBar(
+              title: Text(this.room.name),
+              actions: <Widget>[
+                  // action button
+                  room.private != null && room.private && this._userid == room.userId ? IconButton(
+                    tooltip: "Ajouter des utilisateur à cette room",
+                      icon: Icon(Icons.add),
+                      onPressed: () {
+                          this.room.private ? Navigator.push(context, 
+                            MaterialPageRoute(builder: (context) => RoomAddUser(room: this.room))
+                          ): null;
+                      },
+                  ) : 
+                  IconButton(
+                      icon: Icon(Icons.remove),
+                      tooltip: "Délier de cette room",
+                      onPressed: () {
+                          this.room.private ? _unlinkThisRoom(): null;
+                      },
+                  ),
+                  IconButton(
+                      icon: Icon(Icons.mode_edit),
+                      onPressed: () {
+                          Navigator.push(context, 
+                              MaterialPageRoute(builder: (context) => RoomsUpdateScreen(room: this.room)),
+                          );
+                      },
+                  ),
+                  room.enabled != null && room.enabled ? IconButton(
+                      icon: Icon(Icons.close),
+                      onPressed: () {
+                        disableRoom(room.id);
+                        Navigator.push(context, 
+                            MaterialPageRoute(builder: (context) => RoomsListPage()),
+                        );
+                        //Navigator.pop(context);
+                      },
+                  ) :
+                  IconButton(
+                      icon: Icon(Icons.done),
+                      onPressed: () {
+                        enableRoom(room.id);
                         Navigator.push(context, 
                             MaterialPageRoute(builder: (context) => RoomsListPage()),
                         );
@@ -267,13 +420,13 @@ class _RoomsChatPageState extends State<RoomsChatPage> {
           return AppBar(
               title: Text(this.room.name),
           );
-        }
+        } */
         
-    }
-                        
-                        
+    }        
                               
     Widget buildMessageTextField() {
+      /* print("this.room.enabled");
+      print(this.room.enabled); */
       if (this.room.enabled != null && !this.room.enabled) {
         return Container();
       }

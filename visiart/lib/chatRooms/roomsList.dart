@@ -199,7 +199,7 @@ class _RoomsListPageState extends State<RoomsListPage>  with SingleTickerProvide
     }
   }
 
-  GestureDetector _rowPublic(Room room, IconData icon, String dateLastMsgViewed) => GestureDetector(
+  GestureDetector _rowPublic(Room room, IconData icon) => GestureDetector(
     onTap: () => 
       Navigator.push(
         context,
@@ -214,7 +214,7 @@ class _RoomsListPageState extends State<RoomsListPage>  with SingleTickerProvide
           Container(
             padding: EdgeInsets.all(12.0),
             decoration: BoxDecoration(
-              color: Colors.deepPurple[300],
+              color: this._userId == room.userId ? Colors.deepPurple[300]:Colors.green[300],
               borderRadius: BorderRadius.circular(23.0),
               
             ),
@@ -233,7 +233,46 @@ class _RoomsListPageState extends State<RoomsListPage>  with SingleTickerProvide
             ),
           ),
         ],
-        
+      ),
+    ),
+  );
+
+  GestureDetector _rowPrivate(UserRoomPrivate userRoomPrivate, IconData icon) => GestureDetector(
+    onTap: () => 
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => RoomsChatsScreen(room: userRoomPrivate.room, userRoomPrivate: userRoomPrivate), maintainState: true),
+      ),
+      //Navigator.pushNamed(context, "room_chats", arguments: RoomsChatsScreen(room: room)),
+    child: Container(
+      padding: EdgeInsets.all(12.0),
+      margin: EdgeInsets.all(5.0),
+      child: Column(
+        children: <Widget>[
+          Container(
+            padding: EdgeInsets.all(12.0),
+            decoration: BoxDecoration(
+              color: this._userId==userRoomPrivate.room.id? Colors.deepPurple[300]:Colors.green[300],
+              borderRadius: BorderRadius.circular(23.0),
+              
+            ),
+            child: ListTile(
+              leading: Icon(Icons.chat),
+              title: Text(userRoomPrivate.room.name),
+              //trailing: room.roomMessages != null && room.roomMessages.isNotEmpty && room.roomMessages.last != null && room.roomMessages.last.userId != this._userId 
+              trailing: userRoomPrivate.room.lastDate != null 
+              && userRoomPrivate.room.roomMessages.isNotEmpty 
+              && userRoomPrivate.room.roomMessages.last != null &&  
+              DateTime.parse(userRoomPrivate.room.roomMessages.last.date).isAfter(DateTime.parse(userRoomPrivate.room.lastDate))
+              ? Badge(
+                badgeContent: null,
+                badgeColor: Colors.green[300],
+                padding: EdgeInsets.all(10),
+              ) : null,
+              //subtitle: Text("Salon public"),
+            ),
+          ),
+        ],
       ),
     ),
   );
@@ -304,10 +343,7 @@ class _RoomsListPageState extends State<RoomsListPage>  with SingleTickerProvide
                         shrinkWrap: true,
                         itemCount: _publicRooms.length,
                         itemBuilder: (context, index) {
-                          /* print("room");
-                          print(_publicRooms[0].roomMessages.last.date);
-                          print(_publicRooms[0].lastDate); */
-                          return _rowPublic(_publicRooms[index], Icons.work, null);
+                          return _rowPublic(_publicRooms[index], Icons.work);
                         },
                       ),
                     ),
@@ -341,7 +377,7 @@ class _RoomsListPageState extends State<RoomsListPage>  with SingleTickerProvide
                               return _rowPublic(_listUserRoomsPrivate[index].room, Icons.work, lastDate.data.toString());
                             },
                           ); */
-                          return _rowPublic(_listUserRoomsPrivate[index].room, Icons.work, null);
+                          return _rowPrivate(_listUserRoomsPrivate[index], Icons.work);
                         },
                       ),
                     ),

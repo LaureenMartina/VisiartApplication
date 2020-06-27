@@ -66,6 +66,7 @@ class _RoomsCreateScreenState extends State<RoomsCreateScreen> {
         body: json.encode(data)
     );
     if (response.statusCode == 200) {
+      //TODO ajout incremente du badge invested
         Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => RoomsListPage()),

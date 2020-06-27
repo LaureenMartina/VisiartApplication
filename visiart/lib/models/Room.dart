@@ -38,8 +38,10 @@ class Room {
       } else {
         userId = json['user']['id'];
       }
-    }
-
+    }/* 
+    print("model");
+    print(json['name']);
+    print(json['enabled']); */
     return Room(
       id: json['id'],
       name: json['name'],
