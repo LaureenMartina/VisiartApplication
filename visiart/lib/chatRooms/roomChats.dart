@@ -16,6 +16,7 @@ import 'package:visiart/config/SharedPref.dart';
 import 'package:visiart/models/User.dart';
 import 'package:visiart/config/config.dart' as globals;
 import 'package:visiart/models/UserRoomPrivate.dart';
+import 'package:profanity_filter/profanity_filter.dart';
 
 SharedPref sharedPref = SharedPref();
 
@@ -53,6 +54,7 @@ class _RoomsChatPageState extends State<RoomsChatPage> {
     UserRoomPrivate userRoomPrivate;
     var _userid;
     var _userAdded;
+    final filter = ProfanityFilter(); 
 
     _RoomsChatPageState(Room room, UserRoomPrivate userRoomPrivate) {
       this.room = room;
@@ -169,18 +171,23 @@ class _RoomsChatPageState extends State<RoomsChatPage> {
     }
 
     void addNewMessage() async {
-
+        
         if (textEditingController.text.trim().isNotEmpty) {
 
             this._userid = await sharedPref.readInteger("userId");
 
             var token = await sharedPref.read("token");
+            var message = textEditingController.text.trim();
+            bool isProfane = filter.checkStringForProfanity(message);
+            if (isProfane) {
+              message = filter.censorString(message);
+            }
             RoomMessage newMessage = RoomMessage(
-                content: textEditingController.text.trim(),
+                content: message,
                 userId: _userid
             ); 
             var data = {
-                "content": textEditingController.text.trim(),
+                "content": message,
                 "user": {
                     "id": _userid
                 },
