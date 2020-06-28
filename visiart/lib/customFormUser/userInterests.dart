@@ -20,7 +20,6 @@ class UserInterestsScreen extends StatefulWidget {
 }
 
 class _UserInterestsScreenState extends State<UserInterestsScreen> {
-  bool _isSwitched = false; // Button Switch
   String titlePopup;
   String description;
   String button;

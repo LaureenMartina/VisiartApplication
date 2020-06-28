@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:typed_data';
 import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
@@ -208,7 +207,11 @@ class _HomeState extends State<HomeScreen> {
         contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
         hintText: AppLocalizations.of(context).translate("email"),
         hintStyle: TextStyle(color: Colors.black87),
-        border: OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))),
+        border: OutlineInputBorder(
+          /*borderRadius: BorderRadius.circular(32.0)*/
+          borderRadius: BorderRadius.only(topLeft: Radius.circular(20), bottomRight: Radius.circular(20))
+        ),
+      ),
     );
 
     final passwordField = TextFormField(
@@ -226,7 +229,10 @@ class _HomeState extends State<HomeScreen> {
         contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
         hintText: AppLocalizations.of(context).translate("password"),
         hintStyle: TextStyle(color: Colors.black87),
-        border: OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))
+        border: OutlineInputBorder(
+          /*borderRadius: BorderRadius.circular(32.0)*/
+          borderRadius: BorderRadius.only(topLeft: Radius.circular(20), bottomRight: Radius.circular(20))
+        ),
       ),
     );
 
@@ -234,7 +240,7 @@ class _HomeState extends State<HomeScreen> {
       width: double.infinity,
       child: Material(
         elevation: 8.0,
-        borderRadius: BorderRadius.circular(30.0),
+        borderRadius: BorderRadius.only(topLeft: Radius.circular(20), bottomRight: Radius.circular(20)),//BorderRadius.circular(30.0),
         color: Colors.orange[300],
         child: MaterialButton(
           onPressed: () {
@@ -274,14 +280,13 @@ class _HomeState extends State<HomeScreen> {
                         "Visiart",
                         style:
                           TextStyle(
-                            //fontFamily: 'Montserrat',
                             color: Colors.black,
                             fontSize: 60,
                             letterSpacing: 2.5,
-                            decoration: TextDecoration.overline,
-                            decorationStyle: TextDecorationStyle.solid,
-                            decorationColor: Colors.black12,
-                            decorationThickness: 2,
+                            //decoration: TextDecoration.overline,
+                            //decorationStyle: TextDecorationStyle.solid,
+                            //decorationColor: Colors.black12,
+                            //decorationThickness: 2,
                             shadows: [
                               Shadow(
                                 color: Colors.red[200],
@@ -316,18 +321,18 @@ class _HomeState extends State<HomeScreen> {
                                 fontSize: 22,
                                 fontStyle: FontStyle.italic,
                                 letterSpacing: 2,
-                                shadows: [
-                                  Shadow(
-                                    color: Colors.red[200],
-                                    blurRadius: 5,
-                                    offset: Offset(1, 0.0),
-                                  ),
-                                  Shadow(
-                                    color: Colors.orange[200],
-                                    blurRadius: 5,
-                                    offset: Offset(1, 0.0),
-                                  ),
-                                ],
+                                // shadows: [
+                                //   Shadow(
+                                //     color: Colors.red[200],
+                                //     blurRadius: 5,
+                                //     offset: Offset(1, 0.0),
+                                //   ),
+                                //   Shadow(
+                                //     color: Colors.orange[200],
+                                //     blurRadius: 5,
+                                //     offset: Offset(1, 0.0),
+                                //   ),
+                                // ],
                               ),
                           ),
                       ),
@@ -339,8 +344,6 @@ class _HomeState extends State<HomeScreen> {
               Padding(
                 padding: EdgeInsets.only(top: 70.0, left: 20.0, right: 20.0),
                 child: Container(
-                  //child: Padding(
-                    //padding: EdgeInsets.all(0),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -353,15 +356,14 @@ class _HomeState extends State<HomeScreen> {
                         loginButon,
                       ],
                     ),
-                  //),
                 ),
               ),
               // OU Gmail
               Padding(
                 padding: EdgeInsets.only(top: 20.0),
-                child: Text("Continuer avec :",
+                child: Text(AppLocalizations.of(context).translate("home_gmail"),
                   style: TextStyle(
-                    color: Colors.white, fontWeight: FontWeight.bold , fontStyle: FontStyle.italic, fontSize: 16, letterSpacing: 2,
+                    color: Colors.grey[700], fontWeight: FontWeight.bold , fontStyle: FontStyle.italic, fontSize: 16, letterSpacing: 2,
                   ),
                 ),
               ),
@@ -383,7 +385,7 @@ class _HomeState extends State<HomeScreen> {
                         });
                       },
                       child: Container(
-                        width: 200,
+                        width: 100,
                         height: 40,
                         decoration: BoxDecoration(
                           color: Colors.white54,
@@ -401,10 +403,12 @@ class _HomeState extends State<HomeScreen> {
               Padding(
                 padding: EdgeInsets.only(top: 30),
                 child: RichText(
+                  textAlign: TextAlign.center,
                   text: TextSpan(
                     text: AppLocalizations.of(context).translate('home_signUpLink'),
                     style: TextStyle(
-                        color: Colors.black87, fontWeight: FontWeight.bold, fontStyle: FontStyle.italic, fontSize: 14, letterSpacing: 1,
+                      color: Colors.grey[900],
+                      fontWeight: FontWeight.bold, fontStyle: FontStyle.italic, fontSize: 14, letterSpacing: 1,
                     ),
                     recognizer: TapGestureRecognizer()
                       ..onTap = () {

@@ -39,7 +39,6 @@ class ModalAwards  {
             Text(
               this.description,
               textAlign: TextAlign.center,
-              style: TextStyle(),
             ),
             SizedBox(height: 10,),
             SizedBox(

@@ -24,21 +24,22 @@ class _EventsListScreenState extends State<EventsListScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.blueGrey[200],
+      backgroundColor: Color.fromRGBO(252, 233, 216, 0.1),
       body: EventList(),
       floatingActionButton: SpeedDial(
+        backgroundColor: Color.fromRGBO(82, 59, 92, 1.0),
         closeManually: true,
         animatedIcon: AnimatedIcons.menu_close,
         children: [
           SpeedDialChild(
-              backgroundColor: Colors.redAccent[200],
+              backgroundColor: Colors.pink[800],
               child: Icon(Icons.favorite),
               label: 'favorite',
               onTap: () {
                 print("favorie");
               }),
           SpeedDialChild(
-              backgroundColor: Colors.greenAccent[200],
+              backgroundColor: Colors.teal[700],
               child: Icon(Icons.filter_list),
               label: 'Récent',
               onTap: () {
@@ -128,15 +129,16 @@ class _EventListState extends State<EventList> {
             itemCount: filteredEvents.length,
             itemBuilder: (context, index) {
               return Card(
-                margin:
-                    new EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
+                elevation: 10,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(15.0)
+                ),
+                margin: EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
                 child: ListTile(
-                  contentPadding:
-                      EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
+                  contentPadding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
                   onTap: () => {
                     Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) =>
-                            EventDetails(specificEvent: filteredEvents[index])))
+                      builder: (context) => EventDetails(specificEvent: filteredEvents[index])))
                   },
                   title: Text('${filteredEvents[index].title}',
                       style: TextStyle(

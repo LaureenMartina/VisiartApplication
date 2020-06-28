@@ -12,8 +12,6 @@ import 'package:visiart/utils/FormUtils.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:visiart/models/User.dart';
-import 'package:visiart/config/SharedPref.dart';
-
 import 'package:http/http.dart' as http;
 
 SharedPref sharedPref = SharedPref();
@@ -127,7 +125,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
       },
       style: TextStyle(fontFamily: 'Montserrat', fontSize: 18.0),
       decoration: InputDecoration(
-          icon: Icon(Icons.person),
+          icon: Icon(Icons.person, color: Color.fromRGBO(82, 59, 92, 0.8), size: 28,),
           contentPadding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
           hintText: AppLocalizations.of(context).translate("signup_username"),
           border:
@@ -144,7 +142,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
       keyboardType: TextInputType.emailAddress,
       style: TextStyle(fontFamily: 'Montserrat', fontSize: 18.0),
       decoration: InputDecoration(
-          icon: Icon(Icons.email),
+          icon: Icon(Icons.email, color: Color.fromRGBO(82, 59, 92, 0.8), size: 28),
           contentPadding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
           hintText: AppLocalizations.of(context).translate("email"),
           border:
@@ -161,7 +159,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
       obscureText: true,
       style: TextStyle(fontFamily: 'Montserrat', fontSize: 18.0),
       decoration: InputDecoration(
-          icon: Icon(Icons.lock),
+          icon: Icon(Icons.lock, color: Color.fromRGBO(82, 59, 92, 0.8), size: 28),
           contentPadding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
           hintText: AppLocalizations.of(context).translate('password'),
           border:
@@ -178,7 +176,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
       obscureText: true,
       style: TextStyle(fontFamily: 'Montserrat', fontSize: 18.0),
       decoration: InputDecoration(
-          icon: Icon(Icons.lock),
+          icon: Icon(Icons.lock, color: Color.fromRGBO(82, 59, 92, 0.8), size: 28,),
           contentPadding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
           hintText: AppLocalizations.of(context).translate('signup_pwdConfirmation'),
           border:
@@ -188,14 +186,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
     final createAccountButon = Material(
       elevation: 5.0,
       borderRadius: BorderRadius.circular(30.0),
-      color: Color(0xff01A0C7),
+      color: Color.fromRGBO(82, 59, 92, 1.0),
       child: MaterialButton(
         onPressed: () {
           _onClickCreateAccountButton();
         },
         child: Text(AppLocalizations.of(context).translate('goBtn'),
             textAlign: TextAlign.center,
-            style: TextStyle(fontFamily: 'Montserrat', fontSize: 18.0)
+            style: TextStyle(fontSize: 18.0)
                 .copyWith(color: Colors.white, fontWeight: FontWeight.bold)),
       ),
     );
@@ -206,10 +204,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
         child: Column(
           children: <Widget>[
             Container(
-              height: 200,
+              height: 220,
               decoration: BoxDecoration(
                 image: DecorationImage(
-                    image: AssetImage('assets/imgs/pattern.png'),
+                    image: AssetImage('assets/imgs/signup.png'),
                     fit: BoxFit.fill),
               ),
               child: Stack(
@@ -218,8 +216,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     child: Container(
                       child: Center(
                         child: Text(AppLocalizations.of(context).translate("signup_createAccount"),
-                            style:
-                            TextStyle(color: Colors.white, fontSize: 30)),
+                          style: TextStyle(
+                            color: Color.fromRGBO(82, 59, 92, 1.0), fontSize: 30, fontWeight: FontWeight.w600
+                          ),
+                        ),
                       ),
                     ),
                   ),
@@ -247,7 +247,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       children: <Widget>[
                         Checkbox(
                           checkColor: Colors.white,
-                          activeColor: Colors.orange[800],
+                          activeColor: Color.fromRGBO(173, 165, 177, 1.0),
                           value: _valueCheckbox,
                           onChanged: (bool value) {
                             setState(() {
@@ -259,7 +259,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           text: TextSpan(
                             text: AppLocalizations.of(context).translate('rgpd_title'),
                             style: TextStyle(
-                                color: Colors.blue[800], fontWeight: FontWeight.w600, fontStyle: FontStyle.italic, fontSize: 14, letterSpacing: 1,
+                                color: Color.fromRGBO(82, 59, 92, 1.0), fontWeight: FontWeight.w600, fontStyle: FontStyle.italic, fontSize: 15, letterSpacing: 1,
                             ),
                             recognizer: TapGestureRecognizer()
                               ..onTap = () {
@@ -355,7 +355,6 @@ void displayIdFromSharedPrefs() async {
 }
 
 Future<void> createUser(String newUsername, String newName, String newEmail, String newPassword) async {
-  final api = 'http://91.121.165.149/auth/local/register';
   
   Map data = {
     'username': newUsername,
@@ -364,10 +363,8 @@ Future<void> createUser(String newUsername, String newName, String newEmail, Str
     'password': newPassword
   };
 
-
-
   Response response = await post(
-      api,
+      API_REGISTER,
       headers: {
           'Content-Type': 'application/json',
           'Accept': 'application/json',
@@ -378,18 +375,13 @@ Future<void> createUser(String newUsername, String newName, String newEmail, Str
   Map<String, dynamic> jsonResponse = json.decode(response.body);
 
   if (response.statusCode == 200) {
-    //print("res -> $jsonResponse");
-    //print('token: ${jsonResponse['jwt']}');
-    //print('userId: ${jsonResponse['user']['id']}');
     int id = jsonResponse['user']['id'];
-    print("id= $id");
     String name = jsonResponse['user']['name'];
     String username = jsonResponse['user']['username'];
     String email = jsonResponse['user']['email'];
     String token = jsonResponse['jwt'];
 
     userModel.setId(id);
-    print("user id --> ${userModel.getId()}");
     userModel.setToken(token);
     userModel.setUsername(username);
     userModel.setName(name);
@@ -408,9 +400,3 @@ Future<void> createUser(String newUsername, String newName, String newEmail, Str
     throw Exception('Failed to create user from API');
   }
 }
-
-/*void signOutGoogle() async{
-  await googleSignIn.signOut();
-
-  print("User Sign Out");
-}*/

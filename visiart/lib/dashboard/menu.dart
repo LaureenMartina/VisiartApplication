@@ -108,7 +108,7 @@ class _MenuBoardScreenState extends State<MenuBoardScreen> {
         title: Text('Visiart'),
         centerTitle: true,
         elevation: 5.0,
-        backgroundColor: Colors.deepPurple[800],
+        backgroundColor: Color.fromRGBO(82, 59, 92, 1.0),
       ),
       drawer: Drawer(
         child: ListView(
@@ -151,27 +151,41 @@ class _MenuBoardScreenState extends State<MenuBoardScreen> {
           BottomNavigationBarItem(
             icon: Icon(
               Icons.forum, 
-              color: Colors.lightBlue,
+              //color: Colors.lightBlue,
             ),
             title: Text('Salons'),
           ),
           BottomNavigationBarItem(
             icon: Icon(
               Icons.home,
-              color: Colors.brown
+              //color: Colors.brown
             ),
             title: Text('Home'),
           ),
           BottomNavigationBarItem(
             icon: Icon(
               Icons.local_play,
-              color: Colors.deepOrange,
+              //color: Colors.deepOrange,
             ),
             title: Text('Events'),
           ),
         ],
         currentIndex: _selectedIndex,
-        selectedItemColor: Colors.amber[800],
+        selectedItemColor: Color.fromRGBO(82, 59, 92, 1.0),
+        backgroundColor: Color.fromRGBO(249, 248, 249, 1.0),
+        selectedIconTheme: IconThemeData(
+          color: Color.fromRGBO(82, 59, 92, 1.0),
+          opacity: 1.0,
+          size: 25.0
+        ),
+        unselectedIconTheme: IconThemeData(
+          color: Color.fromRGBO(87, 74, 77, 0.5),
+          opacity: 1.0,
+          size: 25.0
+        ),
+        elevation: 20,
+        selectedFontSize: 16,
+        unselectedItemColor: Colors.grey,
         onTap: (value) {
           _selectedIndex = value;
           setState(() {
