@@ -1,10 +1,18 @@
 import 'dart:io';
-import 'dart:ui';
+import 'dart:typed_data';
+import 'dart:ui' as ui;
 import 'package:arkit_plugin/arkit_plugin.dart';
+import 'package:flutter/rendering.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:vector_math/vector_math_64.dart' as vector;
 import 'package:flutter/material.dart';
+import 'package:screenshot/screenshot.dart';
+import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:flare_flutter/flare_actor.dart';
 import 'package:visiart/localization/AppLocalization.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:gallery_saver/gallery_saver.dart';
 
 enum SelectedMode { StrokeWidth, Opacity, Color, Object3D, Material }
 
@@ -14,6 +22,10 @@ class Draw extends StatefulWidget {
 }
 
 class _DrawState extends State<Draw> {
+
+  // GlobalKey _globalKey = GlobalKey();
+  // final String screenshotImagePath = '/screenshots';
+
   ARKitController arkitController;
 
   String _animationState = "simple";
@@ -213,7 +225,7 @@ class _DrawState extends State<Draw> {
           print("sphere"); 
           nodeSphere = ARKitNode(
             geometry: ARKitSphere(
-              radius: 0.1,
+              radius: 0.2,
               materials: [material]
             ),
             position: vector.Vector3(0, 0, -0.5),
@@ -228,8 +240,8 @@ class _DrawState extends State<Draw> {
           nodeCone = ARKitNode(
             geometry: ARKitCone(
               topRadius: 0,
-              bottomRadius: 0.05,
-              height: 0.09,
+              bottomRadius: 0.10,
+              height: 0.18,
               materials: [material],
             ),
             position: vector.Vector3(0, -0.1, -0.5),
@@ -242,11 +254,11 @@ class _DrawState extends State<Draw> {
         print("test cylindre");
         nodeCylinder = ARKitNode(
           geometry: ARKitCylinder(
-            radius: 0.05,
-            height: 0.09,
+            radius: 0.08,
+            height: 0.15,
             materials: [material],
           ),
-          position: vector.Vector3(-0.1, 0.1, -0.5),
+          position: vector.Vector3(0, -0.1, -0.5),
         );
 
         this.arkitController.add(nodeCylinder);
@@ -256,9 +268,9 @@ class _DrawState extends State<Draw> {
         print("test pyramide");
         nodePyramid = ARKitNode(
           geometry: ARKitPyramid(
-            width: 0.09,
-            height: 0.09,
-            length: 0.09,
+            width: 0.20,
+            height: 0.20,
+            length: 0.20,
             materials: [material],
           ),
           position: vector.Vector3(0, -0.05, -0.5),
@@ -306,9 +318,9 @@ class _DrawState extends State<Draw> {
           nodeCube = ARKitNode(
             geometry: ARKitBox(
               materials: [material],
-              width: 0.1 ,
-              height: 0.1,
-              length: 0.1
+              width: 0.2,
+              height: 0.2,
+              length: 0.2
             ),
             position: vector.Vector3(0, 0, -0.5),
           );
@@ -320,9 +332,89 @@ class _DrawState extends State<Draw> {
   }
 
 
+  _requestPermission() async {
+    // Map<Permission, PermissionStatus> statuses = await [
+    //   Permission.storage,
+    // ].request();
+
+    // final info = statuses[Permission.storage].toString();
+    // print(info);
+  }
+
+  //void _saveDrawing() async {
+    // RenderRepaintBoundary boundary = _globalKey.currentContext.findRenderObject();
+    // ui.Image image = await boundary.toImage(pixelRatio: 1);
+    // final directory = (await getApplicationDocumentsDirectory()).path;
+    // ByteData byteData = await image.toByteData(format: ui.ImageByteFormat.png);
+    // Uint8List pngBytes = byteData.buffer.asUint8List();
+    // print(pngBytes);
+    // final result = await ImageGallerySaver.saveImage(byteData.buffer.asUint8List());
+    // print(directory);
+    // print(result.toString());
+    
+  void _saveDrawing({ Function success, Function fail }) {
+    print("je passe");
+    // RenderRepaintBoundary boundary = _globalKey.currentContext.findRenderObject();
+    // capturePng2List(boundary).then((uint8List) async {
+    //   if (uint8List == null || uint8List.length == 0) {
+    //     print("uint8List: $uint8List");
+    //     if (fail != null) fail();
+    //     return;
+    //   }
+    //   print("...ici...");
+    //   //Directory tempDir = await getTemporaryDirectory();
+    //   Directory directory = await getExternalStorageDirectory();
+    //   //print("tempDir: $tempDir");
+    //   print("directory: $directory");
+    //   final myImagePath = '${directory.path}/MyImages' ;
+    //   print("myImagePath: $myImagePath");
+    //   //final myImgDir = await new Directory(myImagePath).create();
+    //   //_saveImage(uint8List, myImgDir, screenshotImagePath, success: success, fail: fail);
+    // });
+ 
+  }
+
+  // Future<Uint8List> capturePng2List(RenderRepaintBoundary boundary) async {
+  //   print("dans capturePng2List...");
+  //   ui.Image image = await boundary.toImage(pixelRatio: ui.window.devicePixelRatio);
+  //   ByteData byteData = await image.toByteData(format: ui.ImageByteFormat.png);
+  //   Uint8List pngBytes = byteData.buffer.asUint8List();
+  //   print("pngBytes: $pngBytes");
+  //   return pngBytes;
+  // }
+
+  // void _saveImage(Uint8List uint8List, Directory dir, String fileName, {Function success, Function fail}) async {
+  //   print("_saveImage...");
+  //   bool isDirExist = await Directory(dir.path).exists();
+  //   print("isDirExist: $isDirExist");
+
+  //   if (!isDirExist) Directory(dir.path).create();
+
+  //   String tempPath = '${dir.path}$fileName';
+  //   print("tempPath: $tempPath");
+  //   File image = File(tempPath);
+  //   print("image: $image");
+  //   bool isExist = await image.exists();
+  //   print("isExist: $isExist");
+
+  //   if (isExist) await image.delete();
+
+  //   File(tempPath).writeAsBytes(uint8List).then((_) {
+  //     print("writeAsBytes");
+  //     if (success != null) {
+  //       print("success");
+  //       success();
+  //     }
+  //   });
+  // }
+
+
+
+
   @override
   void initState() {
     print('initState');
+    _requestPermission();
     super.initState();
   }
 
@@ -418,6 +510,7 @@ class _DrawState extends State<Draw> {
                         icon: Icon(Icons.file_download, size: 30, color: Colors.blueGrey[700],),
                         onPressed: () {
                           setState(() {
+                            _saveDrawing();
                             showBottomList = false;
                           });
                         }
@@ -512,95 +605,100 @@ class _DrawState extends State<Draw> {
         ),
       ),
 
-      body: Stack(
-        alignment: Alignment.center,
-        children: <Widget>[
-          Container(
-            child: ARKitSceneView(
-              //showFeaturePoints: true,
-              //planeDetection: ARPlaneDetection.horizontalAndVertical,
-              onARKitViewCreated: (controller) {
-                print("is changed 1: $changed");
-                return _onArKitViewCreated(controller, selectedObj, selectedMaterial);
-              }
+      body: RepaintBoundary(
+        key: _globalKey,
+        child: Stack(
+          alignment: Alignment.center,
+          children: <Widget>[ 
+            Container(
+              child: ARKitSceneView(
+                //showFeaturePoints: true,
+                //planeDetection: ARPlaneDetection.horizontalAndVertical,
+                onARKitViewCreated: (controller) {
+                  print("is changed 1: $changed");
+                  return _onArKitViewCreated(controller, selectedObj, selectedMaterial);
+                }
+              ),
             ),
-          ),
-          
-          (!detectAR) ?
-            GestureDetector(
+            
+            (!detectAR) ?
+              GestureDetector(
+                onPanUpdate: (details) {
+                  setState(() {
+                    RenderBox renderBox = context.findRenderObject();
+                    points.add(DrawingPoints(
+                        points: renderBox.globalToLocal(details.globalPosition),
+                        paint: Paint()
+                          ..strokeCap = strokeCap
+                          ..isAntiAlias = true
+                          ..color = selectedColor.withOpacity(opacity)
+                          ..strokeWidth = strokeWidth));
+                  });
+                },
+                onPanStart: (details) {
+                  setState(() {
+                    RenderBox renderBox = context.findRenderObject();
+                    points.add(DrawingPoints(
+                        points: renderBox.globalToLocal(details.globalPosition),
+                        paint: Paint()
+                          ..strokeCap = strokeCap
+                          ..isAntiAlias = true
+                          ..color = selectedColor.withOpacity(opacity)
+                          ..strokeWidth = strokeWidth));
+                  });
+                },
+                onPanEnd: (details) {
+                  setState(() {
+                    points.add(null);
+                  });
+                },
+                child: Stack(
+                  children: <Widget>[
+                    ARKitSceneView(onARKitViewCreated: (controller) {
+                      print("is changed 2: $changed");
+                      return _onArKitViewCreated(controller, selectedObj, selectedMaterial);
+                    }),
+                    CustomPaint(
+                      size: Size.infinite,
+                      painter: DrawingPainter(
+                        pointsList: points,
+                      ),
+                    ),
+                  ],
+                ),
+                  
+              )
+            :
+              GestureDetector(
               onPanUpdate: (details) {
                 setState(() {
-                  RenderBox renderBox = context.findRenderObject();
-                  points.add(DrawingPoints(
-                      points: renderBox.globalToLocal(details.globalPosition),
-                      paint: Paint()
-                        ..strokeCap = strokeCap
-                        ..isAntiAlias = true
-                        ..color = selectedColor.withOpacity(opacity)
-                        ..strokeWidth = strokeWidth));
+                  print("update details: $details");
+                  
                 });
               },
               onPanStart: (details) {
                 setState(() {
-                  RenderBox renderBox = context.findRenderObject();
-                  points.add(DrawingPoints(
-                      points: renderBox.globalToLocal(details.globalPosition),
-                      paint: Paint()
-                        ..strokeCap = strokeCap
-                        ..isAntiAlias = true
-                        ..color = selectedColor.withOpacity(opacity)
-                        ..strokeWidth = strokeWidth));
+                  print("start details: $details");
+                  
                 });
               },
               onPanEnd: (details) {
                 setState(() {
-                  points.add(null);
+                  print("end details: $details");
                 });
               },
-              child: Stack(
-                children: <Widget>[
-                  ARKitSceneView(onARKitViewCreated: (controller) {
-                    print("is changed 2: $changed");
-                    return _onArKitViewCreated(controller, selectedObj, selectedMaterial);
-                  }),
-                  CustomPaint(
-                    size: Size.infinite,
-                    painter: DrawingPainter(
-                      pointsList: points,
-                    ),
-                  ),
-                ],
+              child: ARKitSceneView(onARKitViewCreated: (controller) {
+                  print("is changed 3: $changed");
+                  return _onArKitViewCreated(controller, selectedObj, selectedMaterial);
+                }
               ),
-                
-            )
-          :
-            GestureDetector(
-            onPanUpdate: (details) {
-              setState(() {
-                print("update details: $details");
-                
-              });
-            },
-            onPanStart: (details) {
-              setState(() {
-                print("start details: $details");
-                
-              });
-            },
-            onPanEnd: (details) {
-              setState(() {
-                print("end details: $details");
-              });
-            },
-            child: ARKitSceneView(onARKitViewCreated: (controller) {
-                print("is changed 3: $changed");
-                return _onArKitViewCreated(controller, selectedObj, selectedMaterial);
-              }
             ),
-          ),
 
-        ],
+          ],
+        ),
+        
       ),
+    
     );
   }
 
@@ -628,7 +726,7 @@ class DrawingPainter extends CustomPainter {
         offsetPoints.clear();
         offsetPoints.add(pointsList[i].points);
         offsetPoints.add(Offset(pointsList[i].points.dx + 0.1, pointsList[i].points.dy + 0.1));
-        canvas.drawPoints(PointMode.points, offsetPoints, pointsList[i].paint);
+        canvas.drawPoints(ui.PointMode.points, offsetPoints, pointsList[i].paint);
       }
     }
   }
