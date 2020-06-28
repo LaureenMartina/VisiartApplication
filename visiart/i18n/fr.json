@@ -16,6 +16,7 @@
 
   "home_signUpLink": "Pas encore inscrit ? Rejoignez les passionnés !",
   "home_slogan": "Mettez de l'ART dans vos vies",
+  "home_gmail": "Continuer avec :",
 
   "signup_createAccount": "Créer un Compte",
   "signup_username": "Nom / Pseudo",
@@ -42,6 +43,9 @@
   "menu_settingsSubtitle": "Données de l\\'application",
   "menu_logout": "Déconnexion",
   "menu_logoutSubtitle": "Bye Bye !",
+
+  "dashboard_subtitle": "Les événements du Mois",
+  "dashboard_infoDateEvent": "A partir du \n",
 
   "userInterest_userInterest": "Vos Centres d'intérêts",
   "userInterests_congratulations": "Bravooo !",

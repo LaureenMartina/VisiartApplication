@@ -17,6 +17,7 @@
 
   "home_signUpLink": "Not signed in ? Join thousands of passionates !",
   "home_slogan": "Add more ART to your life",
+  "home_gmail": "Continue with :",
 
   "signup_createAccount": "Create Account",
   "signup_username": "Name / Pseudo",
@@ -39,10 +40,13 @@
   "menu_storedData": "Your saved data",
   "menu_about": "About",
   "menu_aboutSubtitle": "Our team, our app",
-  "menu_settings": "Settongs",
+  "menu_settings": "Settings",
   "menu_settingsSubtitle": "Application's data",
   "menu_logout": "Logout",
   "menu_logoutSubtitle": "Bye Bye !",
+
+  "dashboard_subtitle": "Events of the Month",
+  "dashboard_infoDateEvent": "From \n",
 
   "userInterest_userInterest": "Your points of interest",
   "userInterests_congratulations": "Congratulations !",
