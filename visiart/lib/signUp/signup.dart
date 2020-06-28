@@ -7,6 +7,17 @@ import 'package:visiart/config/config.dart';
 import 'package:visiart/localization/AppLocalization.dart';
 import 'package:visiart/utils/AlertUtils.dart';
 import 'package:visiart/utils/FormUtils.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:visiart/models/User.dart';
+import 'package:visiart/config/SharedPref.dart';
+
+import 'package:http/http.dart' as http;
+
+SharedPref sharedPref = SharedPref();
+User userModel = new User();
+final FirebaseAuth _auth = FirebaseAuth.instance;
+final GoogleSignIn googleSignIn = GoogleSignIn();
 
 
 class SignUpScreen extends StatefulWidget {
@@ -231,3 +242,136 @@ class _SignUpScreenState extends State<SignUpScreen> {
     );
   }
 }
+
+Future<String> signInWithGoogle() async {
+  
+  final GoogleSignInAccount googleSignInAccount = await googleSignIn.signIn();
+  final GoogleSignInAuthentication googleSignInAuthentication = await googleSignInAccount.authentication;
+
+  final AuthCredential credential = GoogleAuthProvider.getCredential(
+    accessToken: googleSignInAuthentication.accessToken,
+    idToken: googleSignInAuthentication.idToken,
+  );
+
+  final AuthResult authResult = await _auth.signInWithCredential(credential);
+  final FirebaseUser user = authResult.user;
+
+  //assert(user.email != null);
+  assert(!user.isAnonymous);
+  assert(await user.getIdToken() != null);
+
+  final FirebaseUser currentUser = await _auth.currentUser();
+
+  var name = currentUser.displayName;
+  var email = currentUser.email;
+  var password = " "; // TODO empty if connexion is GMAIL
+  var data = {
+      "identifier" : name,
+      "password" : password
+  };
+  if (currentUser != null) {
+    final response = await http.post(
+        'http://91.121.165.149/room-messages',
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+        },
+        body: json.encode(data)
+    );
+
+    Map<String, dynamic> jsonResponse = json.decode(response.body);
+        if (response.statusCode == 200) {
+        int id = jsonResponse['user']['id'];
+        String name = jsonResponse['user']['name'];
+        String username = jsonResponse['user']['username'];
+        String email = jsonResponse['user']['email'];
+        String token = jsonResponse['jwt'];
+
+        userModel.setId(id);
+        userModel.setToken(token);
+        userModel.setUsername(username);
+        userModel.setName(name);
+        userModel.setEmail(email);
+
+        sharedPref.saveInteger("userId", id);
+        sharedPref.save("name", name);
+        sharedPref.save("email", email);
+        sharedPref.save("token", token);
+    } else {
+        throw Exception('Failed to post message from API');
+    }
+  } else {
+    createUser(name, name, email, password);
+  }
+
+  assert(user.uid == currentUser.uid);
+
+  return 'signInWithGoogle succeeded: $user';
+}
+
+ // ------ Get value from SharedPreferences ------
+void displayIdFromSharedPrefs() async {
+  var _id = await sharedPref.readInteger("userId");
+  print("_id -> $_id");
+}
+
+Future<void> createUser(String newUsername, String newName, String newEmail, String newPassword) async {
+  final api = 'http://91.121.165.149/auth/local/register';
+  
+  Map data = {
+    'username': newUsername,
+    'name': newName,
+    'email': newEmail,
+    'password': newPassword
+  };
+
+
+
+  Response response = await post(
+      api,
+      headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+      },
+      body: json.encode(data),
+  );
+
+  Map<String, dynamic> jsonResponse = json.decode(response.body);
+
+  if (response.statusCode == 200) {
+    //print("res -> $jsonResponse");
+    //print('token: ${jsonResponse['jwt']}');
+    //print('userId: ${jsonResponse['user']['id']}');
+    int id = jsonResponse['user']['id'];
+    print("id= $id");
+    String name = jsonResponse['user']['name'];
+    String username = jsonResponse['user']['username'];
+    String email = jsonResponse['user']['email'];
+    String token = jsonResponse['jwt'];
+
+    userModel.setId(id);
+    print("user id --> ${userModel.getId()}");
+    userModel.setToken(token);
+    userModel.setUsername(username);
+    userModel.setName(name);
+    userModel.setEmail(email);
+
+    sharedPref.saveInteger("userId", id);
+    sharedPref.save("name", name);
+    sharedPref.save("email", email);
+    sharedPref.save("token", token);
+
+    //return jsonResponse;
+  } else if(response.statusCode == 400) {
+    String errorMsg = jsonResponse['message'][0]['messages'][0]['message'];
+    throw Exception(errorMsg);
+  } else {
+    throw Exception('Failed to create user from API');
+  }
+}
+
+/*void signOutGoogle() async{
+  await googleSignIn.signOut();
+
+  print("User Sign Out");
+}*/

@@ -5,6 +5,14 @@
   "warning": "Attention !",
   "close": "Fermer",
   "save": "Enregistrer",
+  "display": "Affiché ?",
+  "private": "Privé ?",
+  "yes": "OUI",
+  "no": "NON",
+  "rooms": "Salons de discussion",
+  "add": "Ajouter",
+  "validate": "Valider",
+  "none": "Aucune",
 
   "home_signUpLink": "Pas encore inscrit ? Rejoignez les passionnés !",
   "home_slogan": "Mettez de l'ART dans vos vies",
@@ -31,6 +39,19 @@
   "userInterest_tellUsWhatYouLike": "Dites nous ce que vous aimez",
   "userInterest_select": "Sélectionnez un ou plusieurs domaines qui vous intéressent",
   "userInterest_move": "Etes-vous prêt(e) à vous déplacer ?",
-  "userInterest_save": "Enregistrer"
+  "userInterest_save": "Enregistrer",
+
+  "roomsList_roomsList": "Liste des salons",
+  "roomsList_roomsPublic": "Salon publique",
+  "roomsList_roomsPrivate": "Salon privée",
+
+  "roomsCreate_hobbyChoice": "Choisir le hobby",
+  "roomsCreate_addRomm": "Ajout d'un salon",
+  "roomsCreate_roomName": "Nom du salon",
+  "roomsCreate_updateRomm": "Modification d'un salon",
+  "roomsCreate_showRomm": "Afficher le salon ?",
+  "roomsCreate_privateRomm": "Est-ce un salon privée ?",
+
+  "roomsChats_addFriend": "Ajouter un ami"
 
 }
