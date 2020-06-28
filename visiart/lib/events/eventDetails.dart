@@ -1,8 +1,12 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:visiart/config/SharedPref.dart';
+import 'package:visiart/config/config.dart';
 import 'package:visiart/models/Event.dart';
+import 'package:http/http.dart' as http;
 
 SharedPref sharedPref = SharedPref();
 
@@ -19,7 +23,8 @@ class _EventDetailsState extends State<EventDetails> {
 
   var infoSite = "Plus d'informations sur le site officiel";
   //var infoGeoloc = "";
-  var favorite = false;
+  var _favorite = false;
+  int _idEvent;
   var specificEvent = List<Event>();
 
   Future<void> _launchedUrlSite(url) async {
@@ -32,20 +37,42 @@ class _EventDetailsState extends State<EventDetails> {
 
   void _changeFavorite() {
     setState(() {
-      if (favorite) {
-        favorite = false;
+      if (_favorite) {
+        _favorite = false;
       } else {
-        favorite = true;
-        // TODO: update API EVENT
+        _favorite = true;
+        _setFavoriteEvent();
       }
     });
+  }
+
+  void _setFavoriteEvent() async{
+    var token = await sharedPref.read(API_TOKEN_KEY); 
+    final response = await http.put("http://91.121.165.149/events/" + _idEvent.toString(),
+      headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          'Authorization': 'Bearer $token',
+      },
+      body: jsonEncode(<String, bool>{
+        'favorite' : true
+      }),
+    );
+    print("response: $response");
+    
+    if(response.statusCode == 200) {
+        print(response.statusCode);
+    } else {
+      throw Exception('Failed to update event in API');
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     //print("eventDetails: ${widget.specificEvent.id}");
-    var city = widget.specificEvent.city;
-    var urlSite = widget.specificEvent.urlSite;
+    String city = widget.specificEvent.city;
+    String urlSite = widget.specificEvent.urlSite;
+    _idEvent = widget.specificEvent.id;
 
     return Scaffold(
       body: Column(
@@ -92,10 +119,12 @@ class _EventDetailsState extends State<EventDetails> {
                       radius: 26,
                       backgroundColor: Colors.white70, 
                       child: IconButton(
-                        icon: (favorite ? Icon(Icons.favorite) : Icon(Icons.favorite_border)),
+                        icon: (_favorite ? Icon(Icons.favorite) : Icon(Icons.favorite_border)),
                         color: Colors.red[500],
                         iconSize: 35,
-                        onPressed: _changeFavorite,
+                        onPressed: () {
+                          _changeFavorite();
+                        },
                       ),
                     ),
                   ],

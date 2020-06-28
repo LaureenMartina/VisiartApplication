@@ -255,21 +255,37 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             });
                           },
                         ),
-                        RichText(
-                          text: TextSpan(
-                            text: AppLocalizations.of(context).translate('rgpd_title'),
-                            style: TextStyle(
-                                color: Color.fromRGBO(82, 59, 92, 1.0), fontWeight: FontWeight.w600, fontStyle: FontStyle.italic, fontSize: 15, letterSpacing: 1,
+                        Flexible(
+                          child: RichText(
+                            text: TextSpan(
+                              text: AppLocalizations.of(context).translate('rgpd_checkbox'),
+                              style: TextStyle(
+                                color: Color.fromRGBO(82, 59, 92, 1.0), fontWeight: FontWeight.w600, fontStyle: FontStyle.italic, fontSize: 14, letterSpacing: 1,
+                              ),
+                              children: <TextSpan>[
+                                TextSpan(text: AppLocalizations.of(context).translate('rgpd_title'),
+                                  style: TextStyle(
+                                      color: Colors.blueAccent, fontSize: 14),
+                                  recognizer: TapGestureRecognizer()
+                                    ..onTap = () {
+                                      _navigateToRGPD();
+                                    }
+                                ),
+                                TextSpan(text: " (" + AppLocalizations.of(context).translate('rgpd_required') + ")",
+                                  style: TextStyle(
+                                      color: Colors.grey, fontSize: 12),
+                                  recognizer: TapGestureRecognizer()
+                                    ..onTap = () {
+                                      _navigateToRGPD();
+                                    }
+                                )
+                              ]
                             ),
-                            recognizer: TapGestureRecognizer()
-                              ..onTap = () {
-                                _navigateToRGPD();
-                              },
                           ),
                         ),
                       ],
                     ),
-                    SizedBox(height: 15.0),
+                    SizedBox(height: 20.0),
                     createAccountButon,
                   ],
                 ),

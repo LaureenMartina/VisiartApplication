@@ -24,6 +24,8 @@
   "signup_pwdConfirmation": "Confirm",
   "signup_createAccountAlt": "Or create an account with :",
 
+  "rgpd_checkbox": "I agree to the processing of my information as explained in the ",
+  "rgpd_required": "required",
   "rgpd_title": "Privacy Policy",
   "rgpd_aboutUsTitle": "Who are we?",
   "rgpd_personnalDataTitle": "Use of personal data collected",
