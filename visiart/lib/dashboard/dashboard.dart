@@ -246,14 +246,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                           Column(
                                             children: <Widget>[
                                               Padding(
-                                                padding: EdgeInsets.only(top: 5, right: 25.0),
+                                                padding: EdgeInsets.only(top: 5, right: 10),
                                                 child: Container(
                                                   child: Text(AppLocalizations.of(context).translate("dashboard_infoDateEvent") + '${index.startDate}',
                                                     style: TextStyle(
-                                                      fontSize: 20, fontWeight: FontWeight.bold,
+                                                      fontSize: 17.5,
                                                       color: Colors.blueGrey[800],
                                                     ),
-                                                    textAlign: TextAlign.center,
+                                                    textAlign: TextAlign.left,
                                                   ),
                                                 ),
                                               ),

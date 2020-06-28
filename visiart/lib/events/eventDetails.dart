@@ -146,16 +146,17 @@ class _EventDetailsState extends State<EventDetails> {
                             style: TextStyle(
                               color: Colors.white,
                               fontSize: 18,
+                              fontWeight: FontWeight.w600
                             ),
                           )
                           : Text(
-                              "France",
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 18,
-                              ),
+                            "France",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 18,
+                              fontWeight: FontWeight.w600
                             ),
-                        //SizedBox(width: 200,),
+                          ),
                       ],
                     ), 
                   ],
@@ -163,8 +164,8 @@ class _EventDetailsState extends State<EventDetails> {
               ),
               // btn Géolocalisation
               Positioned(
-                top: 250,
-                left: 350,
+                top: 105,
+                left: 314,
                 child: Material(
                   color: Colors.transparent,
                   child: Center(
@@ -199,7 +200,7 @@ class _EventDetailsState extends State<EventDetails> {
                         Container(
                           padding: EdgeInsets.only(left: 20, right: 20),
                           child: Text(
-                            "Début : ${widget.specificEvent.startDate}", 
+                            "De : ${widget.specificEvent.startDate}", 
                             style: TextStyle(
                               color: Colors.white,
                               fontSize: 16
@@ -207,9 +208,9 @@ class _EventDetailsState extends State<EventDetails> {
                           ),
                           alignment: Alignment.center,
                           width: 180,
-                          height: 30,
+                          height: 40,
                           decoration: BoxDecoration(
-                            color: Colors.deepOrange[900],
+                            color: Color.fromRGBO(173, 165, 177, 1.0),
                             borderRadius: BorderRadius.circular(20),
                             boxShadow: [
                               BoxShadow(
@@ -224,7 +225,7 @@ class _EventDetailsState extends State<EventDetails> {
                         // endDate
                         Container(
                           padding: EdgeInsets.only(left: 20, right: 20),
-                          child: Text("Fin : ${widget.specificEvent.endDate}",
+                          child: Text("Au : ${widget.specificEvent.endDate}",
                             style: TextStyle(
                               color: Colors.white,
                               fontSize: 16
@@ -232,9 +233,9 @@ class _EventDetailsState extends State<EventDetails> {
                           ),
                           alignment: Alignment.center,
                           width: 180,
-                          height: 30,
+                          height: 40,
                           decoration: BoxDecoration(
-                            color: Colors.deepOrange[900],
+                            color: Color.fromRGBO(173, 165, 177, 1.0),
                             borderRadius: BorderRadius.circular(20),
                             boxShadow: [
                               BoxShadow(
@@ -297,7 +298,7 @@ class _EventDetailsState extends State<EventDetails> {
                               ),
                             ),
                             elevation: 5,
-                            color: Colors.deepOrange[100],
+                            color: Color.fromRGBO(252, 233, 216, 1.0),
                             colorBrightness: Brightness.light,
                             shape: RoundedRectangleBorder(
                               borderRadius: new BorderRadius.circular(18.0),
