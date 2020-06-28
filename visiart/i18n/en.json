@@ -31,6 +31,8 @@
   "userInterest_tellUsWhatYouLike": "Tell us what you like",
   "userInterest_select": "Select one or more point of interest",
   "userInterest_move": "Are you ready to move ?",
-  "userInterest_save": "Save"
+  "userInterest_save": "Save",
+
+  "drawingAR_drawing": "Drawing"
 
 }

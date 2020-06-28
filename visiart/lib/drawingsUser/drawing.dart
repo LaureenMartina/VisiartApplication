@@ -4,6 +4,7 @@ import 'package:arkit_plugin/arkit_plugin.dart';
 import 'package:vector_math/vector_math_64.dart' as vector;
 import 'package:flutter/material.dart';
 import 'package:flare_flutter/flare_actor.dart';
+import 'package:visiart/localization/AppLocalization.dart';
 
 enum SelectedMode { StrokeWidth, Opacity, Color, Object3D, Material }
 
@@ -22,9 +23,7 @@ class _DrawState extends State<Draw> {
   bool modernObj = false;
   bool showBottomList = false;
 
-  ARKitNode nodeSphere;
-  ARKitNode nodeCube;
-  ARKitNode nodeCone;
+  ARKitNode nodeSphere, nodeCube, nodeCone, nodeCylinder, nodePyramid, nodeTorus, nodeText;
 
   Color selectedColor = Colors.black;
   Color pickerColor = Colors.black;
@@ -33,8 +32,7 @@ class _DrawState extends State<Draw> {
   double strokeWidth = 5.0;
   double opacity = 1.0;
   
-  String selectedText = "carré"; 
-  IconData selectedObj = Icons.crop_square;
+  String selectedObj = "cube";
   String selectedMaterial = "";
 
   List<DrawingPoints> points = List();
@@ -59,12 +57,15 @@ class _DrawState extends State<Draw> {
     Colors.black
   ];
 
-  List<IconData> obj3DBasic = [
-    Icons.radio_button_unchecked,
-    Icons.crop_square,
-    Icons.change_history,
-    Icons.ac_unit
-  ];
+  Map<String,String> obj3D = {
+    "sphere": "assets/imgs/sphere.png",
+    "cube": "assets/imgs/cube.png",
+    "cone": "assets/imgs/cone.png",
+    "cylinder": "assets/imgs/cylinder.png",
+    "pyramid": "assets/imgs/pyramid.png",
+    "torus": "assets/imgs/torus.png",
+    "text": "assets/imgs/text.png"
+  };
 
   List<String> materialsLink = [
     "assets/imgs/art.png",
@@ -129,26 +130,35 @@ class _DrawState extends State<Draw> {
   _getObject3D() {
     List<Widget> listWidget = List();
 
-    for(var obj in obj3DBasic) {
-      listWidget.add(object3DDisplay(obj));
-    }
+    obj3D.forEach((nameObj, path) {
+      listWidget.add(object3DDisplay(nameObj, path));
+    });
 
     return listWidget;
   }
 
-  Widget object3DDisplay(IconData obj) {
+  Widget object3DDisplay(String nameObj, String path) {
     return GestureDetector(
       onTap: () {
         setState(() {
           print("changed: $changed");
           changed = true;
+          selectedObj = nameObj;
           print("object cliqué: $selectedObj");
-          //changed = true;
-          selectedObj = obj;
         });
       },
-      child: Container(
-        child: Icon(obj, size: 30),
+      child: ClipOval(
+        child: Container(
+          padding: const EdgeInsets.only(bottom: 16.0, top: 20),
+          height: 40,
+          width: 40,
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              fit: BoxFit.fill,
+              image: AssetImage(path)
+            ),
+          ),
+        ),
       ),
     );
   }
@@ -188,7 +198,7 @@ class _DrawState extends State<Draw> {
 
   /*=====================================================*/
 
-  _onArKitViewCreated(ARKitController controller, IconData obj, String decor) {
+  _onArKitViewCreated(ARKitController controller, String obj, String decor) {
     this.arkitController = controller;
     
     ARKitMaterial material = ARKitMaterial(
@@ -198,13 +208,13 @@ class _DrawState extends State<Draw> {
     print("choice: $obj");
     print("decor: $decor");
 
-    switch (obj.toString()) {
-      case "IconData(U+0E836)": { //IconData(U+0E86B)
+    switch (obj) {
+      case "sphere": {
           print("sphere"); 
           nodeSphere = ARKitNode(
             geometry: ARKitSphere(
-              materials: [material],
-              radius: 0.1
+              radius: 0.1,
+              materials: [material]
             ),
             position: vector.Vector3(0, 0, -0.5),
           );
@@ -213,29 +223,89 @@ class _DrawState extends State<Draw> {
           this.arkitController.add(nodeSphere);
         }
         break;
-      case "IconData(U+0E86B)": {
+      case "cone": {
           print("cone");
           nodeCone = ARKitNode(
             geometry: ARKitCone(
-                topRadius: 0,
-                bottomRadius: 0.05,
-                height: 0.09),
+              topRadius: 0,
+              bottomRadius: 0.05,
+              height: 0.09,
+              materials: [material],
+            ),
             position: vector.Vector3(0, -0.1, -0.5),
           );
 
           this.arkitController.add(nodeCone);
         }
         break;
-      case "IconData(U+0EB3B)": {
-        print("test plan");
-        //this.arkitController.onAddNodeForAnchor = _handleAddAnchor;
+      case "cylinder": {
+        print("test cylindre");
+        nodeCylinder = ARKitNode(
+          geometry: ARKitCylinder(
+            radius: 0.05,
+            height: 0.09,
+            materials: [material],
+          ),
+          position: vector.Vector3(-0.1, 0.1, -0.5),
+        );
+
+        this.arkitController.add(nodeCylinder);
+      }
+        break;
+      case "pyramid": {
+        print("test pyramide");
+        nodePyramid = ARKitNode(
+          geometry: ARKitPyramid(
+            width: 0.09,
+            height: 0.09,
+            length: 0.09,
+            materials: [material],
+          ),
+          position: vector.Vector3(0, -0.05, -0.5),
+        );
+
+        this.arkitController.add(nodePyramid);
+      }
+        break;
+      case "torus": {
+        print("test donut");
+        nodeTorus = ARKitNode(
+          geometry: ARKitTorus(
+            ringRadius: 0.04,
+            pipeRadius: 0.02,
+            materials: [material],
+          ),
+          position: vector.Vector3(0.1, -0.1, -0.5),
+        );
+
+        this.arkitController.add(nodeTorus);
+      }
+        break;
+      case "text": {
+        print("test TEXT");
+        nodeText = ARKitNode(
+          geometry: ARKitText(
+          text: 'Flutter',
+          extrusionDepth: 1,
+          materials: [
+            ARKitMaterial(
+              diffuse: ARKitMaterialProperty(color: Colors.blue),
+            )
+          ],
+        ),
+          position: vector.Vector3(-0.3, 0.3, -1.4),
+          scale: vector.Vector3(0.02, 0.02, 0.02),
+        );
+
+        this.arkitController.add(nodeText);
       }
         break;
       default: {
-          print("carré"); //IconData(U+0E3C6)
+          print("carré");
           print("choice: $selectedObj");
           nodeCube = ARKitNode(
             geometry: ARKitBox(
+              materials: [material],
               width: 0.1 ,
               height: 0.1,
               length: 0.1
@@ -289,7 +359,7 @@ class _DrawState extends State<Draw> {
                     Container(
                       padding: EdgeInsets.only(right: 12),
                       child: Text(
-                        "Dessin", // TODO translate
+                        AppLocalizations.of(context).translate('drawingAR_drawing'),
                         style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.teal[300])
                       ),
                     ),
@@ -325,7 +395,7 @@ class _DrawState extends State<Draw> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
                       IconButton(
-                        icon: Icon(Icons.gesture),
+                        icon: Icon(Icons.gesture, size: 30, color: Colors.grey[900],),
                         onPressed: () {
                           setState(() {
                             if (selectedMode == SelectedMode.StrokeWidth)
@@ -335,7 +405,7 @@ class _DrawState extends State<Draw> {
                         }
                       ),
                       IconButton(
-                        icon: Icon(Icons.bubble_chart),
+                        icon: Icon(Icons.bubble_chart, size: 30, color: Colors.orange[700],),
                         onPressed: () {
                           setState(() {
                             if (selectedMode == SelectedMode.Color)
@@ -345,7 +415,7 @@ class _DrawState extends State<Draw> {
                         }
                       ),
                       IconButton(
-                        icon: Icon(Icons.file_download),
+                        icon: Icon(Icons.file_download, size: 30, color: Colors.blueGrey[700],),
                         onPressed: () {
                           setState(() {
                             showBottomList = false;
@@ -353,7 +423,7 @@ class _DrawState extends State<Draw> {
                         }
                       ),
                       IconButton(
-                        icon: Icon(Icons.delete_outline),
+                        icon: Icon(Icons.delete_outline, size: 30, color: Colors.red[900],),
                         onPressed: () {
                           setState(() {
                             showBottomList = false;
@@ -368,18 +438,17 @@ class _DrawState extends State<Draw> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
                       IconButton(
-                        icon: Icon(Icons.apps),
+                        icon: Icon(Icons.apps, size: 30, color: Colors.cyan[900],),
                         onPressed: () {
                           setState(() {
                             if (selectedMode == SelectedMode.Material)
                               showBottomList = !showBottomList;
-                              //print("là");
                             selectedMode = SelectedMode.Material;
                           });
                         }
                       ),
                       IconButton(
-                        icon: Icon(Icons.category),
+                        icon: Icon(Icons.category, size: 30, color: Colors.brown[900],),
                         onPressed: () {
                           setState(() {
                             if (selectedMode == SelectedMode.Object3D)
@@ -413,8 +482,8 @@ class _DrawState extends State<Draw> {
                       min: 0.0,
                       onChanged: (val) {
                         setState(() {
-                          print("value slider : $strokeWidth");
-                          print("value slider : ${(selectedMode == SelectedMode.StrokeWidth)}");
+                          // print("value slider : $strokeWidth");
+                          // print("value slider : ${(selectedMode == SelectedMode.StrokeWidth)}");
                           if (selectedMode == SelectedMode.StrokeWidth)
                             strokeWidth = val;
                         });
@@ -446,23 +515,16 @@ class _DrawState extends State<Draw> {
       body: Stack(
         alignment: Alignment.center,
         children: <Widget>[
-          //if(changed)
-            // Container(
-            //   child: ARKitSceneView(onARKitViewCreated: (controller) {
-            //       return _onArKitViewCreated(controller, "");
-            //     }
-            //   ),
-            // ),
-            Container(
-              child: ARKitSceneView(
-                //showFeaturePoints: true,
-                //planeDetection: ARPlaneDetection.horizontalAndVertical,
-                onARKitViewCreated: (controller) {
-                  print("is changed 1: $changed");
-                  return _onArKitViewCreated(controller, selectedObj, selectedMaterial);
-                }
-              ),
+          Container(
+            child: ARKitSceneView(
+              //showFeaturePoints: true,
+              //planeDetection: ARPlaneDetection.horizontalAndVertical,
+              onARKitViewCreated: (controller) {
+                print("is changed 1: $changed");
+                return _onArKitViewCreated(controller, selectedObj, selectedMaterial);
+              }
             ),
+          ),
           
           (!detectAR) ?
             GestureDetector(

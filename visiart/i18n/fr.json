@@ -31,6 +31,7 @@
   "userInterest_tellUsWhatYouLike": "Dites nous ce que vous aimez",
   "userInterest_select": "Sélectionnez un ou plusieurs domaines qui vous intéressent",
   "userInterest_move": "Etes-vous prêt(e) à vous déplacer ?",
-  "userInterest_save": "Enregistrer"
+  "userInterest_save": "Enregistrer",
 
+  "drawingAR_drawing": "Dessin"
 }
