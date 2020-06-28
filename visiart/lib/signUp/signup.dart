@@ -1,10 +1,12 @@
 import 'dart:convert';
 import 'package:email_validator/email_validator.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:visiart/config/SharedPref.dart';
 import 'package:visiart/config/config.dart';
 import 'package:visiart/localization/AppLocalization.dart';
+import 'package:visiart/signUp/privacyPolicy.dart';
 import 'package:visiart/utils/AlertUtils.dart';
 import 'package:visiart/utils/FormUtils.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -26,6 +28,8 @@ class SignUpScreen extends StatefulWidget {
 }
 
 class _SignUpScreenState extends State<SignUpScreen> {
+  bool _valueCheckbox = false;
+
   final _nameController = TextEditingController();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
@@ -55,18 +59,24 @@ class _SignUpScreenState extends State<SignUpScreen> {
     }
     if (!EmailValidator.validate(_emailController.text)){
       showAlert(context, "Warning", "Email must be valid", "Close");
+      return;
     }
-    _createUser(_nameController.text, _nameController.text, _emailController.text,
-        _passwordController.text);
+    if(_valueCheckbox == false) {
+      showAlert(context, "Warning", "Private Policy must be checked", "Close");
+      return;
+    }
+    _createUser(_nameController.text, _nameController.text, _emailController.text, _passwordController.text, 
+      _valueCheckbox);
   }
 
-  void _createUser(String newUsername, String newName, String newEmail, String newPassword) async {
+  void _createUser(String newUsername, String newName, String newEmail, String newPassword, bool acceptPrivatePolicy) async {
 
     Map data = {
       'username': newUsername,
       'name': newName,
       'email': newEmail,
-      'password': newPassword
+      'password': newPassword,
+      'privatePolicy': acceptPrivatePolicy
     };
 
     Response response = await post(
@@ -78,10 +88,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
     Map<String, dynamic> jsonResponse = json.decode(response.body);
 
     if (response.statusCode == 200) {
-      debugPrint("API_REGISTER ==> 200");
-      debugPrint(response.toString());
       int id = jsonResponse['user']['id'];
-      print("id= $id");
       String name = jsonResponse['user']['name'];
       String email = jsonResponse['user']['email'];
       String token = jsonResponse['jwt'];
@@ -92,11 +99,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
       sharedPref.save("token", token);
 
       Navigator.pushNamed(context, 'hobbies');
-
       //return jsonResponse;
     } else if (response.statusCode == 400) {
       String errorMsg = jsonResponse['message'][0]['messages'][0]['message'];
-      debugPrint("errormsg: " + errorMsg);
+      //debugPrint("errormsg: " + errorMsg);
         showAlert(context, "Error", errorMsg, "Close");
       throw Exception(errorMsg);
     } else {
@@ -104,6 +110,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
     }
   }
 
+  void _navigateToRGPD() { //Replacement
+    Navigator.of(context).push(
+        new MaterialPageRoute(builder: (context) => PrivacyPolicy()));
+  }
+  
   @override
   Widget build(BuildContext context) {
     
@@ -230,6 +241,34 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     passwordField,
                     SizedBox(height: 20.0),
                     passwordConfirmationField,
+                    SizedBox(height: 15.0),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Checkbox(
+                          checkColor: Colors.white,
+                          activeColor: Colors.orange[800],
+                          value: _valueCheckbox,
+                          onChanged: (bool value) {
+                            setState(() {
+                                _valueCheckbox = value;
+                            });
+                          },
+                        ),
+                        RichText(
+                          text: TextSpan(
+                            text: AppLocalizations.of(context).translate('rgpd_title'),
+                            style: TextStyle(
+                                color: Colors.blue[800], fontWeight: FontWeight.w600, fontStyle: FontStyle.italic, fontSize: 14, letterSpacing: 1,
+                            ),
+                            recognizer: TapGestureRecognizer()
+                              ..onTap = () {
+                                _navigateToRGPD();
+                              },
+                          ),
+                        ),
+                      ],
+                    ),
                     SizedBox(height: 15.0),
                     createAccountButon,
                   ],
