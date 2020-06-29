@@ -70,6 +70,10 @@
   "roomsCreate_showRomm": "Afficher le salon ?",
   "roomsCreate_privateRomm": "Est-ce un salon privée ?",
 
-  "roomsChats_addFriend": "Ajouter un ami"
+  "roomsChats_addFriend": "Ajouter un ami",
+
+  "event_filterFavorite": "Favoris",
+  "event_filterRecent": "Récents",
+  "event_filterNone": "Tous"
 
 }

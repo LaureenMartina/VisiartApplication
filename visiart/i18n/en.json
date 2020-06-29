@@ -71,7 +71,9 @@
   "roomsCreate_showRomm": "Show the room ?",
   "roomsCreate_privateRomm": "Is it a private room ?",
 
-  "roomsChats_addFriend": "Add a friend"
+  "roomsChats_addFriend": "Add a friend",
 
-
+  "event_filterFavorite": "Favorite",
+  "event_filterRecent": "Recent",
+  "event_filterNone": "All"
 }
