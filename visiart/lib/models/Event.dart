@@ -16,11 +16,12 @@ class Event {
   final String location;
   final String urlSite;
   final String labelSite;
+  final bool favorite;
 
 
   Event({this.id, this.recordId, this.url, this.title, this.description, this.longDescription, this.city, 
   this.language, this.image, this.region, this.geoJson, this.startDate, this.endDate, this.postalcode, this.location,
-  this.urlSite, this.labelSite});
+  this.urlSite, this.labelSite, this.favorite});
 
   factory Event.fromJson(Map<String, dynamic> json) {
      //var list = json['geoJson'] as List;
@@ -43,7 +44,8 @@ class Event {
       postalcode : json['postalcode'],
       location : json['location'],
       urlSite : json['urlSite'],
-      labelSite : json['labelSite']
+      labelSite : json['labelSite'],
+      favorite: json['favorite']
     );
   }
 }

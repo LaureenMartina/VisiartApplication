@@ -73,6 +73,9 @@ class _EventDetailsState extends State<EventDetails> {
     String city = widget.specificEvent.city;
     String urlSite = widget.specificEvent.urlSite;
     _idEvent = widget.specificEvent.id;
+    bool favoriteEvent = widget.specificEvent.favorite;
+    if(favoriteEvent == null) favoriteEvent = false;
+    print(favoriteEvent);
     //print("geoJson: ${widget.specificEvent.geoJson}");
 
     return Scaffold(
@@ -120,7 +123,7 @@ class _EventDetailsState extends State<EventDetails> {
                       radius: 26,
                       backgroundColor: Colors.white70, 
                       child: IconButton(
-                        icon: (_favorite ? Icon(Icons.favorite) : Icon(Icons.favorite_border)),
+                        icon: (favoriteEvent) ? Icon(Icons.favorite) : Icon(Icons.favorite_border),
                         color: Colors.red[500],
                         iconSize: 35,
                         onPressed: () {
