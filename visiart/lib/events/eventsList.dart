@@ -22,6 +22,7 @@ class _EventsListScreenState extends State<EventsListScreen> {
 
   ScrollController _scrollController = ScrollController();
 
+  var userLanguage = window.locale.languageCode;
   String name, username, avatar;
   bool isData = false;
   bool _favorite = false, _recent = false;
@@ -64,7 +65,6 @@ class _EventsListScreenState extends State<EventsListScreen> {
 
   void _fetchEvents(int _count) async {
     var token = await sharedPref.read("token");
-    var userLanguage = window.locale.languageCode;
 
     final response = await http.get(API_BASE_URL + "/events?_limit=" + _count.toString() + "&language=" + userLanguage, headers: {
       'Content-Type': 'application/json',
@@ -87,7 +87,7 @@ class _EventsListScreenState extends State<EventsListScreen> {
   void _fetchFavoriteEvents() async {
     var token = await sharedPref.read("token");
 
-    final response = await http.get(API_EVENT_FAVORITE, 
+    final response = await http.get(API_EVENT_FAVORITE + userLanguage, 
       headers: {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
@@ -107,10 +107,10 @@ class _EventsListScreenState extends State<EventsListScreen> {
     }
   }
 
-   void _fetchRecentEvents() async {
+  void _fetchRecentEvents() async {
     var token = await sharedPref.read("token");
 
-    final response = await http.get(API_EVENT_RECENT, 
+    final response = await http.get(API_EVENT_RECENT + userLanguage, 
       headers: {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
