@@ -74,6 +74,9 @@
 
   "event_filterFavorite": "Favoris",
   "event_filterRecent": "Récents",
-  "event_filterNone": "Tous"
+  "event_filterNone": "Tous",
+  
+  "eventDetail_from" : "De :",
+  "eventDetail_to": "Au :"
 
 }

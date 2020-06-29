@@ -75,5 +75,8 @@
 
   "event_filterFavorite": "Favorite",
   "event_filterRecent": "Recent",
-  "event_filterNone": "All"
+  "event_filterNone": "All",
+
+  "eventDetail_from": "From :",
+  "eventDetail_to": "To :"
 }

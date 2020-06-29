@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:visiart/config/SharedPref.dart';
 import 'package:visiart/config/config.dart';
+import 'package:visiart/localization/AppLocalization.dart';
 import 'package:visiart/models/Event.dart';
 import 'package:http/http.dart' as http;
 
@@ -233,7 +234,7 @@ class _EventDetailsState extends State<EventDetails> {
                         Container(
                           padding: EdgeInsets.only(left: 20, right: 20),
                           child: Text(
-                            "De : ${widget.specificEvent.startDate}", 
+                            AppLocalizations.of(context).translate("eventDetail_from") + " ${widget.specificEvent.startDate}", 
                             style: TextStyle(
                               color: Colors.white,
                               fontSize: 16
@@ -258,7 +259,7 @@ class _EventDetailsState extends State<EventDetails> {
                         // endDate
                         Container(
                           padding: EdgeInsets.only(left: 20, right: 20),
-                          child: Text("Au : ${widget.specificEvent.endDate}",
+                          child: Text(AppLocalizations.of(context).translate("eventDetail_to") + " ${widget.specificEvent.endDate}",
                             style: TextStyle(
                               color: Colors.white,
                               fontSize: 16

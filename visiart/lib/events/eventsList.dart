@@ -243,7 +243,7 @@ class _EventsListScreenState extends State<EventsListScreen> {
             }),
           SpeedDialChild(
             backgroundColor: Color.fromRGBO(173, 165, 177, 1.0),
-            child: Icon(Icons.filter_list),
+            child: Icon(Icons.all_inclusive),
             label: AppLocalizations.of(context).translate("event_filterNone"),
             onTap: () {
               _favorite = false;
