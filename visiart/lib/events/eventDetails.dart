@@ -69,10 +69,11 @@ class _EventDetailsState extends State<EventDetails> {
 
   @override
   Widget build(BuildContext context) {
-    //print("eventDetails: ${widget.specificEvent.id}");
+    print("id: ${widget.specificEvent.id}");
     String city = widget.specificEvent.city;
     String urlSite = widget.specificEvent.urlSite;
     _idEvent = widget.specificEvent.id;
+    //print("geoJson: ${widget.specificEvent.geoJson}");
 
     return Scaffold(
       body: Column(

@@ -9,7 +9,7 @@ class Event {
   final String language; 
   final String image;
   final String region;
-  //final Map<int, int> geoJson;
+  final List<int> geoJson;
   final String startDate;
   final String endDate;
   final int postalcode;
@@ -19,10 +19,13 @@ class Event {
 
 
   Event({this.id, this.recordId, this.url, this.title, this.description, this.longDescription, this.city, 
-  this.language, this.image, this.region, /*this.geoJson,*/ this.startDate, this.endDate, this.postalcode, this.location,
+  this.language, this.image, this.region, this.geoJson, this.startDate, this.endDate, this.postalcode, this.location,
   this.urlSite, this.labelSite});
 
   factory Event.fromJson(Map<String, dynamic> json) {
+     //var list = json['geoJson'] as List;
+     //print("list: $list");
+
     return Event(
       id : json['id'],
       recordId : json['recordId'],

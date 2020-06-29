@@ -5,9 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
-import 'package:loading/indicator/ball_pulse_indicator.dart';
-import 'package:delayed_display/delayed_display.dart';
-import 'package:loading/loading.dart';
 import 'package:visiart/config/SharedPref.dart';
 import 'package:visiart/config/config.dart';
 import 'package:visiart/models/Event.dart';
@@ -90,19 +87,20 @@ class _DashboardScreenState extends State<DashboardScreen> {
     final response = await http.get(
       API_EVENT_CAROUSEL + userLanguage + "&startDate_contains=" + dateEvent,
       headers: {
-      'Content-Type': 'application/json',
-      'Accept': 'application/json',
-      'Authorization':
-          'Bearer $token',
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'Authorization': 'Bearer $token',
       }
     );
 
     if (response.statusCode == 200) {
         List jsonResponse = json.decode(response.body);
+        //print("event: ${jsonResponse[0].id}");
         this.futureEvent = jsonResponse.map( (event) => new Event.fromJson(event) ).toList();
         setState(() {
           events.addAll(futureEvent);
         });
+        
       return jsonResponse.map( (event) => new Event.fromJson(event) ).toList();
     } else {
       throw Exception('Failed to load events from API');
