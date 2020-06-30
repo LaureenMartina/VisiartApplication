@@ -1,10 +1,13 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:visiart/config/SharedPref.dart';
 import 'package:visiart/config/config.dart';
+import 'package:visiart/events/eventMaps.dart';
 import 'package:visiart/localization/AppLocalization.dart';
 import 'package:visiart/models/Event.dart';
 import 'package:http/http.dart' as http;
@@ -27,6 +30,14 @@ class _EventDetailsState extends State<EventDetails> {
   var _favorite = false;
   int _idEvent;
   var specificEvent = List<Event>();
+
+ /*  Completer<GoogleMapController> _controllerGoogleMaps = Completer();
+
+  static const LatLng _center = const LatLng(45.521563, -122.677433); */
+
+  /* void _onMapCreated(GoogleMapController controller) {
+    _controllerGoogleMaps.complete(controller);
+  } */
 
   Future<void> _launchedUrlSite(url) async {
     if(await canLaunch(url)) {
@@ -169,28 +180,29 @@ class _EventDetailsState extends State<EventDetails> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: <Widget>[
-                      Icon(
-                        Icons.location_city,
+                        Icon(
+                          Icons.location_city,
                           color: Colors.white,
                         ),
-                        SizedBox(width: 8),
-                        (city != "") ?
-                          Text(
-                            "${widget.specificEvent.city}",
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 18,
-                              fontWeight: FontWeight.w600
-                            ),
-                          )
-                          : Text(
-                            "France",
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 18,
-                              fontWeight: FontWeight.w600
-                            ),
+                        
+                      SizedBox(width: 8),
+                      (city != "") ?
+                        Text(
+                          "${widget.specificEvent.city}",
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 18,
+                            fontWeight: FontWeight.w600
                           ),
+                        )
+                        : Text(
+                          "France",
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 18,
+                            fontWeight: FontWeight.w600
+                          ),
+                        ),
                       ],
                     ), 
                   ],
@@ -212,7 +224,13 @@ class _EventDetailsState extends State<EventDetails> {
                         iconSize: 35,
                         icon: Icon(Icons.room),
                         color: Colors.green[900],
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => EventMaps(coordinate: widget.specificEvent.geoJson)
+                            )
+                          );
+                        },
                       ),
                     ),
                   ),
@@ -344,6 +362,20 @@ class _EventDetailsState extends State<EventDetails> {
                         ],
                       ),
                     SizedBox(height: 35,),
+                    /* 
+                    GoogleMap(
+                      mapType: MapType.hybrid,
+                      initialCameraPosition: CameraPosition(
+                        target: _center,
+                        zoom: 11.0,
+                      ),
+                      onMapCreated: _onMapCreated,
+                    ),
+                    floatingActionButton: FloatingActionButton.extended(
+                      onPressed: null,
+                      label: Text('Do something Jake!'),
+                      icon: Icon(Icons.directions_boat),
+                    ),*/
                   ],
                 );
               },

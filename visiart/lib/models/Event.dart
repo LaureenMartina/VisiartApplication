@@ -9,7 +9,7 @@ class Event {
   final String language; 
   final String image;
   final String region;
-  final List<int> geoJson;
+  final List<double> geoJson;
   final String startDate;
   final String endDate;
   final int postalcode;
@@ -24,6 +24,7 @@ class Event {
   this.urlSite, this.labelSite, this.favorite});
 
   factory Event.fromJson(Map<String, dynamic> json) {
+    List<double> geoList = json['geoJson'].cast<double>();
      //var list = json['geoJson'] as List;
      //print("list: $list");
 
@@ -38,7 +39,7 @@ class Event {
       language : json['language'],
       image : json['image'],
       region : json['region'],
-      //geoJson : json['geoJson'],
+      geoJson : geoList,
       startDate : json['startDate'],
       endDate : json['endDate'],
       postalcode : json['postalcode'],
