@@ -227,7 +227,7 @@ class _EventDetailsState extends State<EventDetails> {
                         onPressed: () {
                           Navigator.of(context).push(
                             MaterialPageRoute(
-                              builder: (context) => EventMaps(coordinate: widget.specificEvent.geoJson)
+                              builder: (context) => EventMaps(coordinate: widget.specificEvent.geoJson, eventName: widget.specificEvent.title)
                             )
                           );
                         },
