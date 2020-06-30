@@ -21,6 +21,7 @@ class EventMaps extends StatelessWidget {
     return MaterialApp(
       title: 'You are...',
       home: EventMapsPage(coordinate: coordinate, eventName: eventName),
+      debugShowCheckedModeBanner: false,
     );
   }
 }
@@ -80,8 +81,6 @@ class EventMapsPageState extends State<EventMapsPage> {
     }); */
     _getLocation();
     _getValidMakerIcon().then((value) => {
-      print("init staste"),
-      print(value),
       _userIcon = BitmapDescriptor.fromBytes(value)
     });
     super.initState();
@@ -89,9 +88,7 @@ class EventMapsPageState extends State<EventMapsPage> {
 
   Future<Uint8List> _getValidMakerIcon() async {
     ByteData data = await rootBundle.load("assets/icons/me.png");
-    print("get valid");
-    print(data);
-    ui.Codec codec = await ui.instantiateImageCodec(data.buffer.asUint8List(), targetWidth: 60);
+    ui.Codec codec = await ui.instantiateImageCodec(data.buffer.asUint8List(), targetWidth: 80);
     ui.FrameInfo fi = await codec.getNextFrame();
     return (await fi.image.toByteData(format: ui.ImageByteFormat.png)).buffer.asUint8List();
   
@@ -100,8 +97,6 @@ class EventMapsPageState extends State<EventMapsPage> {
   void _getLocation() async {
       var currentLocation = await Geolocator()
           .getCurrentPosition(desiredAccuracy: LocationAccuracy.best);
-      print("icon");
-      print(_userIcon.toString());
       setState(() {
         var marker = Marker(
             markerId: MarkerId("curr_loc"),
