@@ -13,6 +13,8 @@ const String API_HOBBIES = API_BASE_URL + "/hobbies";
 const String API_EVENT = API_BASE_URL + "/events";
 const String API_EVENT_LANG = API_BASE_URL + "/events?_limit=50&language=";
 const String API_EVENT_CAROUSEL = API_BASE_URL + "/events?_limit=20&language=";
+const String API_EVENT_FAVORITE = API_BASE_URL + "/events?favorite_eq=true&language=";
+const String API_EVENT_RECENT = API_BASE_URL + "/events?_sort=startDate:ASC&language=";
 
 const API_HEADERS = {
   'Content-Type': 'application/json',

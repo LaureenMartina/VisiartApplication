@@ -84,7 +84,7 @@ class PrivacyPolicy extends StatelessWidget {
                                   style: TextStyle(
                                     fontSize: 20,
                                     fontWeight: FontWeight.w600,
-                                    color: Colors.indigoAccent[700]
+                                    color: Color.fromRGBO(82, 59, 92, 1.0)
                                   ),
                                 ),
                               ),

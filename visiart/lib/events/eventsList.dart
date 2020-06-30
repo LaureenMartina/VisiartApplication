@@ -9,6 +9,7 @@ import 'package:visiart/config/SharedPref.dart';
 import 'package:visiart/config/config.dart';
 import 'package:visiart/events/eventDetails.dart';
 import 'package:visiart/models/Event.dart';
+import 'package:visiart/localization/AppLocalization.dart';
 
 SharedPref sharedPref = SharedPref();
 
@@ -18,51 +19,30 @@ class EventsListScreen extends StatefulWidget {
 }
 
 class _EventsListScreenState extends State<EventsListScreen> {
+
+  ScrollController _scrollController = ScrollController();
+
+  var userLanguage = window.locale.languageCode;
   String name, username, avatar;
   bool isData = false;
+  bool _favorite = false, _recent = false;
+  int _count = 50;
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.blueGrey[200],
-      body: EventList(),
-      floatingActionButton: SpeedDial(
-        closeManually: true,
-        animatedIcon: AnimatedIcons.menu_close,
-        children: [
-          SpeedDialChild(
-              backgroundColor: Colors.redAccent[200],
-              child: Icon(Icons.favorite),
-              label: 'favorite',
-              onTap: () {
-                print("favorie");
-              }),
-          SpeedDialChild(
-              backgroundColor: Colors.greenAccent[200],
-              child: Icon(Icons.filter_list),
-              label: 'Récent',
-              onTap: () {
-                print("récent");
-              }),
-        ],
-      ),
-    );
-  }
-}
+  List<Event> _eventsFavorite = List<Event>();
+  List<Event> filteredFavoriteEvents = List<Event>();
 
-class EventList extends StatefulWidget {
-  @override
-  _EventListState createState() => _EventListState();
-}
-
-class _EventListState extends State<EventList> {
   List<Event> events = List<Event>();
   List<Event> filteredEvents = List<Event>();
+
+  List<Event> _eventsRecent = List<Event>();
+  List<Event> filteredRecentEvents = List<Event>();
+
   TextEditingController editingController = TextEditingController();
 
   @override
   void initState() {
-    _fetchEvents();
+    _fetchEvents(_count);
+    
     editingController.addListener(() {
       if (editingController.text.isNotEmpty) {
         filteredEvents = events
@@ -73,14 +53,20 @@ class _EventListState extends State<EventList> {
         setState(() {});
       }
     });
+
+    _scrollController.addListener(() {
+      if(_scrollController.position.pixels == _scrollController.position.maxScrollExtent) {
+        _fetchEvents(_count + 50);
+      }
+    });
+
     super.initState();
   }
 
-  void _fetchEvents() async {
+  void _fetchEvents(int _count) async {
     var token = await sharedPref.read("token");
-    var userLanguage = window.locale.languageCode;
 
-    final response = await http.get(API_EVENT_LANG + userLanguage, headers: {
+    final response = await http.get(API_BASE_URL + "/events?_limit=" + _count.toString() + "&language=" + userLanguage, headers: {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
       'Authorization': 'Bearer $token',
@@ -98,9 +84,58 @@ class _EventListState extends State<EventList> {
     }
   }
 
+  void _fetchFavoriteEvents() async {
+    var token = await sharedPref.read("token");
+
+    final response = await http.get(API_EVENT_FAVORITE + userLanguage, 
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'Authorization': 'Bearer $token',
+      }
+    );
+
+    if (response.statusCode == 200) {
+      List jsonResponse = json.decode(response.body);
+      setState(() {
+        _eventsFavorite.addAll(
+            jsonResponse.map((event) => new Event.fromJson(event)).toList());
+        filteredFavoriteEvents.addAll(_eventsFavorite);
+      });
+    } else {
+      throw Exception('Failed to load favorite events from API');
+    }
+  }
+
+  void _fetchRecentEvents() async {
+    var token = await sharedPref.read("token");
+
+    final response = await http.get(API_EVENT_RECENT + userLanguage, 
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'Authorization': 'Bearer $token',
+      }
+    );
+
+    if (response.statusCode == 200) {
+      List jsonResponse = json.decode(response.body);
+      setState(() {
+        _eventsRecent.addAll(
+            jsonResponse.map((event) => new Event.fromJson(event)).toList());
+        filteredRecentEvents.addAll(_eventsRecent);
+      });
+    } else {
+      throw Exception('Failed to load recent events from API');
+    }
+  }
+
+
   @override
   Widget build(BuildContext context) {
-    return Column(
+    return Scaffold(
+      backgroundColor: Color.fromRGBO(252, 233, 216, 0.1),
+      body: Column(
       children: <Widget>[
         Padding(
           padding: EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 5),
@@ -123,29 +158,40 @@ class _EventListState extends State<EventList> {
         ),
         Expanded(
           child: ListView.builder(
+            controller: _scrollController,
             scrollDirection: Axis.vertical,
             shrinkWrap: true,
-            itemCount: filteredEvents.length,
+            itemCount: (_favorite) ? filteredFavoriteEvents.length : (_recent) ? filteredRecentEvents.length : filteredEvents.length,
             itemBuilder: (context, index) {
               return Card(
-                margin:
-                    new EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
+                elevation: 10,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(15.0)
+                ),
+                margin: EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
                 child: ListTile(
-                  contentPadding:
-                      EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
+                  contentPadding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
                   onTap: () => {
-                    Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) =>
-                            EventDetails(specificEvent: filteredEvents[index])))
+                    if(_favorite) {
+                      Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => EventDetails(specificEvent: filteredFavoriteEvents[index])))
+                    }else if(_recent){
+                      Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => EventDetails(specificEvent: filteredRecentEvents[index])))
+                    }else{
+                      Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => EventDetails(specificEvent: filteredEvents[index])))
+                    }
                   },
-                  title: Text('${filteredEvents[index].title}',
+                  title: Text( (_favorite) ? '${filteredFavoriteEvents[index].title}' : 
+                    (_recent) ? '${filteredRecentEvents[index].title}' : '${filteredEvents[index].title}',
                       style: TextStyle(
                         fontSize: 18.0,
                         color: Colors.black,
                         fontWeight: FontWeight.bold,
                       )),
-                  subtitle: Text(
-                    '${filteredEvents[index].description}',
+                  subtitle: Text( (_favorite) ? '${filteredFavoriteEvents[index].description}' : 
+                    (_recent) ? '${filteredRecentEvents[index].description}' : '${filteredEvents[index].description}',
                     style: TextStyle(
                       fontSize: 16.0,
                     ),
@@ -159,8 +205,9 @@ class _EventListState extends State<EventList> {
                       maxWidth: 100,
                       maxHeight: 100,
                     ),
-                    child: Image.network('${filteredEvents[index].image}',
-                        fit: BoxFit.cover),
+                    child: Image.network( (_favorite) ? '${filteredFavoriteEvents[index].image}' : 
+                      (_recent) ? '${filteredRecentEvents[index].image}' : '${filteredEvents[index].image}',
+                      fit: BoxFit.cover),
                   ),
                   trailing: Icon(Icons.keyboard_arrow_right,
                       size: 50.0, color: Colors.blueGrey[500]),
@@ -170,6 +217,41 @@ class _EventListState extends State<EventList> {
           ),
         ),
       ],
+    ),
+      floatingActionButton: SpeedDial(
+        backgroundColor: Color.fromRGBO(82, 59, 92, 1.0),
+        closeManually: true,
+        animatedIcon: AnimatedIcons.menu_close,
+        children: [
+          SpeedDialChild(
+            backgroundColor: Colors.pink[800],
+            child: Icon(Icons.favorite),
+            label: AppLocalizations.of(context).translate("event_filterFavorite"),
+            onTap: () {
+              _favorite = true;
+              _recent = false;
+              _fetchFavoriteEvents();
+            }),
+          SpeedDialChild(
+            backgroundColor: Colors.teal[700],
+            child: Icon(Icons.filter_list),
+            label: AppLocalizations.of(context).translate("event_filterRecent"),
+            onTap: () {
+              _recent = true;
+              _favorite = false;
+              _fetchRecentEvents();
+            }),
+          SpeedDialChild(
+            backgroundColor: Color.fromRGBO(173, 165, 177, 1.0),
+            child: Icon(Icons.all_inclusive),
+            label: AppLocalizations.of(context).translate("event_filterNone"),
+            onTap: () {
+              _favorite = false;
+              _recent = false;
+              _fetchEvents(_count);
+            }),
+        ],
+      ),
     );
   }
 }

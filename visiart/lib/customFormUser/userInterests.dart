@@ -20,7 +20,6 @@ class UserInterestsScreen extends StatefulWidget {
 }
 
 class _UserInterestsScreenState extends State<UserInterestsScreen> {
-  bool _isSwitched = false; // Button Switch
   String titlePopup;
   String description;
   String button;
@@ -92,12 +91,12 @@ class _UserInterestsScreenState extends State<UserInterestsScreen> {
         .translate('userInterests_modalButton');
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.deepOrange[200],
+        backgroundColor: Color.fromRGBO(82, 59, 92, 1.0),
         brightness: Brightness.light,
         elevation: 2,
         title: Text(
           AppLocalizations.of(context).translate('userInterest_userInterest'),
-          style: TextStyle(color: Colors.black87),
+          style: TextStyle(color: Colors.white),
         ),
       ),
       body: CustomScrollView(
@@ -106,11 +105,12 @@ class _UserInterestsScreenState extends State<UserInterestsScreen> {
             child: Container(
               height: 100,
               child: Padding(
-                padding: EdgeInsets.only(top: 20.0),
+                padding: EdgeInsets.only(top: 30.0),
                 child: Text(AppLocalizations.of(context).translate('userInterest_tellUsWhatYouLike'),
                     style: TextStyle(
-                        color: Colors.deepOrange[200],
+                        color: Color.fromRGBO(173, 165, 177, 1.0),
                         fontSize: 25,
+                        fontWeight: FontWeight.w600,
                         letterSpacing: 2.5),
                     textAlign: TextAlign.center),
               ),
@@ -123,7 +123,7 @@ class _UserInterestsScreenState extends State<UserInterestsScreen> {
                 padding: EdgeInsets.only(left: 15, right: 15),
                 child: Text(
                     AppLocalizations.of(context).translate('userInterest_select'),
-                    style: TextStyle(color: Colors.black87, fontSize: 14)),
+                    style: TextStyle(color: Color.fromRGBO(82, 59, 92, 1.0), fontSize: 15, letterSpacing: 1.2)),
               ),
             ),
           ),
@@ -134,14 +134,14 @@ class _UserInterestsScreenState extends State<UserInterestsScreen> {
               child: ProgressButton(
                 child: Text(
                   AppLocalizations.of(context).translate('save'),
-                  style: TextStyle(color: Colors.black87, fontSize: 18),
+                  style: TextStyle(color: Colors.white, fontSize: 18),
                 ),
                 buttonState: ButtonState.normal,
-                backgroundColor: Colors.deepOrange[200],
+                backgroundColor: Color.fromRGBO(82, 59, 92, 1.0),
                 onPressed: () {
                   _onSaveInterestsClicked();
                 },
-                progressColor: Colors.deepOrange[300],
+                progressColor: Color.fromRGBO(82, 59, 92, 1.0),
               ),
             ),
           ),
@@ -203,7 +203,7 @@ class _CreateFilterChipState extends State<CreateFilterChip> {
                         padding: EdgeInsets.fromLTRB(4, 0, 4, 0),
                         child: FilterChip(
                             label: Text(chip.name),
-                            selectedColor: Colors.green,
+                            selectedColor: Color.fromRGBO(252, 233, 216, 1.0),
                             selected: chip.isSelected,
                             onSelected: (value) {
                               setState(() {
