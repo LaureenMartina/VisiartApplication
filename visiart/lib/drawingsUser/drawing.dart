@@ -23,7 +23,7 @@ class Draw extends StatefulWidget {
 
 class _DrawState extends State<Draw> {
 
-  // GlobalKey _globalKey = GlobalKey();
+  GlobalKey _globalKey = GlobalKey();
   // final String screenshotImagePath = '/screenshots';
 
   ARKitController arkitController;
