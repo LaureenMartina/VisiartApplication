@@ -43,14 +43,6 @@ class EventMapsPageState extends State<EventMapsPage> {
   CameraPosition _cameraPosition;
   List<Marker> _markers = <Marker>[];
   BitmapDescriptor _userIcon;
-  
-  /* CameraPosition _cameraPosition = CameraPosition(
-    target: LatLng(37.42796133580664, -122.085749655962),
-    zoom: 14.4746
-  ); 
-  48.8647135,2.3450413
-  */
-
   EventMapsPageState(List<double> coordinate, String eventName) {
 
     this.coordinate = coordinate;
@@ -72,13 +64,6 @@ class EventMapsPageState extends State<EventMapsPage> {
 
 @override
   void initState() {
-    
-    /* setState(() {
-      _cameraPosition = CameraPosition(
-        target: LatLng(coordinate.first, coordinate.last),
-        zoom: 14.4746,
-      );
-    }); */
     _getLocation();
     _getValidMakerIcon().then((value) => {
       _userIcon = BitmapDescriptor.fromBytes(value)

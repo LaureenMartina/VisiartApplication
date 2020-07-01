@@ -30,15 +30,6 @@ class _EventDetailsState extends State<EventDetails> {
   var _favorite = false;
   int _idEvent;
   var specificEvent = List<Event>();
-
- /*  Completer<GoogleMapController> _controllerGoogleMaps = Completer();
-
-  static const LatLng _center = const LatLng(45.521563, -122.677433); */
-
-  /* void _onMapCreated(GoogleMapController controller) {
-    _controllerGoogleMaps.complete(controller);
-  } */
-
   Future<void> _launchedUrlSite(url) async {
     if(await canLaunch(url)) {
       await launch(url, forceSafariVC: false, forceWebView: true);
@@ -362,20 +353,6 @@ class _EventDetailsState extends State<EventDetails> {
                         ],
                       ),
                     SizedBox(height: 35,),
-                    /* 
-                    GoogleMap(
-                      mapType: MapType.hybrid,
-                      initialCameraPosition: CameraPosition(
-                        target: _center,
-                        zoom: 11.0,
-                      ),
-                      onMapCreated: _onMapCreated,
-                    ),
-                    floatingActionButton: FloatingActionButton.extended(
-                      onPressed: null,
-                      label: Text('Do something Jake!'),
-                      icon: Icon(Icons.directions_boat),
-                    ),*/
                   ],
                 );
               },
