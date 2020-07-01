@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -333,10 +334,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         child: GestureDetector(
                           onTap: () {
                             Navigator.pushNamed(context, 'awards');
-                            /*Navigator.push(
-                              context, MaterialPageRoute(
-                                builder: (BuildContext context) => AwardsListScreen() )
-                            );*/
                           },
                           child: _awardsCard(),
                         ),
@@ -366,11 +363,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         padding: EdgeInsets.only(right: 10),
                         child: GestureDetector(
                           onTap: () {
+                            Platform.isAndroid ? Navigator.pushNamed(context, "drawingAndroid") :
                             Navigator.pushNamed(context, 'drawing'); // TODO change to drawing
-                            // Navigator.push(
-                            //   context, MaterialPageRoute(
-                            //     builder: (BuildContext context) => Draw() )
-                            // );
                           },
                           child: _drawingCard(),
                         ),

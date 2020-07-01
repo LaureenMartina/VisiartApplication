@@ -3,16 +3,17 @@ import 'dart:typed_data';
 import 'dart:ui' as ui;
 import 'package:arkit_plugin/arkit_plugin.dart';
 import 'package:flutter/rendering.dart';
-import 'package:path_provider/path_provider.dart';
+//import 'package:path_provider/path_provider.dart';
 import 'package:vector_math/vector_math_64.dart' as vector;
 import 'package:flutter/material.dart';
-import 'package:screenshot/screenshot.dart';
-import 'package:image_gallery_saver/image_gallery_saver.dart';
+//import 'package:screenshot/screenshot.dart';
+//import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:flare_flutter/flare_actor.dart';
 import 'package:visiart/localization/AppLocalization.dart';
-import 'package:permission_handler/permission_handler.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:gallery_saver/gallery_saver.dart';
+//import 'package:permission_handler/permission_handler.dart';
+//import 'package:image_picker/image_picker.dart';
+//import 'package:gallery_saver/gallery_saver.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 
 enum SelectedMode { StrokeWidth, Opacity, Color, Object3D, Material }
 
@@ -24,8 +25,7 @@ class Draw extends StatefulWidget {
 class _DrawState extends State<Draw> {
 
   GlobalKey _globalKey = GlobalKey();
-  // final String screenshotImagePath = '/screenshots';
-
+  
   ARKitController arkitController;
 
   String _animationState = "simple";
@@ -34,6 +34,7 @@ class _DrawState extends State<Draw> {
   bool changed = false;
   bool modernObj = false;
   bool showBottomList = false;
+  bool _loading = false;
 
   ARKitNode nodeSphere, nodeCube, nodeCone, nodeCylinder, nodePyramid, nodeTorus, nodeText;
 
@@ -341,75 +342,48 @@ class _DrawState extends State<Draw> {
     // print(info);
   }
 
-  //void _saveDrawing() async {
-    // RenderRepaintBoundary boundary = _globalKey.currentContext.findRenderObject();
-    // ui.Image image = await boundary.toImage(pixelRatio: 1);
+  void _convertAndSaveDrawing() async {
+    RenderRepaintBoundary boundary = _globalKey.currentContext.findRenderObject();
+    ui.Image image = await boundary.toImage(pixelRatio: 1);
     // final directory = (await getApplicationDocumentsDirectory()).path;
-    // ByteData byteData = await image.toByteData(format: ui.ImageByteFormat.png);
-    // Uint8List pngBytes = byteData.buffer.asUint8List();
-    // print(pngBytes);
+    ByteData byteData = await image.toByteData(format: ui.ImageByteFormat.png);
+    Uint8List pngBytes = byteData.buffer.asUint8List();
+    print(pngBytes);
+
+    setState(() {
+      _loading = true;
+    });
+
+    List<String> uploadUrls = [];
+
+    String fileName = "IMG_51/img_${DateTime.now().millisecondsSinceEpoch}.png";
+    StorageReference storageReference = FirebaseStorage().ref().child(fileName);
+    StorageUploadTask storageUploadTask = storageReference.putData(pngBytes);
+
+    //StorageTaskSnapshot storageTaskSnapshot;
+    //StorageTaskSnapshot snapshot = await storageUploadTask.onComplete;
+    
+    await storageUploadTask.onComplete;
+
+    // if (snapshot.error == null) {
+    //   storageTaskSnapshot = snapshot;
+    //   final String downloadUrl = await storageTaskSnapshot.ref.getDownloadURL();
+    //   uploadUrls.add(downloadUrl);
+
+    //   print('Upload success');
+    // } else {
+    //   print('Error from image repo ${snapshot.error.toString()}');
+    //   throw ('This file is not an image');
+    // }
+
+    setState(() {
+      _loading = false;
+    });
+   
     // final result = await ImageGallerySaver.saveImage(byteData.buffer.asUint8List());
     // print(directory);
     // print(result.toString());
-    
-  void _saveDrawing({ Function success, Function fail }) {
-    print("je passe");
-    // RenderRepaintBoundary boundary = _globalKey.currentContext.findRenderObject();
-    // capturePng2List(boundary).then((uint8List) async {
-    //   if (uint8List == null || uint8List.length == 0) {
-    //     print("uint8List: $uint8List");
-    //     if (fail != null) fail();
-    //     return;
-    //   }
-    //   print("...ici...");
-    //   //Directory tempDir = await getTemporaryDirectory();
-    //   Directory directory = await getExternalStorageDirectory();
-    //   //print("tempDir: $tempDir");
-    //   print("directory: $directory");
-    //   final myImagePath = '${directory.path}/MyImages' ;
-    //   print("myImagePath: $myImagePath");
-    //   //final myImgDir = await new Directory(myImagePath).create();
-    //   //_saveImage(uint8List, myImgDir, screenshotImagePath, success: success, fail: fail);
-    // });
- 
   }
-
-  // Future<Uint8List> capturePng2List(RenderRepaintBoundary boundary) async {
-  //   print("dans capturePng2List...");
-  //   ui.Image image = await boundary.toImage(pixelRatio: ui.window.devicePixelRatio);
-  //   ByteData byteData = await image.toByteData(format: ui.ImageByteFormat.png);
-  //   Uint8List pngBytes = byteData.buffer.asUint8List();
-  //   print("pngBytes: $pngBytes");
-  //   return pngBytes;
-  // }
-
-  // void _saveImage(Uint8List uint8List, Directory dir, String fileName, {Function success, Function fail}) async {
-  //   print("_saveImage...");
-  //   bool isDirExist = await Directory(dir.path).exists();
-  //   print("isDirExist: $isDirExist");
-
-  //   if (!isDirExist) Directory(dir.path).create();
-
-  //   String tempPath = '${dir.path}$fileName';
-  //   print("tempPath: $tempPath");
-  //   File image = File(tempPath);
-  //   print("image: $image");
-  //   bool isExist = await image.exists();
-  //   print("isExist: $isExist");
-
-  //   if (isExist) await image.delete();
-
-  //   File(tempPath).writeAsBytes(uint8List).then((_) {
-  //     print("writeAsBytes");
-  //     if (success != null) {
-  //       print("success");
-  //       success();
-  //     }
-  //   });
-  // }
-
-
-
 
   @override
   void initState() {
@@ -510,7 +484,7 @@ class _DrawState extends State<Draw> {
                         icon: Icon(Icons.file_download, size: 30, color: Colors.blueGrey[700],),
                         onPressed: () {
                           setState(() {
-                            _saveDrawing();
+                            _convertAndSaveDrawing();
                             showBottomList = false;
                           });
                         }
@@ -694,11 +668,11 @@ class _DrawState extends State<Draw> {
               ),
             ),
 
+            (_loading) ? Center(child: CircularProgressIndicator(),) : Center()
           ],
         ),
         
       ),
-    
     );
   }
 

@@ -53,7 +53,8 @@ var _routes = <String, WidgetBuilder> {
   "dashboard": (BuildContext context) => MenuBoardScreen(),
   "awards": (BuildContext context) => AwardsListScreen(),
   "account": (BuildContext context) => AccountScreen(),
-  "drawing": (BuildContext context) => Draw(), //merge with the drawing branch before
+  "drawing": (BuildContext context) => Draw(),
+  "drawingAndroid": (BuildContext context) => AwardsListScreen(), // TODO changer la redirection
   "events": (BuildContext context) => EventsListScreen(),
   //"tchat": (BuildContext context) => RoomsChatsScreen(), // Flo
 };
