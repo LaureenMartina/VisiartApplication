@@ -26,4 +26,3 @@ const int COUNTER_CURIOUS = 1;
 const int COUNTER_INVESTED = 5;
 const int COUNTER_REAGENT = 8;
 const int COUNTER_DRAWING = 3;
-const int COUNTER_PASSIONATE = 6;

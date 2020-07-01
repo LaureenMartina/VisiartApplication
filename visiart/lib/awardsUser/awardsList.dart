@@ -12,22 +12,57 @@ class AwardsListScreen extends StatefulWidget {
 
 class _AwardsListScreenState extends State<AwardsListScreen> {
 
-  int _counterCurious = 0, _counterInvested = 0, _counterReagent = 0, _counterPassionate = 0;
+  int _counterCurious = 0, _counterInvested = 0, _counterReagent = 0, _counterDrawing = 0;
   bool _isEnabledCurious = false, _isEnabledInvested = false, _isEnabledReagent = false, _isEnabledPassionate = false;
-
-  void _setAwardsBadges() async {
-    _isEnabledCurious = await SharedPref().readBool("curiousBadgeEnabled");
-    _isEnabledInvested = await SharedPref().readBool("investedBadgeEnabled");
-    _isEnabledReagent = await SharedPref().readBool("reagentBadgeEnabled");
-    _isEnabledPassionate = await SharedPref().readBool("passionateBadgeEnabled");
-
-    setState(() {});
-  }
 
   @override
   void initState() {
-   _setAwardsBadges();
-   super.initState();
+    SharedPref().readBool("curiousBadgeEnabled").then((value) => {
+        setState(() {
+            _isEnabledCurious = value;
+        })
+    });
+    SharedPref().readBool("investedBadgeEnabled").then((value) => {
+        setState(() {
+            _isEnabledInvested = value;
+        })
+    });
+    SharedPref().readBool("reagentBadgeEnabled").then((value) => {
+        setState(() {
+            _isEnabledReagent = value;
+        })
+    });
+    SharedPref().readBool("passionateBadgeEnabled").then((value) => {
+        setState(() {
+            _isEnabledPassionate = value;
+        })
+    });
+    
+    SharedPref().readInteger("counterInvested").then((value) => {
+        setState(() {
+          //SharedPref().saveInteger("counterInvested", 0);
+          if(value == 99999) {
+            _counterInvested = 0;
+          } else {
+            //print("value: $value");
+            _counterInvested = value;
+          }
+          //print("_counterInvested: $_counterInvested");
+        })
+    });
+    SharedPref().readInteger("counterReagent").then((value) => {
+        setState(() {
+          //SharedPref().saveInteger("counterInvested", 0);
+          if(value == 99999) {
+            _counterReagent = 0;
+          } else {
+            _counterReagent = value;
+          }
+        })
+    });
+
+    _setCuriousImage();
+    super.initState();
   }
   
   String _setCuriousImage() {
@@ -44,7 +79,8 @@ class _AwardsListScreenState extends State<AwardsListScreen> {
   String _setInvestedImage() {
     String _imageBadge = "";
 
-    if(_isEnabledInvested && (_counterInvested >= COUNTER_INVESTED) ) {
+    if(_counterInvested >= COUNTER_INVESTED) {
+      SharedPref().saveBool("investedBadgeEnabled", true);
       _imageBadge = "assets/imgs/investi.png";
     }else{
       _imageBadge = "assets/imgs/coming-soon.png";
@@ -55,7 +91,8 @@ class _AwardsListScreenState extends State<AwardsListScreen> {
   String _setReagentImage() {
     String _imageBadge = "";
 
-    if(_isEnabledReagent && _counterReagent >= COUNTER_REAGENT) {
+    if(_counterReagent >= COUNTER_REAGENT) {
+      SharedPref().saveBool("reagentBadgeEnabled", true);
       _imageBadge = "assets/imgs/reactif.png";
     }else{
       _imageBadge = "assets/imgs/coming-soon.png";
@@ -66,9 +103,8 @@ class _AwardsListScreenState extends State<AwardsListScreen> {
   String _setPassionateImage() {
     String _imageBadge = "";
 
-    if( (_isEnabledPassionate && _isEnabledCurious && _isEnabledCurious && _isEnabledReagent) 
-      && (_counterPassionate >= COUNTER_DRAWING) ) 
-    {
+    if(_isEnabledCurious && _isEnabledInvested && _isEnabledReagent && (_counterDrawing >= COUNTER_DRAWING) ) {
+      SharedPref().saveBool("passionateBadgeEnabled", true);
       _imageBadge = "assets/imgs/passionne.png";
     }else{
       _imageBadge = "assets/imgs/coming-soon.png";
@@ -113,7 +149,7 @@ class _AwardsListScreenState extends State<AwardsListScreen> {
   Padding _titlePasionateBadge() => Padding(
     padding: EdgeInsets.all(10),
     child: Text(
-      '$_counterPassionate/$COUNTER_PASSIONATE\n' + AppLocalizations.of(context).translate("awards_titlePassionate"),
+      '$_counterDrawing/$COUNTER_DRAWING\n' + AppLocalizations.of(context).translate("awards_titlePassionate"),
       maxLines: 3,
       softWrap: true,
       style: TextStyle(fontSize: 17.0),
@@ -190,9 +226,6 @@ class _AwardsListScreenState extends State<AwardsListScreen> {
       child: Container(
         alignment: Alignment.center,
         child: Column(
-          //crossAxisAlignment: CrossAxisAlignment.center,
-          //mainAxisAlignment: MainAxisAlignment.center,
-          //mainAxisSize: MainAxisSize.min,
           children: <Widget>[
             _imageCuriousBadge(),
             _titleCuriousBadge(),
@@ -269,7 +302,7 @@ class _AwardsListScreenState extends State<AwardsListScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[100],//TODO change color ?
+      backgroundColor: Color.fromRGBO(249, 248, 249, 1.0),
       body: Column(
         children: <Widget>[
           ClipPath(
@@ -296,7 +329,7 @@ class _AwardsListScreenState extends State<AwardsListScreen> {
                     size: Size(50, 50), // button width and height
                     child: ClipOval(
                       child: Material(
-                        color: Colors.amber[700], // button color
+                        color: Color.fromRGBO(82, 59, 92, 1.0), // button color
                         child: InkWell(
                           splashColor: Colors.yellow, // splash color
                           onTap: () {

@@ -13,7 +13,7 @@ class SharedPref {
 
   Future<int> readInteger(String key) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    return prefs.getInt(key) ?? 999999;
+    return prefs.getInt(key) ?? 99999;
   }
 
   Future<bool> readBool(String key) async {
