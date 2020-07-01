@@ -38,8 +38,10 @@ class _HomeState extends State<HomeScreen> {
   @override
   void initState() {
     _checkIfAlreadyLogged();
-    super.initState();
+
     bgHome = AssetImage("assets/imgs/home.png");
+
+    super.initState();
   }
 
   @override
@@ -255,171 +257,179 @@ class _HomeState extends State<HomeScreen> {
 
     return Scaffold(
       resizeToAvoidBottomPadding: false,
-      body: Stack(
-        children: <Widget>[
-          // background image
-          Container(
-            decoration: BoxDecoration(
-              image: DecorationImage(
-                image: AssetImage("assets/imgs/home.png"),
-                fit: BoxFit.cover
+      body: GestureDetector(
+        onTap: () {
+          FocusScopeNode currentFocus = FocusScope.of(context);
+          if (!currentFocus.hasPrimaryFocus) {
+            currentFocus.unfocus();
+          }
+        },
+        child: Stack(
+          children: <Widget>[
+            // background image
+            Container(
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage("assets/imgs/home.png"),
+                  fit: BoxFit.cover
+                ),
               ),
             ),
-          ),
-          // Header
-          Column(
-            children: <Widget>[
-              // Title
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Padding(
-                    padding: EdgeInsets.only(top: 60),
-                    child: Container(
-                      child: Text(
-                        "Visiart",
-                        style:
-                          TextStyle(
-                            color: Colors.black,
-                            fontSize: 60,
-                            letterSpacing: 2.5,
-                            //decoration: TextDecoration.overline,
-                            //decorationStyle: TextDecorationStyle.solid,
-                            //decorationColor: Colors.black12,
-                            //decorationThickness: 2,
-                            shadows: [
-                              Shadow(
-                                color: Colors.red[200],
-                                blurRadius: 5,
-                                offset: Offset(3.5, 0.0),
-                              ),
-                              Shadow(
-                                color: Colors.orange[200],
-                                blurRadius: 5,
-                                offset: Offset(3.5, 0.0),
-                              ),
-                            ],
-                          ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              // Slogan
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Padding(
-                    padding: EdgeInsets.only(top: 20),
-                    child: Container(
-                      child: Align(
-                        alignment: Alignment.center,
-                          child: Text(AppLocalizations.of(context).translate('home_slogan'),
-                            style:
-                              TextStyle(
-                                color: Colors.black,
-                                fontSize: 22,
-                                fontStyle: FontStyle.italic,
-                                letterSpacing: 2,
-                                // shadows: [
-                                //   Shadow(
-                                //     color: Colors.red[200],
-                                //     blurRadius: 5,
-                                //     offset: Offset(1, 0.0),
-                                //   ),
-                                //   Shadow(
-                                //     color: Colors.orange[200],
-                                //     blurRadius: 5,
-                                //     offset: Offset(1, 0.0),
-                                //   ),
-                                // ],
-                              ),
-                          ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              // Fields Connexion
-              Padding(
-                padding: EdgeInsets.only(top: 70.0, left: 20.0, right: 20.0),
-                child: Container(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        SizedBox(height: 20.0),
-                        emailField,
-                        SizedBox(height: 20.0),
-                        passwordField,
-                        SizedBox(height: 30.0),
-                        loginButon,
-                      ],
-                    ),
-                ),
-              ),
-              // OU Gmail
-              Padding(
-                padding: EdgeInsets.only(top: 20.0),
-                child: Text(AppLocalizations.of(context).translate("home_gmail"),
-                  style: TextStyle(
-                    color: Colors.grey[700], fontWeight: FontWeight.bold , fontStyle: FontStyle.italic, fontSize: 16, letterSpacing: 2,
-                  ),
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.only(top: 15),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            // Header
+            Column(
+              children: <Widget>[
+                // Title
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
-                    GestureDetector(
-                      onTap: () {
-                        _signInWithGoogle().whenComplete(() {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (context) {
-                                return UserInterestsScreen();
-                              },
-                            ),
-                          );
-                        });
-                      },
+                    Padding(
+                      padding: EdgeInsets.only(top: 60),
                       child: Container(
-                        width: 100,
-                        height: 40,
-                        decoration: BoxDecoration(
-                          color: Colors.white54,
-                          borderRadius: BorderRadius.circular(30),
-                          image: DecorationImage(
-                            image: AssetImage("assets/icons/google.png"),
-                          )
+                        child: Text(
+                          "Visiart",
+                          style:
+                            TextStyle(
+                              color: Colors.black,
+                              fontSize: 60,
+                              letterSpacing: 2.5,
+                              //decoration: TextDecoration.overline,
+                              //decorationStyle: TextDecorationStyle.solid,
+                              //decorationColor: Colors.black12,
+                              //decorationThickness: 2,
+                              shadows: [
+                                Shadow(
+                                  color: Colors.red[200],
+                                  blurRadius: 5,
+                                  offset: Offset(3.5, 0.0),
+                                ),
+                                Shadow(
+                                  color: Colors.orange[200],
+                                  blurRadius: 5,
+                                  offset: Offset(3.5, 0.0),
+                                ),
+                              ],
+                            ),
                         ),
                       ),
                     ),
                   ],
-                )
-              ),
-              // Text new inscription
-              Padding(
-                padding: EdgeInsets.only(top: 30),
-                child: RichText(
-                  textAlign: TextAlign.center,
-                  text: TextSpan(
-                    text: AppLocalizations.of(context).translate('home_signUpLink'),
-                    style: TextStyle(
-                      color: Colors.grey[900],
-                      fontWeight: FontWeight.bold, fontStyle: FontStyle.italic, fontSize: 14, letterSpacing: 1,
+                ),
+                // Slogan
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Padding(
+                      padding: EdgeInsets.only(top: 20),
+                      child: Container(
+                        child: Align(
+                          alignment: Alignment.center,
+                            child: Text(AppLocalizations.of(context).translate('home_slogan'),
+                              style:
+                                TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 22,
+                                  fontStyle: FontStyle.italic,
+                                  letterSpacing: 2,
+                                  // shadows: [
+                                  //   Shadow(
+                                  //     color: Colors.red[200],
+                                  //     blurRadius: 5,
+                                  //     offset: Offset(1, 0.0),
+                                  //   ),
+                                  //   Shadow(
+                                  //     color: Colors.orange[200],
+                                  //     blurRadius: 5,
+                                  //     offset: Offset(1, 0.0),
+                                  //   ),
+                                  // ],
+                                ),
+                            ),
+                        ),
+                      ),
                     ),
-                    recognizer: TapGestureRecognizer()
-                      ..onTap = () {
-                        _navigateToSignUpScreen();
-                      },
+                  ],
+                ),
+                // Fields Connexion
+                Padding(
+                  padding: EdgeInsets.only(top: 70.0, left: 20.0, right: 20.0),
+                  child: Container(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          SizedBox(height: 20.0),
+                          emailField,
+                          SizedBox(height: 20.0),
+                          passwordField,
+                          SizedBox(height: 30.0),
+                          loginButon,
+                        ],
+                      ),
                   ),
                 ),
-              ),
-            ],
-          ),
-        ],
+                // OU Gmail
+                Padding(
+                  padding: EdgeInsets.only(top: 20.0),
+                  child: Text(AppLocalizations.of(context).translate("home_gmail"),
+                    style: TextStyle(
+                      color: Colors.grey[700], fontWeight: FontWeight.bold , fontStyle: FontStyle.italic, fontSize: 16, letterSpacing: 2,
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(top: 15),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: <Widget>[
+                      GestureDetector(
+                        onTap: () {
+                          _signInWithGoogle().whenComplete(() {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) {
+                                  return UserInterestsScreen();
+                                },
+                              ),
+                            );
+                          });
+                        },
+                        child: Container(
+                          width: 100,
+                          height: 40,
+                          decoration: BoxDecoration(
+                            color: Colors.white54,
+                            borderRadius: BorderRadius.circular(30),
+                            image: DecorationImage(
+                              image: AssetImage("assets/icons/google.png"),
+                            )
+                          ),
+                        ),
+                      ),
+                    ],
+                  )
+                ),
+                // Text new inscription
+                Padding(
+                  padding: EdgeInsets.only(top: 30),
+                  child: RichText(
+                    textAlign: TextAlign.center,
+                    text: TextSpan(
+                      text: AppLocalizations.of(context).translate('home_signUpLink'),
+                      style: TextStyle(
+                        color: Colors.grey[900],
+                        fontWeight: FontWeight.bold, fontStyle: FontStyle.italic, fontSize: 14, letterSpacing: 1,
+                      ),
+                      recognizer: TapGestureRecognizer()
+                        ..onTap = () {
+                          _navigateToSignUpScreen();
+                        },
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }

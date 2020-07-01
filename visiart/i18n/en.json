@@ -78,5 +78,16 @@
   "event_filterNone": "All",
 
   "eventDetail_from": "From :",
-  "eventDetail_to": "To :"
+  "eventDetail_to": "To :",
+
+  "awards_title": "Trophies",
+  "awards_titleCurious": "Curious Badge",
+  "awards_titleInvested": "Invested Badge",
+  "awards_titleReagent": "Reagent Badge",
+  "awards_titlePassionate": "Passionate Badge",
+  "awards_descriptionCurious": "Curious Badge\nobtained when registering and logging in to Visiart",
+  "awards_descriptionInvested": "Invested Badge\nobtained after joining or creating chat rooms",
+  "awards_descriptionReagent": "Reagent Badge\nobtained by participating in various discussions",
+  "awards_descriptionPassionate": "Passionate Badge\nobtained by registering your 3 favorite drawings and having obtained the previous badges"
+  
 }

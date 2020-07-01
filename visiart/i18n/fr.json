@@ -77,6 +77,16 @@
   "event_filterNone": "Tous",
   
   "eventDetail_from" : "De :",
-  "eventDetail_to": "Au :"
+  "eventDetail_to": "Au :",
+
+  "awards_title": "Trophées",
+  "awards_titleCurious": "Badge Curieux",
+  "awards_titleInvested": "Badge Investi",
+  "awards_titleReagent": "Badge Réactif",
+  "awards_titlePassionate": "Badge Passionné",
+  "awards_descriptionCurious": "Badge Curieux\nobtenu lors de l'inscription et à la connexion à Visiart",
+  "awards_descriptionInvested": "Badge Investi\nobtenu après avoir rejoint ou créé des salons de discussions",
+  "awards_descriptionReagent": "Badge Réactif\nobtenu en participant aux diverses discussions",
+  "awards_descriptionPassionate": "Badge Passionné\nobtenu en enregistrant vos 3 dessins favoris et en ayant obtenu les badges précédents"
 
 }
