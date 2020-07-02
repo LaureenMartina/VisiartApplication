@@ -1,7 +1,9 @@
 library visiart.globals;
 
 //API
-const String API_BASE_URL = "http://91.121.165.149";
+//const String API_BASE_URL = "http://91.121.165.149";
+const String API_BASE_URL = "https://www.visiart.fr";
+
 const String API_TOKEN_KEY = "token";
 const String API_USER_ID_KEY = "userId";
 
