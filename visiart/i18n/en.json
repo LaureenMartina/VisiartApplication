@@ -78,5 +78,6 @@
   "event_filterNone": "All",
 
   "eventDetail_from": "From :",
-  "eventDetail_to": "To :"
+  "eventDetail_to": "To :",
+  "eventDetail_linkEvent": "More information on the official website"
 }

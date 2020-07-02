@@ -77,6 +77,7 @@
   "event_filterNone": "Tous",
   
   "eventDetail_from" : "De :",
-  "eventDetail_to": "Au :"
+  "eventDetail_to": "Au :",
+  "eventDetail_linkEvent" : "Plus d'informations sur le site officiel"
 
 }

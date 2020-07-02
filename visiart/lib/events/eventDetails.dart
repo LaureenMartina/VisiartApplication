@@ -1,9 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:visiart/config/SharedPref.dart';
 import 'package:visiart/config/config.dart';
@@ -25,11 +23,15 @@ class EventDetails extends StatefulWidget {
 
 class _EventDetailsState extends State<EventDetails> {
 
-  var infoSite = "Plus d'informations sur le site officiel";
-  //var infoGeoloc = "";
   var _favorite = false;
   int _idEvent;
   var specificEvent = List<Event>();
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
   Future<void> _launchedUrlSite(url) async {
     if(await canLaunch(url)) {
       await launch(url, forceSafariVC: false, forceWebView: true);
@@ -42,29 +44,33 @@ class _EventDetailsState extends State<EventDetails> {
     setState(() {
       if (_favorite) {
         _favorite = false;
+        print("2 favori: $_favorite");
+        _setFavoriteEvent(_favorite);
       } else {
         _favorite = true;
-        _setFavoriteEvent();
+        print("2 favori: $_favorite");
+        _setFavoriteEvent(_favorite);
       }
+      
     });
   }
 
-  void _setFavoriteEvent() async{
-    var token = await sharedPref.read(API_TOKEN_KEY); 
-    final response = await http.put("http://91.121.165.149/events/" + _idEvent.toString(),
+  void _setFavoriteEvent(changeFavorite) async{
+    var token = await sharedPref.read(API_TOKEN_KEY);
+    print("put changeFavorite: $changeFavorite"); 
+    final response = await http.put(API_EVENT + "/" + _idEvent.toString(),
       headers: {
           'Content-Type': 'application/json',
           'Accept': 'application/json',
           'Authorization': 'Bearer $token',
       },
       body: jsonEncode(<String, bool>{
-        'favorite' : true
+        'favorite' : changeFavorite
       }),
     );
-    print("response: $response");
     
     if(response.statusCode == 200) {
-        print(response.statusCode);
+      print(response.statusCode);
     } else {
       throw Exception('Failed to update event in API');
     }
@@ -76,10 +82,14 @@ class _EventDetailsState extends State<EventDetails> {
     String city = widget.specificEvent.city;
     String urlSite = widget.specificEvent.urlSite;
     _idEvent = widget.specificEvent.id;
+    
     bool favoriteEvent = widget.specificEvent.favorite;
-    if(favoriteEvent == null) favoriteEvent = false;
-    print(favoriteEvent);
+    if(favoriteEvent == null) _favorite = false;
+    print("1 $favoriteEvent");
+
+    List<double> geoJson = widget.specificEvent.geoJson;
     //print("geoJson: ${widget.specificEvent.geoJson}");
+    //print("geo: $geoJson");
 
     return Scaffold(
       body: Column(
@@ -126,7 +136,7 @@ class _EventDetailsState extends State<EventDetails> {
                       radius: 26,
                       backgroundColor: Colors.white70, 
                       child: IconButton(
-                        icon: (favoriteEvent) ? Icon(Icons.favorite) : Icon(Icons.favorite_border),
+                        icon: (_favorite ? Icon(Icons.favorite) : Icon(Icons.favorite_border)),
                         color: Colors.red[500],
                         iconSize: 35,
                         onPressed: () {
@@ -199,34 +209,39 @@ class _EventDetailsState extends State<EventDetails> {
                   ],
                 ),
               ),
-              // btn Géolocalisation
-              Positioned(
-                top: 105,
-                left: 314,
-                child: Material(
-                  color: Colors.transparent,
-                  child: Center(
-                    child: Ink(
-                      decoration: const ShapeDecoration(
-                        color: Colors.white70,
-                        shape: CircleBorder(),
+              // Géolocalisation Btn
+              if(geoJson.length != 0)
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 110),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: <Widget>[
+                      Material(
+                        color: Colors.transparent,
+                        child: Center(
+                          child: Ink(
+                            decoration: const ShapeDecoration(
+                              color: Colors.white70,
+                              shape: CircleBorder(),
+                            ),
+                            child: IconButton(
+                              iconSize: 35,
+                              icon: Icon(Icons.room),
+                              color: Colors.green[900],
+                              onPressed: () {
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (context) => EventMaps(coordinate: widget.specificEvent.geoJson, eventName: widget.specificEvent.title)
+                                  )
+                                );
+                              },
+                            ),
+                          ),
+                        ),
                       ),
-                      child: IconButton(
-                        iconSize: 35,
-                        icon: Icon(Icons.room),
-                        color: Colors.green[900],
-                        onPressed: () {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (context) => EventMaps(coordinate: widget.specificEvent.geoJson, eventName: widget.specificEvent.title)
-                            )
-                          );
-                        },
-                      ),
-                    ),
+                    ],
                   ),
                 ),
-              ),
             ],
           ),
           // dates + Description
@@ -335,7 +350,7 @@ class _EventDetailsState extends State<EventDetails> {
                           RaisedButton.icon(
                             icon: Icon(Icons.visibility),
                             label: Text(
-                              infoSite,
+                              AppLocalizations.of(context).translate("eventDetail_linkEvent"),
                               style: TextStyle(
                                 fontSize: 16
                               ),
