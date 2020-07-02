@@ -44,11 +44,9 @@ class _EventDetailsState extends State<EventDetails> {
     setState(() {
       if (_favorite) {
         _favorite = false;
-        print("2 favori: $_favorite");
         _setFavoriteEvent(_favorite);
       } else {
         _favorite = true;
-        print("2 favori: $_favorite");
         _setFavoriteEvent(_favorite);
       }
       
@@ -57,7 +55,6 @@ class _EventDetailsState extends State<EventDetails> {
 
   void _setFavoriteEvent(changeFavorite) async{
     var token = await sharedPref.read(API_TOKEN_KEY);
-    print("put changeFavorite: $changeFavorite"); 
     final response = await http.put(API_EVENT + "/" + _idEvent.toString(),
       headers: {
           'Content-Type': 'application/json',
@@ -78,18 +75,15 @@ class _EventDetailsState extends State<EventDetails> {
 
   @override
   Widget build(BuildContext context) {
-    print("id: ${widget.specificEvent.id}");
+    //print("id: ${widget.specificEvent.id}");
     String city = widget.specificEvent.city;
     String urlSite = widget.specificEvent.urlSite;
     _idEvent = widget.specificEvent.id;
     
     bool favoriteEvent = widget.specificEvent.favorite;
     if(favoriteEvent == null) _favorite = false;
-    print("1 $favoriteEvent");
 
     List<double> geoJson = widget.specificEvent.geoJson;
-    //print("geoJson: ${widget.specificEvent.geoJson}");
-    //print("geo: $geoJson");
 
     return Scaffold(
       body: Column(
