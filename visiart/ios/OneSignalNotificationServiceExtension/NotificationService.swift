@@ -7,6 +7,7 @@
 //
 
 import UserNotifications
+import OneSignal
 
 class NotificationService: UNNotificationServiceExtension {
 
