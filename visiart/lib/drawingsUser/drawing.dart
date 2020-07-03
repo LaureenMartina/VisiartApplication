@@ -9,11 +9,14 @@ import 'package:flutter/material.dart';
 //import 'package:screenshot/screenshot.dart';
 //import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:flare_flutter/flare_actor.dart';
+import 'package:visiart/config/SharedPref.dart';
+import 'package:visiart/drawingsUser/testSaveImage.dart';
 import 'package:visiart/localization/AppLocalization.dart';
 //import 'package:permission_handler/permission_handler.dart';
 //import 'package:image_picker/image_picker.dart';
 //import 'package:gallery_saver/gallery_saver.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:native_screenshot/native_screenshot.dart';
 
 enum SelectedMode { StrokeWidth, Opacity, Color, Object3D, Material }
 
@@ -25,6 +28,8 @@ class Draw extends StatefulWidget {
 class _DrawState extends State<Draw> {
 
   GlobalKey _globalKey = GlobalKey();
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
+  Widget _imgHolder;
   
   ARKitController arkitController;
 
@@ -333,62 +338,9 @@ class _DrawState extends State<Draw> {
   }
 
 
-  _requestPermission() async {
-    // Map<Permission, PermissionStatus> statuses = await [
-    //   Permission.storage,
-    // ].request();
-
-    // final info = statuses[Permission.storage].toString();
-    // print(info);
-  }
-
-  void _convertAndSaveDrawing() async {
-    RenderRepaintBoundary boundary = _globalKey.currentContext.findRenderObject();
-    ui.Image image = await boundary.toImage(pixelRatio: 1);
-    // final directory = (await getApplicationDocumentsDirectory()).path;
-    ByteData byteData = await image.toByteData(format: ui.ImageByteFormat.png);
-    Uint8List pngBytes = byteData.buffer.asUint8List();
-    print(pngBytes);
-
-    setState(() {
-      _loading = true;
-    });
-
-    List<String> uploadUrls = [];
-
-    String fileName = "IMG_51/img_${DateTime.now().millisecondsSinceEpoch}.png";
-    StorageReference storageReference = FirebaseStorage().ref().child(fileName);
-    StorageUploadTask storageUploadTask = storageReference.putData(pngBytes);
-
-    //StorageTaskSnapshot storageTaskSnapshot;
-    //StorageTaskSnapshot snapshot = await storageUploadTask.onComplete;
-    
-    await storageUploadTask.onComplete;
-
-    // if (snapshot.error == null) {
-    //   storageTaskSnapshot = snapshot;
-    //   final String downloadUrl = await storageTaskSnapshot.ref.getDownloadURL();
-    //   uploadUrls.add(downloadUrl);
-
-    //   print('Upload success');
-    // } else {
-    //   print('Error from image repo ${snapshot.error.toString()}');
-    //   throw ('This file is not an image');
-    // }
-
-    setState(() {
-      _loading = false;
-    });
-   
-    // final result = await ImageGallerySaver.saveImage(byteData.buffer.asUint8List());
-    // print(directory);
-    // print(result.toString());
-  }
-
   @override
   void initState() {
     print('initState');
-    _requestPermission();
     super.initState();
   }
 
@@ -399,10 +351,38 @@ class _DrawState extends State<Draw> {
   }
   
 
+  void _convertAndSaveDrawing(File fileTosave) async {
+    //RenderRepaintBoundary boundary = _globalKey.currentContext.findRenderObject();
+    //ui.Image image = await boundary.toImage(pixelRatio: 1);
+    // final directory = (await getApplicationDocumentsDirectory()).path;
+    //ByteData byteData = await image.toByteData(format: ui.ImageByteFormat.png);
+    //Uint8List pngBytes = byteData.buffer.asUint8List();
+    //print(pngBytes);
+
+    setState(() {
+      _loading = true;
+    });
+
+    int userId = await SharedPref().readInteger("userId");
+
+    String fileName = "IMG_" + userId.toString() + "/img_${DateTime.now().millisecondsSinceEpoch}.png";
+    StorageReference storageReference = FirebaseStorage().ref().child(fileName);
+    StorageUploadTask storageUploadTask = storageReference.putFile(fileTosave);
+    
+    await storageUploadTask.onComplete;
+    
+    setState(() {
+      _loading = false;
+    });
+    print('File Uploaded'); 
+    
+  }
+
   @override
   Widget build(BuildContext context) {
     print("state build widget");
     return Scaffold(
+      key: _scaffoldKey,
       backgroundColor: Colors.transparent,
       bottomNavigationBar: Padding(
         padding: EdgeInsets.all(0.0),
@@ -483,8 +463,35 @@ class _DrawState extends State<Draw> {
                       IconButton(
                         icon: Icon(Icons.file_download, size: 30, color: Colors.blueGrey[700],),
                         onPressed: () {
-                          setState(() {
-                            _convertAndSaveDrawing();
+                          setState(() async {
+                            String path = await NativeScreenshot.takeScreenshot();
+
+                            debugPrint('Screenshot taken, path: $path');
+
+                            if( path == null || path.isEmpty ) {
+                              _scaffoldKey.currentState.showSnackBar(
+                                SnackBar(
+                                  content: Text('Error taking the screenshot :('),
+                                  backgroundColor: Colors.red,
+                                )
+                              ); // showSnackBar()
+
+                              return;
+                            } // if error
+
+                            _scaffoldKey.currentState.showSnackBar(
+                              SnackBar(
+                                content: Text('The screenshot has been saved to: $path')
+                              )
+                            ); // showSnackBar()
+
+                            File imgFile = File(path);
+                            //_imgHolder = Image.file(imgFile);
+
+                            setState(() {});
+                            _convertAndSaveDrawing(imgFile);
+                            // Navigator.of(context).pushReplacement(
+                            //   new MaterialPageRoute(builder: (context) => SaveImage()));
                             showBottomList = false;
                           });
                         }
@@ -581,7 +588,8 @@ class _DrawState extends State<Draw> {
 
       body: RepaintBoundary(
         key: _globalKey,
-        child: Stack(
+        child:
+         Stack(
           alignment: Alignment.center,
           children: <Widget>[ 
             Container(
@@ -668,7 +676,11 @@ class _DrawState extends State<Draw> {
               ),
             ),
 
-            (_loading) ? Center(child: CircularProgressIndicator(),) : Center()
+            (_loading) ? Center(child: CircularProgressIndicator(),) : Center(),
+            Container(
+              constraints: BoxConstraints.expand(),
+              child: _imgHolder,
+            ),
           ],
         ),
         
