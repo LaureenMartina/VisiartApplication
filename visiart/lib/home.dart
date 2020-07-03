@@ -5,6 +5,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:visiart/dashboard/menu.dart';
 import 'package:visiart/localization/AppLocalization.dart';
 import 'package:flutter/services.dart';
@@ -37,10 +38,29 @@ class _HomeState extends State<HomeScreen> {
 
   @override
   void initState() {
+    initFirebase();
     _checkIfAlreadyLogged();
     super.initState();
     bgHome = AssetImage("assets/imgs/home.png");
   }
+
+  Future<void> initFirebase() async {
+    OneSignal.shared.setLogLevel(OSLogLevel.verbose, OSLogLevel.none);
+
+    OneSignal.shared.init(
+      "cd6c5bce-8124-45ba-9c0d-d559512c5f8e",
+      iOSSettings: {
+        OSiOSSettings.autoPrompt: false,
+        OSiOSSettings.inAppLaunchUrl: false
+      }
+    );
+    OneSignal.shared.setInFocusDisplayType(OSNotificationDisplayType.notification);
+
+    // The promptForPushNotificationsWithUserResponse function will show the iOS push notification prompt. We recommend removing the following code and instead using an In-App Message to prompt for notification permission
+    OneSignal.shared.promptUserForPushNotificationPermission(fallbackToSettings: true);
+  }
+
+  
 
   @override
   void didChangeDependencies() async {

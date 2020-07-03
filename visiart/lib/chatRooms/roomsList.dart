@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:badges/badges.dart';
 import 'package:http/http.dart' as http;
@@ -59,6 +60,7 @@ class _RoomsListPageState extends State<RoomsListPage>  with SingleTickerProvide
   @override
   void initState() {
     super.initState();
+    //_sendNotifPush(); //juste pour les tests
     _getListHobbies();
     _fetchRooms();
     _fetchUserRoomsPrivate();
@@ -69,6 +71,38 @@ class _RoomsListPageState extends State<RoomsListPage>  with SingleTickerProvide
   void dispose() {
     _tabController.dispose();
     super.dispose();
+  }
+
+  void _sendNotifPush() async {
+    /* var data = {
+        'app_id': 'cd6c5bce-8124-45ba-9c0d-d559512c5f8e',
+        'contents' : {"en": "English Message"},
+        'include_player_ids' : ["a786d5d2-3827-4f57-bca9-f5086c8885c6"]
+    };
+    final response = await http.post(
+        'onesignal.com/api/v1/notifications',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: json.encode(data)
+    );
+    if (response.statusCode == 200) {
+      print("success");
+      print(response.toString());
+    } else {
+      throw Exception('Failed to notif push');
+    } */
+    final client = HttpClient();
+    final request = await client.postUrl(Uri.parse("https://onesignal.com/api/v1/notifications"));
+    request.headers.set(HttpHeaders.contentTypeHeader, "application/json; charset=UTF-8");
+    request.write('{ "app_id": "cd6c5bce-8124-45ba-9c0d-d559512c5f8e","contents" : {"en": "English Message"},"include_player_ids" : ["a786d5d2-3827-4f57-bca9-f5086c8885c6"]}');
+
+    final response = await request.close();
+
+    response.transform(utf8.decoder).listen((contents) {
+      print("contents");
+      print(contents);
+    });
   }
 
   void _getListHobbies() async{

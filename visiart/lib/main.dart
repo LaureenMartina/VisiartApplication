@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:visiart/account/account.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:visiart/awardsUser/awardsList.dart';
@@ -19,10 +20,11 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+   
     return new MaterialApp(
       supportedLocales: [
-      Locale('en', 'US'),
-      Locale('fr', 'FR'),
+        Locale('en', 'US'),
+        Locale('fr', 'FR'),
       ],
       localizationsDelegates: [
         AppLocalizations.delegate,
