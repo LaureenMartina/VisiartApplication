@@ -47,8 +47,7 @@ class _MyDrawingsState extends State<MyDrawings> {
     final _content = allDrawings[index].urlImage;
     final _start = _content.indexOf("img_") + "img_".length;
     final _dateDraw = _content.substring(_start, 98);
-    print("datedraw: $_dateDraw");
-    
+
     showDialog(
       context: context,
       builder: (el) => AlertDialog(
@@ -79,13 +78,13 @@ class _MyDrawingsState extends State<MyDrawings> {
         title: Text(AppLocalizations.of(context).translate("myDrawings_title")),
       ),
       body: Padding(
-        padding: EdgeInsets.only(top: 20,),
+        padding: EdgeInsets.only(top: 20),
         child: GridView.builder(
           itemCount: allDrawings.length,
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
           itemBuilder: (context, index) {
-            return Padding(
-              padding: EdgeInsets.only(top: 0.0),
+            return Container(
+              padding: EdgeInsets.only(bottom: 10),
               child: GestureDetector(
                 child: FadeInImage.memoryNetwork(
                   placeholder: kTransparentImage,

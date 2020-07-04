@@ -220,8 +220,8 @@ class _DrawState extends State<Draw> {
       diffuse: ARKitMaterialProperty(image: decor),
     );
     
-    print("choice: $obj");
-    print("decor: $decor");
+    //print("choice: $obj");
+    //print("decor: $decor");
 
     switch (obj) {
       case "sphere": {
@@ -337,7 +337,6 @@ class _DrawState extends State<Draw> {
 
   @override
   void didUpdateWidget(Draw widget) {
-    print('didUpdateWidget');
     super.didUpdateWidget(widget);
   }
   
@@ -365,8 +364,8 @@ class _DrawState extends State<Draw> {
     Map<String, dynamic> jsonResponse = json.decode(response.body);
 
     if (response.statusCode == 200) {
-      print("API_REGISTER ==> 200");
-      print(response.toString());
+      //print("API_REGISTER ==> 200");
+      //print(response.toString());
     } else if (response.statusCode == 400) {
       String errorMsg = jsonResponse['message'][0]['messages'][0]['message'];
       print("errormsg: " + errorMsg);
@@ -393,17 +392,16 @@ class _DrawState extends State<Draw> {
     setState(() {
       _loading = false;
     });
-    print('File Uploaded');
     
     final ref = FirebaseStorage.instance.ref().child(fileName);
     var url = await ref.getDownloadURL();
-    print("url: $url");
+    //print("url: $url");
     _createDrawing(url, userId);
   }
 
   @override
   Widget build(BuildContext context) {
-    print("state build widget");
+    //print("state build widget");
     return Scaffold(
       key: _scaffoldKey,
       backgroundColor: Colors.transparent,
@@ -488,35 +486,30 @@ class _DrawState extends State<Draw> {
                         onPressed: () {
                           setState(() async {
                             String path = await NativeScreenshot.takeScreenshot();
-
                             debugPrint('Screenshot taken, path: $path');
 
                             if( path == null || path.isEmpty ) {
                               _scaffoldKey.currentState.showSnackBar(
                                 SnackBar(
-                                  content: Text('Error taking the screenshot :('),
+                                  content: Text(AppLocalizations.of(context).translate("myDrawings_infoErrorSave")),
                                   backgroundColor: Colors.red,
                                 )
-                              ); // showSnackBar()
-
+                              );
                               return;
-                            } // if error
+                            }
 
                             _scaffoldKey.currentState.showSnackBar(
                               SnackBar(
-                                content: Text('The screenshot has been saved to: $path')
+                                content: Text(AppLocalizations.of(context).translate("myDrawings_infoSave"))
                               )
                             ); // showSnackBar()
 
                             File imgFile = File(path);
-                            print("imgFile: $imgFile");
+                            //print("imgFile: $imgFile");
                             //_imgHolder = Image.file(imgFile);
 
                             setState(() {});
                             _convertAndSaveDrawing(imgFile);
-
-                            // Navigator.of(context).pushReplacement(
-                            //   new MaterialPageRoute(builder: (context) => SaveImage()));
                             _showBottomList = false;
                           });
                         }
@@ -622,7 +615,7 @@ class _DrawState extends State<Draw> {
                 //showFeaturePoints: true,
                 //planeDetection: ARPlaneDetection.horizontalAndVertical,
                 onARKitViewCreated: (controller) {
-                  print("is _changed 1: $_changed");
+                  //print("is _changed 1: $_changed");
                   return _onArKitViewCreated(controller, _selectedObj, _selectedMaterial);
                 }
               ),
@@ -662,7 +655,7 @@ class _DrawState extends State<Draw> {
                 child: Stack(
                   children: <Widget>[
                     ARKitSceneView(onARKitViewCreated: (controller) {
-                      print("is _changed 2: $_changed");
+                      //print("is _changed 2: $_changed");
                       return _onArKitViewCreated(controller, _selectedObj, _selectedMaterial);
                     }),
                     CustomPaint(
@@ -695,7 +688,7 @@ class _DrawState extends State<Draw> {
                 });
               },
               child: ARKitSceneView(onARKitViewCreated: (controller) {
-                  print("is _changed 3: $_changed");
+                  //print("is _changed 3: $_changed");
                   return _onArKitViewCreated(controller, _selectedObj, _selectedMaterial);
                 }
               ),
@@ -715,7 +708,6 @@ class _DrawState extends State<Draw> {
 
   @override
   void dispose() {
-    print('dispose');
     arkitController?.dispose();
     super.dispose();
   }

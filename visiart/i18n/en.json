@@ -36,6 +36,8 @@
   "drawingAR_drawing": "Drawing",
 
   "myDrawings_title": "Your Creations",
-  "myDrawings_infoDate": "Creation of "
+  "myDrawings_infoDate": "Creation of ",
+  "myDrawings_infoSave": "The screenshot has been saved !",
+  "myDrawings_infoErrorSave": "Error taking the screenshot :("
 
 }

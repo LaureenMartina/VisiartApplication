@@ -36,5 +36,7 @@
   "drawingAR_drawing": "Dessin",
 
   "myDrawings_title": "Vos Créations",
-  "myDrawings_infoDate": "Création du : "
+  "myDrawings_infoDate": "Création du : ",
+  "myDrawings_infoSave": "La capture d'écran a été sauvegardée !",
+  "myDrawings_infoErrorSave": "Erreur lors de la capture d'écran :("
 }
