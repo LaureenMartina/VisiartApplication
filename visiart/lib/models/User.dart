@@ -5,7 +5,7 @@ class User {
   String name;
   String firstname;
   String email;
-  String password = ""; //TODO change if basic connexion
+  String password = ""; //change if basic connexion
   //bool confirmed;
   String phone;
   String language;

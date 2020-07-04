@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:visiart/dashboard/menu.dart';
-import 'package:visiart/config/config.dart' as globals;
+import 'package:visiart/config/config.dart';
+import 'package:visiart/config/SharedPref.dart';
+import 'package:visiart/localization/AppLocalization.dart';
 
 class AwardsListScreen extends StatefulWidget {
   @override
@@ -10,16 +12,63 @@ class AwardsListScreen extends StatefulWidget {
 
 class _AwardsListScreenState extends State<AwardsListScreen> {
 
-  String _descriptionCurious = "Badge Curieux\nobtenu lors de l'inscription et à la connexion à Visiart";
-  String _descriptionInvested = "Badge Investi\nobtenu après avoir rejoint ou créé des salons de discussions";
-  String _descriptionReagent = "Badge Réactif\nobtenu en participant aux diverses discussions";
-  String _descriptionPassionate = "Badge Passionné\nobtenu en enregistrant vos 3 dessins favoris et en ayant obtenu les badges précédents";
+  int _counterCurious = 0, _counterInvested = 0, _counterReagent = 0, _counterDrawing = 0;
+  bool _isEnabledCurious = false, _isEnabledInvested = false, _isEnabledReagent = false, _isEnabledPassionate = false;
 
+  @override
+  void initState() {
+    SharedPref().readBool("curiousBadgeEnabled").then((value) => {
+        setState(() {
+            _isEnabledCurious = value;
+        })
+    });
+    SharedPref().readBool("investedBadgeEnabled").then((value) => {
+        setState(() {
+            _isEnabledInvested = value;
+        })
+    });
+    SharedPref().readBool("reagentBadgeEnabled").then((value) => {
+        setState(() {
+            _isEnabledReagent = value;
+        })
+    });
+    SharedPref().readBool("passionateBadgeEnabled").then((value) => {
+        setState(() {
+            _isEnabledPassionate = value;
+        })
+    });
+    
+    SharedPref().readInteger("counterInvested").then((value) => {
+        setState(() {
+          //SharedPref().saveInteger("counterInvested", 0);
+          if(value == 99999) {
+            _counterInvested = 0;
+          } else {
+            //print("value: $value");
+            _counterInvested = value;
+          }
+          //print("_counterInvested: $_counterInvested");
+        })
+    });
+    SharedPref().readInteger("counterReagent").then((value) => {
+        setState(() {
+          //SharedPref().saveInteger("counterInvested", 0);
+          if(value == 99999) {
+            _counterReagent = 0;
+          } else {
+            _counterReagent = value;
+          }
+        })
+    });
 
+    _setCuriousImage();
+    super.initState();
+  }
+  
   String _setCuriousImage() {
     String _imageBadge = "";
-    if(globals.curiousBadgeEnabled) {
-      globals.counterCurious = 1;
+    if(_isEnabledCurious) {
+      _counterCurious = 1;
       _imageBadge = "assets/imgs/curieux.png";
     }else{
       _imageBadge = "assets/imgs/coming-soon.png";
@@ -30,7 +79,8 @@ class _AwardsListScreenState extends State<AwardsListScreen> {
   String _setInvestedImage() {
     String _imageBadge = "";
 
-    if(globals.investedBadgeEnabled && globals.counterInvested >= globals.finalCounterInvested) {
+    if(_counterInvested >= COUNTER_INVESTED) {
+      SharedPref().saveBool("investedBadgeEnabled", true);
       _imageBadge = "assets/imgs/investi.png";
     }else{
       _imageBadge = "assets/imgs/coming-soon.png";
@@ -41,7 +91,8 @@ class _AwardsListScreenState extends State<AwardsListScreen> {
   String _setReagentImage() {
     String _imageBadge = "";
 
-    if(globals.reagentBadgeEnabled && globals.counterReagent >= globals.finalCounterReagent) {
+    if(_counterReagent >= COUNTER_REAGENT) {
+      SharedPref().saveBool("reagentBadgeEnabled", true);
       _imageBadge = "assets/imgs/reactif.png";
     }else{
       _imageBadge = "assets/imgs/coming-soon.png";
@@ -52,8 +103,8 @@ class _AwardsListScreenState extends State<AwardsListScreen> {
   String _setPassionateImage() {
     String _imageBadge = "";
 
-    if(globals.passionateBadgeEnabled && (globals.curiousBadgeEnabled && globals.investedBadgeEnabled && globals.reagentBadgeEnabled) && (globals.counterPassionate >= globals.counterDrawing) ) 
-    {
+    if(_isEnabledCurious && _isEnabledInvested && _isEnabledReagent && (_counterDrawing >= COUNTER_DRAWING) ) {
+      SharedPref().saveBool("passionateBadgeEnabled", true);
       _imageBadge = "assets/imgs/passionne.png";
     }else{
       _imageBadge = "assets/imgs/coming-soon.png";
@@ -65,7 +116,7 @@ class _AwardsListScreenState extends State<AwardsListScreen> {
   Padding _titleCuriousBadge() => Padding(
     padding: EdgeInsets.only(top: 10),
     child: Text(
-      '${globals.counterCurious}/${globals.finalCounterCurious}\nBadge Curieux',
+      '$_counterCurious/$COUNTER_CURIOUS\n' + AppLocalizations.of(context).translate("awards_titleCurious"),
       maxLines: 3,
       softWrap: true,
       style: TextStyle(fontSize: 17.0),
@@ -76,7 +127,7 @@ class _AwardsListScreenState extends State<AwardsListScreen> {
   Padding _titleInvestedBadge() => Padding(
     padding: EdgeInsets.all(10),
     child: Text(
-      '${globals.counterInvested}/${globals.finalCounterInvested}\nBadge Investi',
+      '$_counterInvested/$COUNTER_INVESTED\n' + AppLocalizations.of(context).translate("awards_titleInvested"),
       maxLines: 3,
       softWrap: true,
       style: TextStyle(fontSize: 17.0),
@@ -87,7 +138,7 @@ class _AwardsListScreenState extends State<AwardsListScreen> {
   Padding _titleReagentBadge() => Padding(
     padding: EdgeInsets.only(top: 10),
     child: Text(
-      '${globals.counterReagent}/${globals.finalCounterReagent}\nBadge Réactif',
+      '$_counterReagent/$COUNTER_REAGENT\n' + AppLocalizations.of(context).translate("awards_titleReagent"),
       maxLines: 3,
       softWrap: true,
       style: TextStyle(fontSize: 17.0),
@@ -98,7 +149,7 @@ class _AwardsListScreenState extends State<AwardsListScreen> {
   Padding _titlePasionateBadge() => Padding(
     padding: EdgeInsets.all(10),
     child: Text(
-      '${globals.counterPassionate}/${globals.finalCounterPassionate}\nBadge Passionné',
+      '$_counterDrawing/$COUNTER_DRAWING\n' + AppLocalizations.of(context).translate("awards_titlePassionate"),
       maxLines: 3,
       softWrap: true,
       style: TextStyle(fontSize: 17.0),
@@ -113,9 +164,6 @@ class _AwardsListScreenState extends State<AwardsListScreen> {
       height: 140,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
-        /*gradient: new LinearGradient(
-          colors: [Colors.blueGrey, Colors.blueGrey[700]],
-        ),*/
         image: DecorationImage(
           fit: BoxFit.cover,
           image: AssetImage(_setCuriousImage()),
@@ -144,9 +192,6 @@ class _AwardsListScreenState extends State<AwardsListScreen> {
       height: 140,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
-        /*gradient: new LinearGradient(
-          colors: [Colors.brown, Colors.deepOrange[900]],
-        ),*/
         image: DecorationImage(
           fit: BoxFit.cover,
           image: AssetImage(_setReagentImage()),
@@ -181,9 +226,6 @@ class _AwardsListScreenState extends State<AwardsListScreen> {
       child: Container(
         alignment: Alignment.center,
         child: Column(
-          //crossAxisAlignment: CrossAxisAlignment.center,
-          //mainAxisAlignment: MainAxisAlignment.center,
-          //mainAxisSize: MainAxisSize.min,
           children: <Widget>[
             _imageCuriousBadge(),
             _titleCuriousBadge(),
@@ -204,9 +246,6 @@ class _AwardsListScreenState extends State<AwardsListScreen> {
       child: Container(
         alignment: Alignment.center,
         child: Column(
-          //crossAxisAlignment: CrossAxisAlignment.center,
-          //mainAxisAlignment: MainAxisAlignment.center,
-          //mainAxisSize: MainAxisSize.min,
           children: <Widget>[
             _imageInvestedBadge(),
             _titleInvestedBadge(),
@@ -227,9 +266,6 @@ class _AwardsListScreenState extends State<AwardsListScreen> {
       child: Container(
         alignment: Alignment.center,
         child: Column(
-          //crossAxisAlignment: CrossAxisAlignment.center,
-          //mainAxisAlignment: MainAxisAlignment.center,
-          //mainAxisSize: MainAxisSize.min,
           children: <Widget>[
             _imageReagentBadge(),
             _titleReagentBadge(),
@@ -266,7 +302,7 @@ class _AwardsListScreenState extends State<AwardsListScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[100],//Colors.grey[850],
+      backgroundColor: Color.fromRGBO(249, 248, 249, 1.0),
       body: Column(
         children: <Widget>[
           ClipPath(
@@ -283,7 +319,7 @@ class _AwardsListScreenState extends State<AwardsListScreen> {
                     ),
                   ),
                   child: Center(
-                    child: Text("Trophées", style: TextStyle(fontSize: 30, color: Colors.white)),
+                    child: Text(AppLocalizations.of(context).translate("awards_title"), style: TextStyle(fontSize: 30, color: Colors.white)),
                   ),
                 ),
                 Positioned(
@@ -293,7 +329,7 @@ class _AwardsListScreenState extends State<AwardsListScreen> {
                     size: Size(50, 50), // button width and height
                     child: ClipOval(
                       child: Material(
-                        color: Colors.amber[700], // button color
+                        color: Color.fromRGBO(82, 59, 92, 1.0), // button color
                         child: InkWell(
                           splashColor: Colors.yellow, // splash color
                           onTap: () {
@@ -326,7 +362,7 @@ class _AwardsListScreenState extends State<AwardsListScreen> {
               GestureDetector(
                 onTap: () {
                   Navigator.of(context).push(MaterialPageRoute<void>(
-                    builder: (context) => Detail(_setCuriousImage(), _descriptionCurious) ));
+                    builder: (context) => Detail(_setCuriousImage(), AppLocalizations.of(context).translate('awards_descriptionCurious')) ));
                 },
                 child: Container(
                   width: 185,
@@ -337,7 +373,7 @@ class _AwardsListScreenState extends State<AwardsListScreen> {
               GestureDetector(
                 onTap: () {
                   Navigator.of(context).push(MaterialPageRoute<void>(
-                    builder: (context) => Detail(_setInvestedImage(), _descriptionInvested) ));
+                    builder: (context) => Detail(_setInvestedImage(), AppLocalizations.of(context).translate('awards_descriptionInvested')) ));
                 },
                 child: Container(
                   width: 185,
@@ -354,7 +390,7 @@ class _AwardsListScreenState extends State<AwardsListScreen> {
               GestureDetector(
                 onTap: () {
                   Navigator.of(context).push(MaterialPageRoute<void>(
-                    builder: (context) => Detail(_setReagentImage(), _descriptionReagent) ));
+                    builder: (context) => Detail(_setReagentImage(), AppLocalizations.of(context).translate('awards_descriptionReagent')) ));
                 },
                 child: Container(
                   width: 185,
@@ -365,7 +401,7 @@ class _AwardsListScreenState extends State<AwardsListScreen> {
               GestureDetector(
                 onTap: () {
                   Navigator.of(context).push(MaterialPageRoute<void>(
-                    builder: (context) => Detail(_setPassionateImage(), _descriptionPassionate) ));
+                    builder: (context) => Detail(_setPassionateImage(), AppLocalizations.of(context).translate('awards_descriptionPassionate')) ));
                 },
                 child: Container(
                   width: 185,
