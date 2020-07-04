@@ -32,7 +32,6 @@ class _DrawState extends State<Draw> {
 
   bool _detectAR = false;
   bool _changed = false;
-  //bool _modernObj = false;
   bool _showBottomList = false;
   bool _loading = false;
 
@@ -366,6 +365,17 @@ class _DrawState extends State<Draw> {
     if (response.statusCode == 200) {
       print("API_REGISTER ==> 200");
       //print(response.toString());
+      setState(() {
+        _counterDrawing += 1;
+        print("_counterDrawing: $_counterDrawing");
+        if(_counterDrawing <= COUNTER_DRAWING) {
+          SharedPref().saveInteger("_counterDrawing", _counterDrawing);
+          print("increment draw: $_counterDrawing");
+        }
+        print(">= draw : $_counterDrawing");
+
+      });
+
     } else if (response.statusCode == 400) {
       String errorMsg = jsonResponse['message'][0]['messages'][0]['message'];
       print("errormsg: " + errorMsg);
