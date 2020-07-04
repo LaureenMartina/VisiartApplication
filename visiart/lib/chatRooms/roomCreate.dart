@@ -39,9 +39,24 @@ class _RoomsCreateScreenState extends State<RoomsCreateScreen> {
   var isPrivate = false;
   var isDisplayed = false;
 
+  int _counterInvested;
+
   @override
   void initState() {
     getListHobbies();
+    
+    SharedPref().readInteger("counterInvested").then((value) => {
+        setState(() {
+          if(value == 99999) {
+            _counterInvested = 0;
+          } else {
+            print("value: $value");
+            _counterInvested = value;
+          }
+          print("_counterInvested: $_counterInvested");
+        })
+    });
+
     super.initState();
   }
 
@@ -66,16 +81,24 @@ class _RoomsCreateScreenState extends State<RoomsCreateScreen> {
         },
         body: json.encode(data)
     );
+    
     if (response.statusCode == 200) {
       //TODO ajout incremente du badge invested
-        Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => RoomsListPage()),
-        );
+      _counterInvested += 1;
+      if(_counterInvested <= globals.COUNTER_INVESTED) {
+        SharedPref().saveInteger("counterInvested", _counterInvested);
+        print("increment invested: $_counterInvested");
+      }
+      print(">= invested : $_counterInvested");
+
+      Navigator.push(
+        context, MaterialPageRoute(builder: (context) => RoomsListPage()),
+      );
     } else {
       throw Exception('Failed to post room from API');
     }
   }
+  
   void getListHobbies() async{
     var token = await sharedPref.read(globals.API_TOKEN_KEY);
     final response = await http.get(

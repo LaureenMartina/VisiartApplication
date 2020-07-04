@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:ui';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:visiart/chatRooms/roomAddUser.dart';
 import 'package:visiart/chatRooms/roomUpdate.dart';
@@ -13,14 +12,12 @@ import 'package:visiart/localization/AppLocalization.dart';
 import 'package:visiart/models/Room_message.dart';
 import 'package:flutter/foundation.dart';
 import 'package:visiart/config/SharedPref.dart';
-import 'package:visiart/models/User.dart';
 import 'package:visiart/config/config.dart' as globals;
 import 'package:visiart/models/UserRoomPrivate.dart';
 
 SharedPref sharedPref = SharedPref();
 
-//void main() => runApp(new RoomsChatsScreen());
-
+//void main() => runApp(new RoomsChatsScreen())
 
 class RoomsChatsScreen extends StatelessWidget {
   // This widget is the root of your application.
@@ -54,6 +51,8 @@ class _RoomsChatPageState extends State<RoomsChatPage> {
     var _userid;
     var _userAdded;
 
+    int _counterReagent;
+
     _RoomsChatPageState(Room room, UserRoomPrivate userRoomPrivate) {
       this.room = room;
       this.userRoomPrivate = userRoomPrivate;
@@ -65,7 +64,6 @@ class _RoomsChatPageState extends State<RoomsChatPage> {
 
     var allMessage = [];
     
-
     @override
     void initState() {
       sharedPref.readInteger(globals.API_USER_ID_KEY).then((value) => {
@@ -73,6 +71,19 @@ class _RoomsChatPageState extends State<RoomsChatPage> {
             this._userid = value;
         })
       });
+
+      SharedPref().readInteger("counterReagent").then((value) => {
+        setState(() {
+          if(value == 99999) {
+            _counterReagent = 0;
+          } else {
+            print("value: $value");
+            _counterReagent = value;
+          }
+          print("_counterReagent: $_counterReagent");
+        })
+      });
+
       this._fetchRoomMessages();
       super.initState();
     }
@@ -188,6 +199,7 @@ class _RoomsChatPageState extends State<RoomsChatPage> {
                     "id": this.room.id
                 }, 
             };
+            
             final response = await http.post(
                 globals.API_BASE_URL+'/room-messages',
                 headers: {
@@ -199,7 +211,14 @@ class _RoomsChatPageState extends State<RoomsChatPage> {
             );
 
             if (response.statusCode == 200) {
-              //TODO add badge 
+              //TODO add badge Réactif
+              _counterReagent += 1;
+              if(_counterReagent <= globals.COUNTER_REAGENT) {
+                SharedPref().saveInteger("counterReagent", _counterReagent);
+                print("increment reagent: $_counterReagent");
+              }
+              print(">= reagent: $_counterReagent");
+              
               newMessage = RoomMessage.fromMainJson(json.decode(response.body));
               sharedPref.save("lastDateMessageVieweRoom_"+this.room.id.toString(), newMessage.date);
             } else {

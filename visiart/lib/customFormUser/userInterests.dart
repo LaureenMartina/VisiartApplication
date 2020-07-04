@@ -71,7 +71,7 @@ class _UserInterestsScreenState extends State<UserInterestsScreen> {
   }
 
   void _setAwardsFirstConnexion() {
-    curiousBadgeEnabled = true;
+    SharedPref().saveBool("curiousBadgeEnabled", true);
   }
 
   // Call to have the Popup Badge information
@@ -83,12 +83,10 @@ class _UserInterestsScreenState extends State<UserInterestsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    titlePopup = AppLocalizations.of(context)
-        .translate('userInterests_congratulations');
-    description = AppLocalizations.of(context)
-        .translate('userInterests_modalMessage');
-    button = AppLocalizations.of(context)
-        .translate('userInterests_modalButton');
+    titlePopup = AppLocalizations.of(context).translate('userInterests_congratulations');
+    description = AppLocalizations.of(context).translate('userInterests_modalMessage');
+    button = AppLocalizations.of(context).translate('userInterests_modalButton');
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Color.fromRGBO(82, 59, 92, 1.0),
@@ -107,12 +105,13 @@ class _UserInterestsScreenState extends State<UserInterestsScreen> {
               child: Padding(
                 padding: EdgeInsets.only(top: 30.0),
                 child: Text(AppLocalizations.of(context).translate('userInterest_tellUsWhatYouLike'),
-                    style: TextStyle(
-                        color: Color.fromRGBO(173, 165, 177, 1.0),
-                        fontSize: 25,
-                        fontWeight: FontWeight.w600,
-                        letterSpacing: 2.5),
-                    textAlign: TextAlign.center),
+                  style: TextStyle(
+                      color: Color.fromRGBO(173, 165, 177, 1.0),
+                      fontSize: 25,
+                      fontWeight: FontWeight.w600,
+                      letterSpacing: 2.5),
+                  textAlign: TextAlign.center
+                ),
               ),
             ),
           ),
@@ -120,10 +119,12 @@ class _UserInterestsScreenState extends State<UserInterestsScreen> {
             child: Container(
               height: 40,
               child: Padding(
-                padding: EdgeInsets.only(left: 15, right: 15),
+                padding: EdgeInsets.only(left: 20),
                 child: Text(
-                    AppLocalizations.of(context).translate('userInterest_select'),
-                    style: TextStyle(color: Color.fromRGBO(82, 59, 92, 1.0), fontSize: 15, letterSpacing: 1.2)),
+                  AppLocalizations.of(context).translate('userInterest_select'),
+                  style: TextStyle(
+                    color: Color.fromRGBO(82, 59, 92, 1.0), fontSize: 15, letterSpacing: 1.2)
+                  ),
               ),
             ),
           ),

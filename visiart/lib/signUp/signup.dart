@@ -176,13 +176,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
       obscureText: true,
       style: TextStyle(fontFamily: 'Montserrat', fontSize: 18.0),
       decoration: InputDecoration(
-          icon: Icon(Icons.lock, color: Color.fromRGBO(82, 59, 92, 0.8), size: 28,),
+          icon: Icon(Icons.lock_outline, color: Color.fromRGBO(82, 59, 92, 0.8), size: 28,),
           contentPadding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
           hintText: AppLocalizations.of(context).translate('signup_pwdConfirmation'),
           border:
           OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))),
     );
-
+    
     final createAccountButon = Material(
       elevation: 5.0,
       borderRadius: BorderRadius.circular(30.0),
@@ -199,99 +199,106 @@ class _SignUpScreenState extends State<SignUpScreen> {
     );
 
     return Scaffold(
-      resizeToAvoidBottomPadding: false,
-      body: Container(
-        child: Column(
-          children: <Widget>[
-            Container(
-              height: 220,
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                    image: AssetImage('assets/imgs/signup.png'),
-                    fit: BoxFit.fill),
-              ),
-              child: Stack(
-                children: <Widget>[
-                  Positioned(
-                    child: Container(
-                      child: Center(
-                        child: Text(AppLocalizations.of(context).translate("signup_createAccount"),
-                          style: TextStyle(
-                            color: Color.fromRGBO(82, 59, 92, 1.0), fontSize: 30, fontWeight: FontWeight.w600
+      resizeToAvoidBottomInset: false,
+      body: GestureDetector(
+        onTap: () {
+          FocusScopeNode currentFocus = FocusScope.of(context);
+          if (!currentFocus.hasPrimaryFocus) {
+            currentFocus.unfocus();
+          }
+        },
+        child: Container(
+          child: Column(
+            children: <Widget>[
+              Container(
+                height: 220,
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                      image: AssetImage('assets/imgs/signup.png'),
+                      fit: BoxFit.fill),
+                ),
+                child: Stack(
+                  children: <Widget>[
+                    Positioned(
+                      child: Container(
+                        child: Center(
+                          child: Text(AppLocalizations.of(context).translate("signup_createAccount"),
+                            style: TextStyle(
+                              color: Color.fromRGBO(82, 59, 92, 1.0), fontSize: 30, fontWeight: FontWeight.w600
+                            ),
                           ),
                         ),
                       ),
                     ),
-                  ),
-                ],
-              ),
-            ),
-            Container(
-              color: Colors.white,
-              child: Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    SizedBox(height: 20.0),
-                    nameField,
-                    SizedBox(height: 20.0),
-                    emailField,
-                    SizedBox(height: 20.0),
-                    passwordField,
-                    SizedBox(height: 20.0),
-                    passwordConfirmationField,
-                    SizedBox(height: 15.0),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        Checkbox(
-                          checkColor: Colors.white,
-                          activeColor: Color.fromRGBO(173, 165, 177, 1.0),
-                          value: _valueCheckbox,
-                          onChanged: (bool value) {
-                            setState(() {
-                                _valueCheckbox = value;
-                            });
-                          },
-                        ),
-                        Flexible(
-                          child: RichText(
-                            text: TextSpan(
-                              text: AppLocalizations.of(context).translate('rgpd_checkbox'),
-                              style: TextStyle(
-                                color: Color.fromRGBO(82, 59, 92, 1.0), fontWeight: FontWeight.w600, fontStyle: FontStyle.italic, fontSize: 14, letterSpacing: 1,
-                              ),
-                              children: <TextSpan>[
-                                TextSpan(text: AppLocalizations.of(context).translate('rgpd_title'),
-                                  style: TextStyle(
-                                      color: Colors.blueAccent, fontSize: 14),
-                                  recognizer: TapGestureRecognizer()
-                                    ..onTap = () {
-                                      _navigateToRGPD();
-                                    }
-                                ),
-                                TextSpan(text: " (" + AppLocalizations.of(context).translate('rgpd_required') + ")",
-                                  style: TextStyle(
-                                      color: Colors.grey, fontSize: 12),
-                                  recognizer: TapGestureRecognizer()
-                                    ..onTap = () {
-                                      _navigateToRGPD();
-                                    }
-                                )
-                              ]
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 20.0),
-                    createAccountButon,
                   ],
                 ),
               ),
-            ),
-          ],
+              Container(
+                color: Colors.white,
+                child: Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      nameField,
+                      SizedBox(height: 20.0),
+                      emailField,
+                      SizedBox(height: 20.0),
+                      passwordField,
+                      SizedBox(height: 20.0),
+                      passwordConfirmationField,
+                      SizedBox(height: 20.0),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Checkbox(
+                            checkColor: Colors.white,
+                            activeColor: Color.fromRGBO(173, 165, 177, 1.0),
+                            value: _valueCheckbox,
+                            onChanged: (bool value) {
+                              setState(() {
+                                  _valueCheckbox = value;
+                              });
+                            },
+                          ),
+                          Flexible(
+                            child: RichText(
+                              text: TextSpan(
+                                text: AppLocalizations.of(context).translate('rgpd_checkbox'),
+                                style: TextStyle(
+                                  color: Color.fromRGBO(82, 59, 92, 1.0), fontWeight: FontWeight.w600, fontStyle: FontStyle.italic, fontSize: 14, letterSpacing: 1,
+                                ),
+                                children: <TextSpan>[
+                                  TextSpan(text: AppLocalizations.of(context).translate('rgpd_title'),
+                                    style: TextStyle(
+                                        color: Colors.blueAccent, fontSize: 14),
+                                    recognizer: TapGestureRecognizer()
+                                      ..onTap = () {
+                                        _navigateToRGPD();
+                                      }
+                                  ),
+                                  TextSpan(text: " (" + AppLocalizations.of(context).translate('rgpd_required') + ")",
+                                    style: TextStyle(
+                                        color: Colors.grey, fontSize: 12),
+                                    recognizer: TapGestureRecognizer()
+                                      ..onTap = () {
+                                        _navigateToRGPD();
+                                      }
+                                  )
+                                ]
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 25.0),
+                      createAccountButon,
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
