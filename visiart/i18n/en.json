@@ -18,8 +18,8 @@
   "menu_storedData": "Your saved data",
   "menu_about": "About",
   "menu_aboutSubtitle": "Our team, our app",
-  "menu_settings": "Settongs",
-  "menu_settingsSubtitle": "Application's data",
+  "menu_myDrawings": "My artistic works",
+  "menu_myDrawingsSubtitle": "Saved drawings",
   "menu_logout": "Logout",
   "menu_logoutSubtitle": "Bye Bye !",
 
@@ -33,6 +33,9 @@
   "userInterest_move": "Are you ready to move ?",
   "userInterest_save": "Save",
 
-  "drawingAR_drawing": "Drawing"
+  "drawingAR_drawing": "Drawing",
+
+  "myDrawings_title": "Your Creations",
+  "myDrawings_infoDate": "Creation of "
 
 }

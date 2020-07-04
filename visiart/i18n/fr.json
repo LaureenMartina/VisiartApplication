@@ -18,8 +18,8 @@
   "menu_storedData": "Vos données enregistrées",
   "menu_about": "À Propos",
   "menu_aboutSubtitle": "Notre équipe, notre application",
-  "menu_settings": "Paramètres",
-  "menu_settingsSubtitle": "Données de l\\'application",
+  "menu_myDrawings": "Mes Oeuvres Artistiques",
+  "menu_myDrawingsSubtitle": "Dessins sauvegardés",
   "menu_logout": "Déconnexion",
   "menu_logoutSubtitle": "Bye Bye !",
 
@@ -33,5 +33,8 @@
   "userInterest_move": "Etes-vous prêt(e) à vous déplacer ?",
   "userInterest_save": "Enregistrer",
 
-  "drawingAR_drawing": "Dessin"
+  "drawingAR_drawing": "Dessin",
+
+  "myDrawings_title": "Vos Créations",
+  "myDrawings_infoDate": "Création du : "
 }

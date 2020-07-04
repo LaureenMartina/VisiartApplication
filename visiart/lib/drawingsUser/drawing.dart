@@ -1,22 +1,17 @@
+import 'dart:convert';
 import 'dart:io';
-import 'dart:typed_data';
 import 'dart:ui' as ui;
 import 'package:arkit_plugin/arkit_plugin.dart';
 import 'package:flutter/rendering.dart';
-//import 'package:path_provider/path_provider.dart';
+import 'package:http/http.dart';
 import 'package:vector_math/vector_math_64.dart' as vector;
 import 'package:flutter/material.dart';
-//import 'package:screenshot/screenshot.dart';
-//import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:flare_flutter/flare_actor.dart';
 import 'package:visiart/config/SharedPref.dart';
-import 'package:visiart/drawingsUser/testSaveImage.dart';
 import 'package:visiart/localization/AppLocalization.dart';
-//import 'package:permission_handler/permission_handler.dart';
-//import 'package:image_picker/image_picker.dart';
-//import 'package:gallery_saver/gallery_saver.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:native_screenshot/native_screenshot.dart';
+import 'package:visiart/config/config.dart';
 
 enum SelectedMode { StrokeWidth, Opacity, Color, Object3D, Material }
 
@@ -35,11 +30,13 @@ class _DrawState extends State<Draw> {
 
   String _animationState = "simple";
 
-  bool detectAR = false;
-  bool changed = false;
-  bool modernObj = false;
-  bool showBottomList = false;
+  bool _detectAR = false;
+  bool _changed = false;
+  //bool _modernObj = false;
+  bool _showBottomList = false;
   bool _loading = false;
+
+  int _counterDrawing;
 
   ARKitNode nodeSphere, nodeCube, nodeCone, nodeCylinder, nodePyramid, nodeTorus, nodeText;
 
@@ -50,8 +47,8 @@ class _DrawState extends State<Draw> {
   double strokeWidth = 5.0;
   double opacity = 1.0;
   
-  String selectedObj = "cube";
-  String selectedMaterial = "";
+  String _selectedObj = "cube";
+  String _selectedMaterial = "";
 
   List<DrawingPoints> points = List();
 
@@ -106,12 +103,12 @@ class _DrawState extends State<Draw> {
     setState(() {
       if(_animationState == "simple") {
          _animationState = "ar";
-         detectAR = true;
-         print("detectAR $detectAR");
+         _detectAR = true;
+         print("_detectAR $_detectAR");
       }else{
         _animationState = "simple";
-        detectAR = false;
-        print("detectAR $detectAR");
+        _detectAR = false;
+        print("_detectAR $_detectAR");
       }
     });
   }
@@ -159,10 +156,10 @@ class _DrawState extends State<Draw> {
     return GestureDetector(
       onTap: () {
         setState(() {
-          print("changed: $changed");
-          changed = true;
-          selectedObj = nameObj;
-          print("object cliqué: $selectedObj");
+          print("_changed: $_changed");
+          _changed = true;
+          _selectedObj = nameObj;
+          print("object cliqué: $_selectedObj");
         });
       },
       child: ClipOval(
@@ -195,7 +192,7 @@ class _DrawState extends State<Draw> {
     return GestureDetector(
       onTap: () {
         setState(() {
-          selectedMaterial = path;
+          _selectedMaterial = path;
         });
       },
       child: ClipOval(
@@ -320,7 +317,7 @@ class _DrawState extends State<Draw> {
         break;
       default: {
           print("carré");
-          print("choice: $selectedObj");
+          print("choice: $_selectedObj");
           nodeCube = ARKitNode(
             geometry: ARKitBox(
               materials: [material],
@@ -339,33 +336,55 @@ class _DrawState extends State<Draw> {
 
 
   @override
-  void initState() {
-    print('initState');
-    super.initState();
-  }
-
-  @override
   void didUpdateWidget(Draw widget) {
     print('didUpdateWidget');
     super.didUpdateWidget(widget);
   }
   
 
-  void _convertAndSaveDrawing(File fileTosave) async {
-    //RenderRepaintBoundary boundary = _globalKey.currentContext.findRenderObject();
-    //ui.Image image = await boundary.toImage(pixelRatio: 1);
-    // final directory = (await getApplicationDocumentsDirectory()).path;
-    //ByteData byteData = await image.toByteData(format: ui.ImageByteFormat.png);
-    //Uint8List pngBytes = byteData.buffer.asUint8List();
-    //print(pngBytes);
+  void _createDrawing(String urlImage, int userId) async {
+    var token = await SharedPref().read("token");
 
+    Map data = {
+      'urlImage': urlImage,
+      'user': {
+        "id": userId
+      }
+    };
+
+    Response response = await post(
+      API_DRAWINGS,
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+      body: json.encode(data),
+    );
+
+    Map<String, dynamic> jsonResponse = json.decode(response.body);
+
+    if (response.statusCode == 200) {
+      print("API_REGISTER ==> 200");
+      print(response.toString());
+    } else if (response.statusCode == 400) {
+      String errorMsg = jsonResponse['message'][0]['messages'][0]['message'];
+      print("errormsg: " + errorMsg);
+      throw Exception(errorMsg);
+    } else {
+      throw Exception('Failed to create drawing from API');
+    }
+  }
+
+
+  void _convertAndSaveDrawing(File fileTosave) async {
     setState(() {
       _loading = true;
     });
 
     int userId = await SharedPref().readInteger("userId");
 
-    String fileName = "IMG_" + userId.toString() + "/img_${DateTime.now().millisecondsSinceEpoch}.png";
+    String fileName = "IMG_" + userId.toString() + "/img_${DateTime.now()}.png";
     StorageReference storageReference = FirebaseStorage().ref().child(fileName);
     StorageUploadTask storageUploadTask = storageReference.putFile(fileTosave);
     
@@ -374,8 +393,12 @@ class _DrawState extends State<Draw> {
     setState(() {
       _loading = false;
     });
-    print('File Uploaded'); 
+    print('File Uploaded');
     
+    final ref = FirebaseStorage.instance.ref().child(fileName);
+    var url = await ref.getDownloadURL();
+    print("url: $url");
+    _createDrawing(url, userId);
   }
 
   @override
@@ -436,7 +459,7 @@ class _DrawState extends State<Draw> {
                   ],
                 ),
                 // Container for Simple Drawing
-                (!detectAR) ? 
+                (!_detectAR) ? 
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
@@ -445,7 +468,7 @@ class _DrawState extends State<Draw> {
                         onPressed: () {
                           setState(() {
                             if (selectedMode == SelectedMode.StrokeWidth)
-                              showBottomList = !showBottomList;
+                              _showBottomList = !_showBottomList;
                             selectedMode = SelectedMode.StrokeWidth;
                           });
                         }
@@ -455,7 +478,7 @@ class _DrawState extends State<Draw> {
                         onPressed: () {
                           setState(() {
                             if (selectedMode == SelectedMode.Color)
-                              showBottomList = !showBottomList;
+                              _showBottomList = !_showBottomList;
                             selectedMode = SelectedMode.Color;
                           });
                         }
@@ -486,13 +509,15 @@ class _DrawState extends State<Draw> {
                             ); // showSnackBar()
 
                             File imgFile = File(path);
+                            print("imgFile: $imgFile");
                             //_imgHolder = Image.file(imgFile);
 
                             setState(() {});
                             _convertAndSaveDrawing(imgFile);
+
                             // Navigator.of(context).pushReplacement(
                             //   new MaterialPageRoute(builder: (context) => SaveImage()));
-                            showBottomList = false;
+                            _showBottomList = false;
                           });
                         }
                       ),
@@ -500,7 +525,7 @@ class _DrawState extends State<Draw> {
                         icon: Icon(Icons.delete_outline, size: 30, color: Colors.red[900],),
                         onPressed: () {
                           setState(() {
-                            showBottomList = false;
+                            _showBottomList = false;
                             points.clear();
                           });
                         }
@@ -516,7 +541,7 @@ class _DrawState extends State<Draw> {
                         onPressed: () {
                           setState(() {
                             if (selectedMode == SelectedMode.Material)
-                              showBottomList = !showBottomList;
+                              _showBottomList = !_showBottomList;
                             selectedMode = SelectedMode.Material;
                           });
                         }
@@ -526,7 +551,7 @@ class _DrawState extends State<Draw> {
                         onPressed: () {
                           setState(() {
                             if (selectedMode == SelectedMode.Object3D)
-                              showBottomList = !showBottomList;
+                              _showBottomList = !_showBottomList;
                             selectedMode = SelectedMode.Object3D;
                           });
                         }
@@ -535,14 +560,14 @@ class _DrawState extends State<Draw> {
                         icon: Icon(Icons.file_download),
                         onPressed: () {
                           setState(() {
-                            showBottomList = false;
+                            _showBottomList = false;
                             //paint.save();
                           });
                         }
                       ),
                     ],
                   ), 
-                (!detectAR) ?
+                (!_detectAR) ?
                   Visibility(
                     child: (selectedMode == SelectedMode.Color) ? Wrap(
                       direction: Axis.horizontal,
@@ -562,7 +587,7 @@ class _DrawState extends State<Draw> {
                             strokeWidth = val;
                         });
                       }),
-                      visible: showBottomList,
+                      visible: _showBottomList,
                   )
                 :
                   Visibility(
@@ -578,7 +603,7 @@ class _DrawState extends State<Draw> {
                       runSpacing: 10.0,
                       children: _getMaterials(),
                     ),
-                    visible: showBottomList,
+                    visible: _showBottomList,
                   ),
               ],
             ),
@@ -597,13 +622,13 @@ class _DrawState extends State<Draw> {
                 //showFeaturePoints: true,
                 //planeDetection: ARPlaneDetection.horizontalAndVertical,
                 onARKitViewCreated: (controller) {
-                  print("is changed 1: $changed");
-                  return _onArKitViewCreated(controller, selectedObj, selectedMaterial);
+                  print("is _changed 1: $_changed");
+                  return _onArKitViewCreated(controller, _selectedObj, _selectedMaterial);
                 }
               ),
             ),
             
-            (!detectAR) ?
+            (!_detectAR) ?
               GestureDetector(
                 onPanUpdate: (details) {
                   setState(() {
@@ -637,8 +662,8 @@ class _DrawState extends State<Draw> {
                 child: Stack(
                   children: <Widget>[
                     ARKitSceneView(onARKitViewCreated: (controller) {
-                      print("is changed 2: $changed");
-                      return _onArKitViewCreated(controller, selectedObj, selectedMaterial);
+                      print("is _changed 2: $_changed");
+                      return _onArKitViewCreated(controller, _selectedObj, _selectedMaterial);
                     }),
                     CustomPaint(
                       size: Size.infinite,
@@ -670,8 +695,8 @@ class _DrawState extends State<Draw> {
                 });
               },
               child: ARKitSceneView(onARKitViewCreated: (controller) {
-                  print("is changed 3: $changed");
-                  return _onArKitViewCreated(controller, selectedObj, selectedMaterial);
+                  print("is _changed 3: $_changed");
+                  return _onArKitViewCreated(controller, _selectedObj, _selectedMaterial);
                 }
               ),
             ),

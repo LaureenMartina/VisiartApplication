@@ -26,7 +26,6 @@ class DashboardScreen extends StatefulWidget {
 class _DashboardScreenState extends State<DashboardScreen> {
   List<String> nameCards = ["Trophées", "Dessins"]; // TODO Translate
   var infoDate = "A partir du \n";
-  //bool isLoaded = false;
   
   var events = List<Event>();
   List<Event> futureEvent;

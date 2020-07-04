@@ -5,6 +5,7 @@ import 'package:visiart/awardsUser/awardsList.dart';
 import 'package:visiart/customFormUser/userInterests.dart';
 import 'package:visiart/dashboard/menu.dart';
 import 'package:visiart/drawingsUser/drawing.dart';
+import 'package:visiart/drawingsUser/myDrawings.dart';
 import 'package:visiart/events/eventsList.dart';
 import 'package:visiart/home.dart';
 import 'package:visiart/signUp/signup.dart';
@@ -55,6 +56,7 @@ var _routes = <String, WidgetBuilder> {
   "account": (BuildContext context) => AccountScreen(),
   "drawing": (BuildContext context) => Draw(),
   "drawingAndroid": (BuildContext context) => AwardsListScreen(), // TODO changer la redirection
+  "myDrawings": (BuildContext context) => MyDrawings(),
   "events": (BuildContext context) => EventsListScreen(),
   //"tchat": (BuildContext context) => RoomsChatsScreen(), // Flo
 };
