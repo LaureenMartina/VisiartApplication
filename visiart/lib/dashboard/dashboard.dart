@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -63,12 +64,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
     ),
     color: Colors.teal[700],
     child: Padding(
-      padding: EdgeInsets.only(top:60, left: 20),
+      padding: EdgeInsets.only(top:55, left: 20),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
-          Text("Vos \nDessins AR", style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold, color: Colors.white)),
+          Text("Vos\nDessins AR", style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold, color: Colors.white)),
           SizedBox(height: 4),
         ],
       ),
@@ -316,10 +317,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         child: GestureDetector(
                           onTap: () {
                             Navigator.pushNamed(context, 'awards');
-                            /*Navigator.push(
-                              context, MaterialPageRoute(
-                                builder: (BuildContext context) => AwardsListScreen() )
-                            );*/
                           },
                           child: _awardsCard(),
                         ),
@@ -349,11 +346,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         padding: EdgeInsets.only(right: 10),
                         child: GestureDetector(
                           onTap: () {
-                            Navigator.pushNamed(context, 'awards'); // TODO change to drawing
-                            /*Navigator.push(
-                              context, MaterialPageRoute(
-                                builder: (BuildContext context) => AwardsListScreen() )
-                            );*/
+                            Platform.isAndroid ? Navigator.pushNamed(context, "drawingAndroid") :
+                            Navigator.pushNamed(context, 'drawing'); // TODO change to drawing
                           },
                           child: _drawingCard(),
                         ),
