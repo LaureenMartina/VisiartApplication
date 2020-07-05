@@ -82,13 +82,14 @@ class _RoomsChatPageState extends State<RoomsChatPage> {
       });
 
       this._fetchRoomMessages();
-      /* Timer.periodic(Duration(milliseconds: 10000), (timer) {
+      Timer.periodic(Duration(milliseconds: 500), (timer) {
         if (mounted) {
             _listviewScrollToBottom();
+            timer.cancel();
         } else {
           timer.cancel();
         }
-      }); */
+      });
     }
 
     void _listviewScrollToBottom() {
