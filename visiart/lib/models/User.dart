@@ -5,7 +5,7 @@ class User {
   String name;
   String firstname;
   String email;
-  String password = ""; //TODO change if basic connexion
+  String password = ""; //change if basic connexion
   //bool confirmed;
   String phone;
   String language;
@@ -54,7 +54,9 @@ class User {
   User.fromJson(Map<String, dynamic> json) :
     id = json['id'],
     name = json['name'],
-    email = json['email']
+    email = json['email'],
+    username = json['username']
+    
   ;
 
 }

@@ -1,4 +1,4 @@
-package com.example.visiart
+package com.visiart
 
 import androidx.annotation.NonNull;
 import io.flutter.embedding.android.FlutterActivity

@@ -1,6 +1,17 @@
-import 'package:flutter/material.dart';
+import 'dart:convert';
+import 'dart:ui';
+
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
+import 'package:http/http.dart' as http;
+import 'package:visiart/config/SharedPref.dart';
+import 'package:visiart/config/config.dart';
+import 'package:visiart/events/eventDetails.dart';
+import 'package:visiart/models/Event.dart';
+import 'package:visiart/localization/AppLocalization.dart';
+
+SharedPref sharedPref = SharedPref();
 
 class EventsListScreen extends StatefulWidget {
   @override
@@ -9,117 +20,239 @@ class EventsListScreen extends StatefulWidget {
 
 class _EventsListScreenState extends State<EventsListScreen> {
 
+  ScrollController _scrollController = ScrollController();
+
+  var userLanguage = window.locale.languageCode;
   String name, username, avatar;
   bool isData = false;
+  bool _favorite = false, _recent = false;
+  int _count = 50;
 
-  /*
-  * EXEMPLE : API GET PARSE JSON
-  */
-  /*FetchJSON() async {
-    var Response = await http.get(
-      "https://api.github.com/users/nitishk72",
-      headers: {"Accept": "application/json"},
-    );
+  List<Event> _eventsFavorite = List<Event>();
+  List<Event> filteredFavoriteEvents = List<Event>();
 
-    if (Response.statusCode == 200) {
-      String responseBody = Response.body;
-      var responseJSON = json.decode(responseBody);
-      username = responseJSON['login'];
-      name = responseJSON['name'];
-      avatar = responseJSON['avatar_url'];
-      isData = true;
+  List<Event> events = List<Event>();
+  List<Event> filteredEvents = List<Event>();
+
+  List<Event> _eventsRecent = List<Event>();
+  List<Event> filteredRecentEvents = List<Event>();
+
+  TextEditingController editingController = TextEditingController();
+
+  @override
+  void initState() {
+    _fetchEvents(_count);
+    
+    editingController.addListener(() {
+      if (editingController.text.isNotEmpty) {
+        filteredEvents = events
+            .where((event) => event.title
+                .toLowerCase()
+                .contains(editingController.text.toLowerCase()))
+            .toList();
+        setState(() {});
+      }
+    });
+
+    _scrollController.addListener(() {
+      if(_scrollController.position.pixels == _scrollController.position.maxScrollExtent) {
+        _fetchEvents(_count + 50);
+      }
+    });
+
+    super.initState();
+  }
+
+  void _fetchEvents(int _count) async {
+    var token = await sharedPref.read("token");
+
+    final response = await http.get(API_BASE_URL + "/events?_limit=" + _count.toString() + "&language=" + userLanguage, headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $token',
+    });
+
+    if (response.statusCode == 200) {
+      List jsonResponse = json.decode(response.body);
       setState(() {
-        print('UI Updated');
+        events.addAll(
+            jsonResponse.map((event) => new Event.fromJson(event)).toList());
+        filteredEvents.addAll(events);
       });
     } else {
-      print('Something went wrong. \nResponse Code : ${Response.statusCode}');
+      throw Exception('Failed to load events from API');
     }
-  }*/
+  }
+
+  void _fetchFavoriteEvents() async {
+    var token = await sharedPref.read("token");
+
+    final response = await http.get(API_EVENTS_FAVORITE + userLanguage, 
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'Authorization': 'Bearer $token',
+      }
+    );
+
+    if (response.statusCode == 200) {
+      List jsonResponse = json.decode(response.body);
+      setState(() {
+        _eventsFavorite.addAll(
+            jsonResponse.map((event) => new Event.fromJson(event)).toList());
+        filteredFavoriteEvents.addAll(_eventsFavorite);
+      });
+    } else {
+      throw Exception('Failed to load favorite events from API');
+    }
+  }
+
+  void _fetchRecentEvents() async {
+    var token = await sharedPref.read("token");
+
+    final response = await http.get(API_EVENTS_RECENT + userLanguage, 
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'Authorization': 'Bearer $token',
+      }
+    );
+
+    if (response.statusCode == 200) {
+      List jsonResponse = json.decode(response.body);
+      setState(() {
+        _eventsRecent.addAll(
+            jsonResponse.map((event) => new Event.fromJson(event)).toList());
+        filteredRecentEvents.addAll(_eventsRecent);
+      });
+    } else {
+      throw Exception('Failed to load recent events from API');
+    }
+  }
+
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: CustomScrollView(
-        slivers: <Widget>[
-          SliverList(
-            delegate: SliverChildBuilderDelegate((context, index) {
-              return Container(
-                alignment: Alignment.center,
-                height: 180,
-                color: Colors.red[100 * (index % 10)],
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  //crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[                
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Row(
-                            children: <Widget>[
-                              Expanded(
-                                child: Container(
-                                  margin: const EdgeInsets.only(top: 12, bottom: 10, left: 12),
-                                  child: Text("TITLE EVENT $index",
-                                    style: TextStyle(
-                                      fontSize: 18.0,
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                          Container(
-                            margin: EdgeInsets.only(right: 10, left: 12),
-                            child: Text("Description event : aaaaaaaaaaaaaaaaa",
-                              style: TextStyle(
-                                fontSize: 16.0,
-                              ),
-                              maxLines: 3,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
+      backgroundColor: Color.fromRGBO(252, 233, 216, 0.1),
+      body: Column(
+        children: <Widget>[
+          Padding(
+            padding: EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 8),
+            child: Container(
+              height: 50,
+              child: TextField(
+                onChanged: (value) {
+                  //search(value);
+                },
+                controller: editingController,
+                decoration: InputDecoration(
+                  filled: true,
+                  fillColor: Colors.white,
+                  labelText: AppLocalizations.of(context).translate("search"),
+                  hintText: AppLocalizations.of(context).translate("search"),
+                  prefixIcon: Icon(Icons.search),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(25.0)),
+                  ),
                 ),
-              );
-            }, childCount: 10,
+              ),
+            ),
+          ),
+          Expanded(
+            child: ListView.builder(
+              controller: _scrollController,
+              scrollDirection: Axis.vertical,
+              shrinkWrap: true,
+              itemCount: (_favorite) ? filteredFavoriteEvents.length : (_recent) ? filteredRecentEvents.length : filteredEvents.length,
+              itemBuilder: (context, index) {
+                return Card(
+                  elevation: 10,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(15.0)
+                  ),
+                  margin: EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
+                  child: ListTile(
+                    contentPadding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
+                    onTap: () => {
+                      if(_favorite) {
+                        Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => EventDetails(specificEvent: filteredFavoriteEvents[index])))
+                      }else if(_recent){
+                        Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => EventDetails(specificEvent: filteredRecentEvents[index])))
+                      }else{
+                        Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => EventDetails(specificEvent: filteredEvents[index])))
+                      }
+                    },
+                    title: Text( (_favorite) ? '${filteredFavoriteEvents[index].title}' : 
+                      (_recent) ? '${filteredRecentEvents[index].title}' : '${filteredEvents[index].title}',
+                        style: TextStyle(
+                          fontSize: 18.0,
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                        )),
+                    subtitle: Text( (_favorite) ? '${filteredFavoriteEvents[index].description}' : 
+                      (_recent) ? '${filteredRecentEvents[index].description}' : '${filteredEvents[index].description}',
+                      style: TextStyle(
+                        fontSize: 16.0,
+                      ),
+                      maxLines: 3,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    leading: ConstrainedBox(
+                      constraints: BoxConstraints(
+                        minWidth: 100,
+                        minHeight: 100,
+                        maxWidth: 100,
+                        maxHeight: 100,
+                      ),
+                      child: Image.network( (_favorite) ? '${filteredFavoriteEvents[index].image}' : 
+                        (_recent) ? '${filteredRecentEvents[index].image}' : '${filteredEvents[index].image}',
+                        fit: BoxFit.cover),
+                    ),
+                    trailing: Icon(Icons.keyboard_arrow_right,
+                        size: 50.0, color: Colors.blueGrey[500]),
+                  ),
+                );
+              },
             ),
           ),
         ],
       ),
       floatingActionButton: SpeedDial(
+        backgroundColor: Color.fromRGBO(82, 59, 92, 1.0),
         closeManually: true,
         animatedIcon: AnimatedIcons.menu_close,
         children: [
           SpeedDialChild(
-            backgroundColor: Colors.redAccent[200],
+            backgroundColor: Colors.pink[800],
             child: Icon(Icons.favorite),
-            label: 'favorite',
+            label: AppLocalizations.of(context).translate("event_filterFavorite"),
             onTap: () {
-              print("favorie");
-            }
-          ),
+              _favorite = true;
+              _recent = false;
+              _fetchFavoriteEvents();
+            }),
           SpeedDialChild(
-            backgroundColor: Colors.greenAccent[200],
+            backgroundColor: Colors.teal[700],
             child: Icon(Icons.filter_list),
-            label: 'Récent',
+            label: AppLocalizations.of(context).translate("event_filterRecent"),
             onTap: () {
-              print("récent");
-            }
-          ),
+              _recent = true;
+              _favorite = false;
+              _fetchRecentEvents();
+            }),
           SpeedDialChild(
-            backgroundColor: Colors.blueAccent[200],
-            child: Icon(Icons.map),
-            label: 'Map',
+            backgroundColor: Color.fromRGBO(173, 165, 177, 1.0),
+            child: Icon(Icons.all_inclusive),
+            label: AppLocalizations.of(context).translate("event_filterNone"),
             onTap: () {
-              print("récent");
-            }
-          ),
+              _favorite = false;
+              _recent = false;
+              _fetchEvents(_count);
+            }),
         ],
       ),
     );

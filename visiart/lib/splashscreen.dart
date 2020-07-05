@@ -1,11 +1,9 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:flare_flutter/flare_actor.dart';
 import 'home.dart';
 
-
-
 class SplashScreen extends StatefulWidget {
-  static String splash = "splash";
 
   @override
   _SplashScreenState createState() => new _SplashScreenState();
@@ -31,22 +29,26 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   void navigateToHomeScreen() {
-    Navigator.of(context).pushReplacement(
+    Navigator.pushReplacement(context, 
+        new MaterialPageRoute(builder: (context) => HomeScreen()));
+    /*Navigator.of(context).pushReplacement(
         new MaterialPageRoute(
             builder: (BuildContext context) => HomeScreen()
         )
-    );
+    );*/
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        child: Stack(
-          alignment: Alignment.center,
-          children: <Widget>[
-            Image.asset("assets/imgs/test.png")
-          ],
+        child: Center(
+          child: FlareActor(
+            "assets/flare/splashscreen.flr",
+            alignment: Alignment.center,
+            fit: BoxFit.contain,
+            animation: "splashScreen",
+          ),
         ),
       ),
     );

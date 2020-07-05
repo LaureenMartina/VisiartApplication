@@ -1,4 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:visiart/account/account.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:visiart/awardsUser/awardsList.dart';
+import 'package:visiart/chatRooms/roomChats.dart';
+import 'package:visiart/chatRooms/roomsList.dart';
+import 'package:visiart/customFormUser/userInterests.dart';
+import 'package:visiart/dashboard/menu.dart';
+import 'package:visiart/events/eventsList.dart';
+import 'package:visiart/home.dart';
+import 'package:visiart/signUp/signup.dart';
+
+import 'localization/AppLocalization.dart';
 import 'splashscreen.dart';
 
 void main() => runApp(MyApp());
@@ -8,14 +20,39 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return new MaterialApp(
-        theme: ThemeData(
-          primarySwatch: Colors.deepPurple,
-        ),
-        debugShowCheckedModeBanner: false,
-        home: new SplashScreen(),
+      supportedLocales: [
+      Locale('en', 'US'),
+      Locale('fr', 'FR'),
+      ],
+      localizationsDelegates: [
+        AppLocalizations.delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+      ],
+      theme: ThemeData(
+        primarySwatch: Colors.deepPurple,
+      ),
+      debugShowCheckedModeBanner: false,
+      initialRoute: "/",
+      routes: _routes,
+        //home: new SplashScreen(),
     );
   }
 }
+
+var _routes = <String, WidgetBuilder> {
+  "/": (BuildContext context) => SplashScreen(),
+  "connexion": (BuildContext context) => HomeScreen(),
+  "hobbies": (BuildContext context) => UserInterestsScreen(),
+  "inscription": (BuildContext context) => SignUpScreen(),
+  "dashboard": (BuildContext context) => MenuBoardScreen(),
+  "awards": (BuildContext context) => AwardsListScreen(),
+  "account": (BuildContext context) => AccountScreen(),
+  //"drawing": (BuildContext context) => Draw(), //merge with the drawing branch before
+  "events": (BuildContext context) => EventsListScreen(),
+  "rooms": (BuildContext context) => RoomsListPage(),
+  "room_chats": (BuildContext context) => RoomsChatPage(),
+};
 
 /*class MyApp extends StatelessWidget {
   // This widget is the root of your application.

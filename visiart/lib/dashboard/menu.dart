@@ -1,8 +1,11 @@
 import 'dart:ui';
+
 import 'package:flutter/material.dart';
-import 'package:visiart/events/eventsList.dart';
-import 'package:visiart/dashboard/dashboard.dart';
 import 'package:visiart/chatRooms/roomsList.dart';
+import 'package:visiart/config/SharedPref.dart';
+import 'package:visiart/dashboard/dashboard.dart';
+import 'package:visiart/events/eventsList.dart';
+import 'package:visiart/localization/AppLocalization.dart';
 
 class MenuBoardScreen extends StatefulWidget {
   @override
@@ -10,31 +13,43 @@ class MenuBoardScreen extends StatefulWidget {
 }
 
 class _MenuBoardScreenState extends State<MenuBoardScreen> {
-  int _selectedIndex = 0;
+  int _selectedIndex = 1;
+  String _username = "";
+  String _mail = "";
+  String _pictureText = "";
+  SharedPref _sharedPref = SharedPref();
 
   final List<Widget> _children = [
-    DashboardScreen(),
     RoomsListPage(),
+    DashboardScreen(),
     EventsListScreen()
   ];
 
+  void _navigateToAccount() {
+    Navigator.pushNamed(context, 'account');
+  }
+
+  void _navigateToLogin() {
+    Navigator.pushNamed(context, 'connexion');
+  }
+
   ListTile _account() => ListTile(
-    title: Text('Mon Compte',
+    title: Text(AppLocalizations.of(context).translate('menu_myAccount'),
       style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
     ),
-    subtitle: Text('Vos données enregistrées',
+    subtitle: Text(AppLocalizations.of(context).translate('menu_storedData'),
       style: TextStyle(fontSize: 12, fontStyle: FontStyle.italic
       ),
     ),
     leading: Icon(Icons.face, size: 40, color: Colors.teal[300]),
-    onTap: () {  },
+    onTap: () { _navigateToAccount(); },
   );
 
   ListTile _about() => ListTile(
-    title: Text('A Propos',
+    title: Text(AppLocalizations.of(context).translate('menu_about'),
       style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
     ),
-    subtitle: Text('Notre équipe, notre application',
+    subtitle: Text(AppLocalizations.of(context).translate('menu_aboutSubtitle'),
       style: TextStyle(fontSize: 12, fontStyle: FontStyle.italic
       ),
     ),
@@ -43,10 +58,10 @@ class _MenuBoardScreenState extends State<MenuBoardScreen> {
   );
 
   ListTile _paramsUser() => ListTile(
-    title: Text('Paramètres',
+    title: Text(AppLocalizations.of(context).translate('menu_settings'),
       style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
     ),
-    subtitle: Text('Données de l\'application',
+    subtitle: Text(AppLocalizations.of(context).translate('menu_settingsSubtitle'),
       style: TextStyle(fontSize: 12, fontStyle: FontStyle.italic
       ),
     ),
@@ -55,39 +70,60 @@ class _MenuBoardScreenState extends State<MenuBoardScreen> {
   );
 
   ListTile _logout() => ListTile(
-    title: Text('Déconnexion',
+    title: Text(AppLocalizations.of(context).translate('menu_logout'),
       style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
     ),
-    subtitle: Text('Bye Bye',
+    subtitle: Text(AppLocalizations.of(context).translate('menu_logoutSubtitle'),
       style: TextStyle(fontSize: 12, fontStyle: FontStyle.italic
       ),
     ),
     leading: Icon(Icons.launch, size: 40, color: Colors.brown[900],),
-    onTap: () {  },
+    onTap: () {  
+      _sharedPref.remove("token");
+      _navigateToLogin();
+    },
   );
 
+  void _setupInfo() async {
+    _username = await SharedPref().read("name");
+    _mail = await SharedPref().read("email");
+    if (_username.length >= 2){
+      _pictureText = _username.substring(0, 2);
+    } else {
+      _pictureText = _username.substring(0, 1);
+    }
+    setState(() {});
+  }
+  
+  @override
+  void initState() {
+    _setupInfo();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text('Visiart'),
+        centerTitle: true,
         elevation: 5.0,
+        backgroundColor: Color.fromRGBO(82, 59, 92, 1.0),
       ),
       drawer: Drawer(
         child: ListView(
           children: <Widget>[
             UserAccountsDrawerHeader(
-              accountName: Text('Exemple Machin',
+              accountName: Text(_username,
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: Colors.white, letterSpacing: 2),
               ),
-              accountEmail: Text('exemple.machin@gmail.com',
+              accountEmail: Text(_mail,
                 style: TextStyle(fontSize: 12, color: Colors.cyanAccent[100]),
               ),
               currentAccountPicture: CircleAvatar(
                 backgroundColor: Colors.white,
                 foregroundColor: Colors.indigo[900],
-                child: Text("EM"),
+                child: Text(_pictureText),
               ),
               decoration: BoxDecoration(
                 image: DecorationImage(
@@ -113,20 +149,43 @@ class _MenuBoardScreenState extends State<MenuBoardScreen> {
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            title: Text('Home'),
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.forum),
+            icon: Icon(
+              Icons.forum, 
+              //color: Colors.lightBlue,
+            ),
             title: Text('Salons'),
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.local_play),
+            icon: Icon(
+              Icons.home,
+              //color: Colors.brown
+            ),
+            title: Text('Home'),
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(
+              Icons.local_play,
+              //color: Colors.deepOrange,
+            ),
             title: Text('Events'),
           ),
         ],
         currentIndex: _selectedIndex,
-        selectedItemColor: Colors.amber[800],
+        selectedItemColor: Color.fromRGBO(82, 59, 92, 1.0),
+        backgroundColor: Color.fromRGBO(249, 248, 249, 1.0),
+        selectedIconTheme: IconThemeData(
+          color: Color.fromRGBO(82, 59, 92, 1.0),
+          opacity: 1.0,
+          size: 25.0
+        ),
+        unselectedIconTheme: IconThemeData(
+          color: Color.fromRGBO(87, 74, 77, 0.5),
+          opacity: 1.0,
+          size: 25.0
+        ),
+        elevation: 20,
+        selectedFontSize: 16,
+        unselectedItemColor: Colors.grey,
         onTap: (value) {
           _selectedIndex = value;
           setState(() {

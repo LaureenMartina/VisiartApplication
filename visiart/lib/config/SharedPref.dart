@@ -13,7 +13,12 @@ class SharedPref {
 
   Future<int> readInteger(String key) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    return prefs.getInt(key) ?? 4;
+    return prefs.getInt(key) ?? 99999;
+  }
+
+  Future<bool> readBool(String key) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getBool(key) ?? false;
   }
 
   readObj(String key) async {
@@ -29,6 +34,11 @@ class SharedPref {
   saveInteger(String key, value) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setInt(key, value);
+  }
+
+  saveBool(String key, value) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setBool(key, value);
   }
 
   saveObj(String key, value) async {
