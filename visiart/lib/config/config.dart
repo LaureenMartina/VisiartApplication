@@ -5,6 +5,7 @@ library visiart.globals;
 const String API_BASE_URL = "https://www.visiart.fr";
 const String API_TOKEN_KEY = "token";
 const String API_USER_ID_KEY = "userId";
+const String ONE_SIGNAL_PLAYER_ID_KEY = "playerId";
 
 const String API_REGISTER = API_BASE_URL + "/auth/local/register";
 const String API_LOGIN = API_BASE_URL + "/auth/local";

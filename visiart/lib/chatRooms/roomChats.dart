@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 import 'dart:ui';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
@@ -53,13 +54,14 @@ class _RoomsChatPageState extends State<RoomsChatPage> {
     UserRoomPrivate userRoomPrivate;
     var _userid;
     var _userAdded;
+    List <String> _listPlayerId = [];
 
     _RoomsChatPageState(Room room, UserRoomPrivate userRoomPrivate) {
       this.room = room;
       this.userRoomPrivate = userRoomPrivate;
     }
 
-    ScrollController _controller = ScrollController(initialScrollOffset: 50.0);
+    ScrollController _scrollController = ScrollController(initialScrollOffset: 50.0);
     TextEditingController textEditingController = new TextEditingController();
     List<RoomMessage> messageList = [];
 
@@ -68,15 +70,52 @@ class _RoomsChatPageState extends State<RoomsChatPage> {
 
     @override
     void initState() {
+      super.initState();
       sharedPref.readInteger(globals.API_USER_ID_KEY).then((value) => {
         setState(() {
             this._userid = value;
         })
       });
       this._fetchRoomMessages();
-      super.initState();
+
+      Timer.periodic(Duration(milliseconds: 100), (timer) {
+        if (mounted) {
+            _listviewScrollToBottom();
+        } else {
+          timer.cancel();
+        }
+      });
     }
 
+  void _listviewScrollToBottom() {
+    _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
+  }
+
+  void _sendNotifPush(String message) async {
+    if (this._listPlayerId.isNotEmpty) {
+      final client = HttpClient();
+      final request = await client.postUrl(Uri.parse("https://onesignal.com/api/v1/notifications"));
+      request.headers.set(HttpHeaders.contentTypeHeader, "application/json; charset=UTF-8");
+      
+      var data = {
+        "app_id":"cd6c5bce-8124-45ba-9c0d-d559512c5f8e",
+        "contents" : {
+          "en" : message,
+        },
+        "include_player_ids" : this._listPlayerId//["a786d5d2-3827-4f57-bca9-f5086c8885c6"]
+      };
+      request.write(json.encode(data));
+      //request.write('{ "app_id": "cd6c5bce-8124-45ba-9c0d-d559512c5f8e","contents" : {"en": "English Message"},"include_player_ids" : ["a786d5d2-3827-4f57-bca9-f5086c8885c6"]}');
+
+      final response = await request.close();
+
+      response.transform(utf8.decoder).listen((contents) {
+        print("contents");
+        print(contents);
+      });
+    }
+    
+  }
     Future<List<RoomMessage>> _fetchRoomMessages() async {
       //final roomAPIUrl = 'http://91.121.165.149/room-messages'; //Rajouter id
       final roomAPIUrl = globals.API_BASE_URL+'/room-messages?room='+this.room.id.toString();
@@ -92,6 +131,11 @@ class _RoomsChatPageState extends State<RoomsChatPage> {
           List jsonResponse = json.decode(response.body);
           var list = jsonResponse.map((roomMessages) => new RoomMessage.fromMainJson(roomMessages)).toList();
           if(list.isNotEmpty) {
+            list.forEach((element) { 
+              if (element.userId != this._userid && element.playerId != null && element.playerId.isNotEmpty && !this._listPlayerId.contains(element.playerId)) {
+                this._listPlayerId.add(element.playerId);
+              }
+            });
             sharedPref.save("lastDateMessageVieweRoom_"+this.room.id.toString(), list.last.date);
           }
           this.setState(() {
@@ -169,50 +213,48 @@ class _RoomsChatPageState extends State<RoomsChatPage> {
     }
 
     void addNewMessage() async {
+      if (textEditingController.text.trim().isNotEmpty) {
+        this._userid = await sharedPref.readInteger(globals.API_USER_ID_KEY);
+        var token = await sharedPref.read(globals.API_TOKEN_KEY);
+        RoomMessage newMessage = RoomMessage(
+            content: textEditingController.text.trim(),
+            userId: _userid
+        ); 
+        var data = {
+            "content": textEditingController.text.trim(),
+            "user": {
+                "id": _userid
+            },
+            "room": {
+                "id": this.room.id
+            }, 
+        };
+        final response = await http.post(
+            globals.API_BASE_URL+'/room-messages',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+                'Authorization': 'Bearer $token',
+            },
+            body: json.encode(data)
+        );
 
-        if (textEditingController.text.trim().isNotEmpty) {
-
-            this._userid = await sharedPref.readInteger(globals.API_USER_ID_KEY);
-
-            var token = await sharedPref.read(globals.API_TOKEN_KEY);
-            RoomMessage newMessage = RoomMessage(
-                content: textEditingController.text.trim(),
-                userId: _userid
-            ); 
-            var data = {
-                "content": textEditingController.text.trim(),
-                "user": {
-                    "id": _userid
-                },
-                "room": {
-                    "id": this.room.id
-                }, 
-            };
-            final response = await http.post(
-                globals.API_BASE_URL+'/room-messages',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json',
-                    'Authorization': 'Bearer $token',
-                },
-                body: json.encode(data)
-            );
-
-            if (response.statusCode == 200) {
-              //TODO add badge 
-              newMessage = RoomMessage.fromMainJson(json.decode(response.body));
-              sharedPref.save("lastDateMessageVieweRoom_"+this.room.id.toString(), newMessage.date);
-            } else {
-                throw Exception('Failed to post message from API');
-            }
-
-            setState(() {
-                messageList.add(newMessage);
-                textEditingController.text = '';
-            });
-            /* Timer(Duration(milliseconds: 500),
-                    () => _controller.jumpTo(_controller.position.maxScrollExtent)); */
+        if (response.statusCode == 200) {
+          //TODO add badge 
+          newMessage = RoomMessage.fromMainJson(json.decode(response.body));
+          sharedPref.save("lastDateMessageVieweRoom_"+this.room.id.toString(), newMessage.date);
+          this._sendNotifPush(textEditingController.text.trim());
+        } else {
+            throw Exception('Failed to post message from API');
         }
+
+        setState(() {
+            messageList.add(newMessage);
+            textEditingController.text = '';
+        });
+        /* Timer(Duration(milliseconds: 500),
+                () => _scrollController.jumpTo(_scrollController.position.maxScrollExtent)); */
+      } 
     }
 
     AppBar _privateRoomOwner() {
@@ -383,7 +425,7 @@ class _RoomsChatPageState extends State<RoomsChatPage> {
                     onTap: () {
                         /*  Timer(
                         Duration(milliseconds: 300),
-                        () => _controller.jumpTo(_controller.position.maxScrollExtent)); */
+                        () => _scrollController.jumpTo(_scrollController.position.maxScrollExtent)); */
                     },
                     ),
                     
@@ -414,7 +456,7 @@ class _RoomsChatPageState extends State<RoomsChatPage> {
                     Column(
                         children: <Widget>[
                         Flexible(
-                            child: _roomsListMeesageView(this.messageList, this._userid, this.allMessage),
+                            child: _roomsListMeesageView(this.messageList, this._userid, this.allMessage, this._scrollController),
                         ),
                         buildMessageTextField(),
                         ],
@@ -426,8 +468,11 @@ class _RoomsChatPageState extends State<RoomsChatPage> {
                         
 }
 
-ListView _roomsListMeesageView(data, userId, allMessage) {
+ListView _roomsListMeesageView(data, userId, allMessage, controller) {
     return ListView.builder(
+      controller: controller,
+      shrinkWrap: true,
+      //reverse: true,
         itemCount: data.length,
         itemBuilder: (context, index) {
             if (data[index].userId == userId) {

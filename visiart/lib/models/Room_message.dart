@@ -5,11 +5,12 @@ class RoomMessage {
   final int id;
   final int roomId;
   final int userId;
+  final String playerId;
   final String content;
   final String username;
   final String date;
 
-  RoomMessage({this.id, this.roomId, this.content, this.userId, this.username, this.date});
+  RoomMessage({this.id, this.roomId, this.content, this.userId, this.username, this.date, this.playerId});
 
   factory RoomMessage.fromJson(Map<String, dynamic> json) {
     
@@ -34,11 +35,13 @@ class RoomMessage {
   factory RoomMessage.fromMainJson(Map<String, dynamic> json) {
     
     var userId = json['user'];
-    var username = json['user'];
+    var username = "";
+    var playerId = "";
 
     if (userId != null){
       userId = json['user']['id'];
       username = json['user']['username'];
+      playerId = json['user']['playerId'];
     }
   
     var roomId = json['room'];
@@ -54,6 +57,7 @@ class RoomMessage {
       userId: userId,
       roomId: roomId,
       username: username,
+      playerId: playerId,
       date: formatter.format(parsedDate)
     );
   }

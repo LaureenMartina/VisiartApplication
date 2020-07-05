@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
+import 'package:visiart/chatRooms/roomsList.dart';
 import 'package:visiart/dashboard/menu.dart';
 import 'package:visiart/localization/AppLocalization.dart';
 import 'package:flutter/services.dart';
@@ -54,10 +55,15 @@ class _HomeState extends State<HomeScreen> {
         OSiOSSettings.inAppLaunchUrl: false
       }
     );
+    
     OneSignal.shared.setInFocusDisplayType(OSNotificationDisplayType.notification);
 
     // The promptForPushNotificationsWithUserResponse function will show the iOS push notification prompt. We recommend removing the following code and instead using an In-App Message to prompt for notification permission
-    OneSignal.shared.promptUserForPushNotificationPermission(fallbackToSettings: true);
+    await OneSignal.shared.promptUserForPushNotificationPermission(fallbackToSettings: true);
+    var status = await OneSignal.shared.getPermissionSubscriptionState();
+
+    var playerId = status.subscriptionStatus.userId;
+    sharedPref.save(ONE_SIGNAL_PLAYER_ID_KEY, playerId);
   }
 
   
@@ -99,6 +105,7 @@ class _HomeState extends State<HomeScreen> {
   }
 
   Future<void> _login(String username, String password) async {
+    //var playerId = await sharedPref.read(ONE_SIGNAL_PLAYER_ID_KEY);
     Map data = {'identifier': username, 'password': password};
 
     Response response = await post(
@@ -173,11 +180,13 @@ class _HomeState extends State<HomeScreen> {
 
  void _createUser(String newUsername, String newName, String newEmail, String newPassword) async {
 
+    var playerId = await sharedPref.read(ONE_SIGNAL_PLAYER_ID_KEY);
     Map data = {
       'username': newUsername,
       'name': newName,
       'email': newEmail,
-      'password': newPassword
+      'password': newPassword,
+      'playerId': playerId
     };
 
     Response response = await post(
