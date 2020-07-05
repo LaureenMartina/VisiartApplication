@@ -54,7 +54,7 @@ class _RoomsChatPageState extends State<RoomsChatPage> {
       this.userRoomPrivate = userRoomPrivate;
     }
 
-    ScrollController _controller = ScrollController(initialScrollOffset: 50.0);
+    ScrollController _scrollController = ScrollController(initialScrollOffset: 50.0);
     TextEditingController textEditingController = new TextEditingController();
     List<RoomMessage> messageList = [];
 
@@ -62,6 +62,7 @@ class _RoomsChatPageState extends State<RoomsChatPage> {
     
     @override
     void initState() {
+      super.initState();
       sharedPref.readInteger(globals.API_USER_ID_KEY).then((value) => {
         setState(() {
             this._userid = value;
@@ -81,7 +82,17 @@ class _RoomsChatPageState extends State<RoomsChatPage> {
       });
 
       this._fetchRoomMessages();
-      super.initState();
+      /* Timer.periodic(Duration(milliseconds: 10000), (timer) {
+        if (mounted) {
+            _listviewScrollToBottom();
+        } else {
+          timer.cancel();
+        }
+      }); */
+    }
+
+    void _listviewScrollToBottom() {
+      _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
     }
 
     Future<List<RoomMessage>> _fetchRoomMessages() async {
@@ -105,6 +116,7 @@ class _RoomsChatPageState extends State<RoomsChatPage> {
           this.setState(() {
             this.messageList.addAll(list);
           });
+          
         return list;
       } else {
         throw Exception('Failed to load rooms from API');
@@ -225,7 +237,7 @@ class _RoomsChatPageState extends State<RoomsChatPage> {
             textEditingController.text = '';
         });
         /*Timer(Duration(milliseconds: 500),
-            () => _controller.jumpTo(_controller.position.maxScrollExtent)); */
+            () => _scrollController.jumpTo(_scrollController.position.maxScrollExtent)); */
       }
     }
 
@@ -367,6 +379,8 @@ class _RoomsChatPageState extends State<RoomsChatPage> {
     Widget buildMessageTextField() {
       /* print("this.room.enabled");
       print(this.room.enabled); */
+
+      //this._listviewScrollToBottom();
       if (this.room.enabled != null && !this.room.enabled) {
         return Container();
       }
@@ -397,7 +411,7 @@ class _RoomsChatPageState extends State<RoomsChatPage> {
                     onTap: () {
                         /*  Timer(
                         Duration(milliseconds: 300),
-                        () => _controller.jumpTo(_controller.position.maxScrollExtent)); */
+                        () => _scrollController.jumpTo(_scrollController.position.maxScrollExtent)); */
                     },
                     ),
                     
@@ -427,7 +441,7 @@ class _RoomsChatPageState extends State<RoomsChatPage> {
             Column(
               children: <Widget>[
                 Flexible(
-                  child: _roomsListMeesageView(this.messageList, this._userid, this.allMessage),
+                  child: _roomsListMeesageView(this.messageList, this._userid, this.allMessage, this._scrollController),
                 ),
                 buildMessageTextField(),
               ],
@@ -438,8 +452,11 @@ class _RoomsChatPageState extends State<RoomsChatPage> {
     }                   
 }
 
-ListView _roomsListMeesageView(data, userId, allMessage) {
+ListView _roomsListMeesageView(data, userId, allMessage, controller) {
     return ListView.builder(
+
+      controller: controller,
+      shrinkWrap: true,
         itemCount: data.length,
         itemBuilder: (context, index) {
             if (data[index].userId == userId) {
@@ -474,5 +491,7 @@ ListView _roomsListMeesageView(data, userId, allMessage) {
                     ),
                 );
             }
+
+      
     });
 }
