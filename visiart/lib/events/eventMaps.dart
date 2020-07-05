@@ -4,8 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:visiart/models/Event.dart';
-import 'package:permission/permission.dart';
 import 'dart:ui' as ui;
 
 class EventMaps extends StatefulWidget {

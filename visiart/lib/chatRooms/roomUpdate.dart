@@ -1,17 +1,11 @@
 import 'dart:convert';
 import 'dart:ui';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:visiart/chatRooms/roomChats.dart';
-import 'package:visiart/chatRooms/roomsList.dart';
 import 'package:visiart/config/SharedPref.dart';
-import 'package:visiart/localization/AppLocalization.dart';
 import 'package:visiart/models/Room.dart';
 import 'package:http/http.dart' as http;
 import 'package:visiart/config/config.dart' as globals;
-
-
 
 SharedPref sharedPref = SharedPref();
 class RoomsUpdateScreen extends StatefulWidget { 
@@ -37,7 +31,7 @@ class _RoomsUpdateScreenState extends State<RoomsUpdateScreen> {
   Future<http.Response> updateRoom(String newRoomName) async{
     var token = await sharedPref.read(globals.API_TOKEN_KEY);
     return http.put(
-        globals.API_BASE_URL+'/rooms/'+this.room.id.toString(),
+        globals.API_ROOMS + '/' + this.room.id.toString(),
         headers: {
             'Content-Type': 'application/json',
             'Accept': 'application/json',
@@ -48,6 +42,7 @@ class _RoomsUpdateScreenState extends State<RoomsUpdateScreen> {
         }),
     );
   }
+
   void submit() {
     // First validate form.
     if (this._formKey.currentState.validate()) {
@@ -55,6 +50,7 @@ class _RoomsUpdateScreenState extends State<RoomsUpdateScreen> {
         this.updateRoom(this.newRoomName);
     }
   }
+  
   @override
   Widget build(BuildContext context) {
     final Size screenSize = MediaQuery.of(context).size;

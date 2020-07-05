@@ -13,6 +13,7 @@
   "add": "Ajouter",
   "validate": "Valider",
   "none": "Aucune",
+  "search": "Rechercher",
 
   "home_signUpLink": "Pas encore inscrit ? Rejoignez les passionnés !",
   "home_slogan": "Mettez de l'ART dans vos vies",
@@ -62,13 +63,14 @@
   "roomsList_roomsList": "Liste des salons",
   "roomsList_roomsPublic": "Salon publique",
   "roomsList_roomsPrivate": "Salon privée",
+  "roomsList_filterRooms": "Filtrer avec une categorie",
 
   "roomsCreate_hobbyChoice": "Choisir le hobby",
   "roomsCreate_addRomm": "Ajout d'un salon",
   "roomsCreate_roomName": "Nom du salon",
   "roomsCreate_updateRomm": "Modification d'un salon",
   "roomsCreate_showRomm": "Afficher le salon ?",
-  "roomsCreate_privateRomm": "Est-ce un salon privée ?",
+  "roomsCreate_privateRoom": "Est-ce un salon privée ?",
 
   "roomsChats_addFriend": "Ajouter un ami",
 

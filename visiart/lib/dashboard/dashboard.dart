@@ -85,7 +85,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     var dateEvent = year + "-" + month;
     
     final response = await http.get(
-      API_EVENT_CAROUSEL + userLanguage + "&startDate_contains=" + dateEvent,
+      API_EVENTS_CAROUSEL + userLanguage + "&startDate_contains=" + dateEvent,
       headers: {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
@@ -339,7 +339,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       ),
                     ],
                   ),
-                  // click AlertCard
+                  // click Drawing
                   Stack(
                     children: <Widget>[
                       Container(
@@ -350,10 +350,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         child: GestureDetector(
                           onTap: () {
                             Navigator.pushNamed(context, 'awards'); // TODO change to drawing
-                            /*Navigator.push(
-                              context, MaterialPageRoute(
-                                builder: (BuildContext context) => AwardsListScreen() )
-                            );*/
                           },
                           child: _drawingCard(),
                         ),

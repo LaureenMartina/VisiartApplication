@@ -1,8 +1,4 @@
 import 'package:visiart/models/Room.dart';
-import 'package:visiart/models/Room_message.dart';
-import 'dart:async' show Future;
-import 'dart:convert';
-
 import 'package:visiart/models/User.dart';
 
 class UserRoomPrivate {
