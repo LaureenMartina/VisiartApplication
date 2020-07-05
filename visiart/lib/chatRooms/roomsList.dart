@@ -1,8 +1,9 @@
 import 'dart:convert';
-
 import 'package:badges/badges.dart';
+import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
+import 'package:visiart/localization/AppLocalization.dart';
 import 'package:visiart/models/Hobby.dart';
 import 'package:visiart/models/Room.dart';
 import 'package:visiart/chatRooms/roomChats.dart';
@@ -202,26 +203,29 @@ class _RoomsListPageState extends State<RoomsListPage>  with SingleTickerProvide
 
   GestureDetector _rowPublic(Room room, IconData icon) => GestureDetector(
     onTap: () => 
-      Navigator.push(
-        context,
+      Navigator.push(context,
         MaterialPageRoute(builder: (context) => RoomsChatsScreen(room: room), maintainState: true),
       ),
       //Navigator.pushNamed(context, "room_chats", arguments: RoomsChatsScreen(room: room)),
     child: Container(
-      padding: EdgeInsets.all(12.0),
-      margin: EdgeInsets.all(5.0),
+      padding: EdgeInsets.only(top: 10.0, bottom: 5, left: 15, right: 15),
       child: Column(
         children: <Widget>[
           Container(
-            padding: EdgeInsets.all(12.0),
+            padding: EdgeInsets.all(8.0),
             decoration: BoxDecoration(
-              color: this._userId == room.userId ? Colors.deepPurple[300]:Colors.green[300],
-              borderRadius: BorderRadius.circular(23.0),
-              
+              color: this._userId == room.userId ? Color.fromRGBO(252, 233, 216, 1.0) : Color.fromRGBO(173, 165, 177, 0.2),
+              borderRadius: BorderRadius.circular(10.0),
             ),
             child: ListTile(
-              leading: Icon(Icons.chat),
-              title: Text(room.name),
+              leading: Icon(Icons.chat, color: Colors.black54,),
+              title: Text(room.name, 
+                style: TextStyle(
+                  fontWeight: FontWeight.w600,
+                  fontSize: 16,
+                  letterSpacing: 1.2
+                ),
+              ),
               //trailing: room.roomMessages != null && room.roomMessages.isNotEmpty && room.roomMessages.last != null && room.roomMessages.last.userId != this._userId 
               trailing: room.lastDate != null && room.roomMessages.isNotEmpty && room.roomMessages.last != null &&  
               DateTime.parse(room.roomMessages.last.date).isAfter(DateTime.parse(room.lastDate))
@@ -240,26 +244,29 @@ class _RoomsListPageState extends State<RoomsListPage>  with SingleTickerProvide
 
   GestureDetector _rowPrivate(UserRoomPrivate userRoomPrivate, IconData icon) => GestureDetector(
     onTap: () => 
-      Navigator.push(
-        context,
+      Navigator.push(context,
         MaterialPageRoute(builder: (context) => RoomsChatsScreen(room: userRoomPrivate.room, userRoomPrivate: userRoomPrivate), maintainState: true),
       ),
       //Navigator.pushNamed(context, "room_chats", arguments: RoomsChatsScreen(room: room)),
     child: Container(
-      padding: EdgeInsets.all(12.0),
-      margin: EdgeInsets.all(5.0),
+      padding: EdgeInsets.only(top: 10.0, bottom: 5, left: 15, right: 15),
       child: Column(
         children: <Widget>[
           Container(
-            padding: EdgeInsets.all(12.0),
+            padding: EdgeInsets.all(8.0),
             decoration: BoxDecoration(
-              color: this._userId==userRoomPrivate.room.userId? Colors.deepPurple[300]:Colors.green[300],
+              color: this._userId == userRoomPrivate.room.userId ? Color.fromRGBO(252, 233, 216, 1.0) : Color.fromRGBO(173, 165, 177, 0.2),
               borderRadius: BorderRadius.circular(23.0),
-              
             ),
             child: ListTile(
-              leading: Icon(Icons.chat),
-              title: Text(userRoomPrivate.room.name),
+              leading: Icon(Icons.chat, color: Colors.black54,),
+              title: Text(userRoomPrivate.room.name,
+                style: TextStyle(
+                  fontWeight: FontWeight.w600,
+                  fontSize: 16,
+                  letterSpacing: 1.2
+                ),
+              ),
               //trailing: room.roomMessages != null && room.roomMessages.isNotEmpty && room.roomMessages.last != null && room.roomMessages.last.userId != this._userId 
               trailing: userRoomPrivate.room.lastDate != null 
               && userRoomPrivate.room.roomMessages.isNotEmpty 
@@ -281,29 +288,38 @@ class _RoomsListPageState extends State<RoomsListPage>  with SingleTickerProvide
   @override
   Widget build(BuildContext context) {
     this.myTabs = <Tab>[
-      Tab(text: "Salon public"),
-      Tab(text: "Salon privée"),
+      Tab(text: "Salon Public"),
+      Tab(text: "Salon Privée"),
     ];
+
     return new Scaffold(
-      appBar: AppBar(
-        title: new Text("Salons"),
-        centerTitle: true,
-        automaticallyImplyLeading: false,
-        bottom: TabBar(
-          controller: _tabController,
-          tabs: myTabs,
-        ),
+      appBar: PreferredSize(
+        child: AppBar(
+          backgroundColor: Color.fromRGBO(249, 248, 249, 0.7),
+          elevation: 10,
+          automaticallyImplyLeading: false,
+          bottom: TabBar(
+            controller: _tabController,
+            labelColor: Colors.black87,
+            labelStyle: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
+            unselectedLabelStyle: TextStyle(fontSize: 15.0),
+            indicatorColor: Color.fromRGBO(82, 59, 92, 1.0),
+            tabs: myTabs,
+          ),
+        ), 
+        preferredSize: Size.fromHeight(60.0),
       ),
-      body:
-        TabBarView(
-          controller: _tabController,
-          children: myTabs.map((Tab tab) {
-            if (tab.text.contains("Salon public")) {
-              return Container(
-                child: Column(
-                  children: <Widget>[
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
+      body:TabBarView(
+        controller: _tabController,
+        children: myTabs.map((Tab tab) {
+          if (tab.text.contains("Salon Public")) {
+            return Container(
+              child: Column(
+                children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.only(top: 20.0, left: 15, right: 15),
+                    child: Container(
+                      height: 50,
                       child: TextField(
                         onChanged: (value) {
                           setState(() {
@@ -313,94 +329,89 @@ class _RoomsListPageState extends State<RoomsListPage>  with SingleTickerProvide
                         },
                         controller: editingController,
                         decoration: InputDecoration(
-                        labelText: "Search",
-                        hintText: "Search",
-                        prefixIcon: Icon(Icons.search),
-                        border: OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(25.0)))),
+                          labelText: AppLocalizations.of(context).translate("search"),
+                          hintText: AppLocalizations.of(context).translate("search"),
+                          prefixIcon: Icon(Icons.search),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(25.0))
+                          ),
+                        ),
                       ),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: DropdownButton<String>(
-                        value: this.selectedHobby == null ? null : selectedHobby,
-                        items: this.listHobbies.map((Hobby hobby) {
-                          return new DropdownMenuItem<String>(
-                            value: hobby.id.toString(),
-                            child: new Text(hobby.name),
-                          );
-                        }).toList(),
-                        isExpanded: true,
-                        onChanged: (_value) {
-                          setState(() {
-                            selectedHobby = _value;
-                          });
-                          filterSearchResults();
-                        },
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 12.0, bottom: 10,left: 15, right: 15),
+                    child: DropdownButton<String>(
+                      hint: Text(
+                        AppLocalizations.of(context).translate("roomsList_filterRooms"),
+                        style: TextStyle(
+                          color: Colors.black54,
+                        ),
                       ),
-                    ),
-                    Expanded(
-                      child: ListView.builder(
-                        shrinkWrap: true,
-                        itemCount: _publicRooms.length,
-                        itemBuilder: (context, index) {
-                          return _rowPublic(_publicRooms[index], Icons.work);
-                        },
-                      ),
-                    ),
-                    RaisedButton(
-                      child: Text("Ajouter", style: TextStyle(fontSize: 20)),
-                      onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (context) => RoomsCreateScreen()),
+                      value: this.selectedHobby == null ? null : selectedHobby,
+                      items: this.listHobbies.map((Hobby hobby) {
+                        return new DropdownMenuItem<String>(
+                          value: hobby.id.toString(),
+                          child: new Text(hobby.name),
                         );
+                      }).toList(),
+                      isExpanded: true,
+                      onChanged: (_value) {
+                        setState(() {
+                          selectedHobby = _value;
+                        });
+                        filterSearchResults();
                       },
-                      color: Colors.blue,
-                      textColor: Colors.white,
-                      elevation: 5,
                     ),
-                  ]
-                )
-              );
-            } else {
-              return Container(
-                child: Column(
-                  children: <Widget>[
-                    Expanded(
-                      child: ListView.builder(
-                        shrinkWrap: true,
-                        itemCount: _listUserRoomsPrivate.length,
-                        itemBuilder: (context, index) {
-                          /* return FutureBuilder(
-                            future: sharedPref.read("lastDateMessageVieweRoom_"+_listUserRoomsPrivate[index].room.id.toString()),
-                            builder: (context, lastDate) {
-                              return _rowPublic(_listUserRoomsPrivate[index].room, Icons.work, lastDate.data.toString());
-                            },
-                          ); */
-                          return _rowPrivate(_listUserRoomsPrivate[index], Icons.work);
-                        },
-                      ),
-                    ),
-                    RaisedButton(
-                      child: Text("Ajouter", style: TextStyle(fontSize: 20)),
-                      onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (context) => RoomsCreateScreen()),
-                        );
+                  ),
+                  Expanded(
+                    child: ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: _publicRooms.length,
+                      itemBuilder: (context, index) {
+                        return _rowPublic(_publicRooms[index], Icons.work);
                       },
-                      color: Colors.blue,
-                      textColor: Colors.white,
-                      elevation: 5,
                     ),
-                  ]
-                )
-              );
-            }
-            
-          }).toList(),
-        ),
+                  ),
+                ]
+              )
+            );
+          } else {
+            return Container(
+              child: Column(
+                children: <Widget>[
+                  Expanded(
+                    child: ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: _listUserRoomsPrivate.length,
+                      itemBuilder: (context, index) {
+                        /* return FutureBuilder(
+                          future: sharedPref.read("lastDateMessageVieweRoom_"+_listUserRoomsPrivate[index].room.id.toString()),
+                          builder: (context, lastDate) {
+                            return _rowPublic(_listUserRoomsPrivate[index].room, Icons.work, lastDate.data.toString());
+                          },
+                        ); */
+                        return _rowPrivate(_listUserRoomsPrivate[index], Icons.work);
+                      },
+                    ),
+                  ),
+                ]
+              )
+            );
+          }
+        }).toList(),
+      ),
+      floatingActionButton: SpeedDial(
+        backgroundColor: Color.fromRGBO(82, 59, 92, 1.0),
+        closeManually: true,
+        animatedIcon: AnimatedIcons.add_event,
+        elevation: 10,
+        onPress: () {
+          Navigator.push(context,
+            MaterialPageRoute(builder: (context) => RoomsCreateScreen()),
+          );
+        },
+      ),
     );
   }
 }

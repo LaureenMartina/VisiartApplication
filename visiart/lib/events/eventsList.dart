@@ -136,88 +136,91 @@ class _EventsListScreenState extends State<EventsListScreen> {
     return Scaffold(
       backgroundColor: Color.fromRGBO(252, 233, 216, 0.1),
       body: Column(
-      children: <Widget>[
-        Padding(
-          padding: EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 5),
-          child: TextField(
-            onChanged: (value) {
-              //search(value);
-            },
-            controller: editingController,
-            decoration: InputDecoration(
-              filled: true,
-              fillColor: Colors.white,
-              //labelText: "Search",
-              hintText: "Search",
-              prefixIcon: Icon(Icons.search),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.all(Radius.circular(25.0)),
+        children: <Widget>[
+          Padding(
+            padding: EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 8),
+            child: Container(
+              height: 50,
+              child: TextField(
+                onChanged: (value) {
+                  //search(value);
+                },
+                controller: editingController,
+                decoration: InputDecoration(
+                  filled: true,
+                  fillColor: Colors.white,
+                  labelText: AppLocalizations.of(context).translate("search"),
+                  hintText: AppLocalizations.of(context).translate("search"),
+                  prefixIcon: Icon(Icons.search),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(25.0)),
+                  ),
+                ),
               ),
             ),
           ),
-        ),
-        Expanded(
-          child: ListView.builder(
-            controller: _scrollController,
-            scrollDirection: Axis.vertical,
-            shrinkWrap: true,
-            itemCount: (_favorite) ? filteredFavoriteEvents.length : (_recent) ? filteredRecentEvents.length : filteredEvents.length,
-            itemBuilder: (context, index) {
-              return Card(
-                elevation: 10,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(15.0)
-                ),
-                margin: EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
-                child: ListTile(
-                  contentPadding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
-                  onTap: () => {
-                    if(_favorite) {
-                      Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => EventDetails(specificEvent: filteredFavoriteEvents[index])))
-                    }else if(_recent){
-                      Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => EventDetails(specificEvent: filteredRecentEvents[index])))
-                    }else{
-                      Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => EventDetails(specificEvent: filteredEvents[index])))
-                    }
-                  },
-                  title: Text( (_favorite) ? '${filteredFavoriteEvents[index].title}' : 
-                    (_recent) ? '${filteredRecentEvents[index].title}' : '${filteredEvents[index].title}',
+          Expanded(
+            child: ListView.builder(
+              controller: _scrollController,
+              scrollDirection: Axis.vertical,
+              shrinkWrap: true,
+              itemCount: (_favorite) ? filteredFavoriteEvents.length : (_recent) ? filteredRecentEvents.length : filteredEvents.length,
+              itemBuilder: (context, index) {
+                return Card(
+                  elevation: 10,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(15.0)
+                  ),
+                  margin: EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
+                  child: ListTile(
+                    contentPadding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
+                    onTap: () => {
+                      if(_favorite) {
+                        Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => EventDetails(specificEvent: filteredFavoriteEvents[index])))
+                      }else if(_recent){
+                        Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => EventDetails(specificEvent: filteredRecentEvents[index])))
+                      }else{
+                        Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => EventDetails(specificEvent: filteredEvents[index])))
+                      }
+                    },
+                    title: Text( (_favorite) ? '${filteredFavoriteEvents[index].title}' : 
+                      (_recent) ? '${filteredRecentEvents[index].title}' : '${filteredEvents[index].title}',
+                        style: TextStyle(
+                          fontSize: 18.0,
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                        )),
+                    subtitle: Text( (_favorite) ? '${filteredFavoriteEvents[index].description}' : 
+                      (_recent) ? '${filteredRecentEvents[index].description}' : '${filteredEvents[index].description}',
                       style: TextStyle(
-                        fontSize: 18.0,
-                        color: Colors.black,
-                        fontWeight: FontWeight.bold,
-                      )),
-                  subtitle: Text( (_favorite) ? '${filteredFavoriteEvents[index].description}' : 
-                    (_recent) ? '${filteredRecentEvents[index].description}' : '${filteredEvents[index].description}',
-                    style: TextStyle(
-                      fontSize: 16.0,
+                        fontSize: 16.0,
+                      ),
+                      maxLines: 3,
+                      overflow: TextOverflow.ellipsis,
                     ),
-                    maxLines: 3,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  leading: ConstrainedBox(
-                    constraints: BoxConstraints(
-                      minWidth: 100,
-                      minHeight: 100,
-                      maxWidth: 100,
-                      maxHeight: 100,
+                    leading: ConstrainedBox(
+                      constraints: BoxConstraints(
+                        minWidth: 100,
+                        minHeight: 100,
+                        maxWidth: 100,
+                        maxHeight: 100,
+                      ),
+                      child: Image.network( (_favorite) ? '${filteredFavoriteEvents[index].image}' : 
+                        (_recent) ? '${filteredRecentEvents[index].image}' : '${filteredEvents[index].image}',
+                        fit: BoxFit.cover),
                     ),
-                    child: Image.network( (_favorite) ? '${filteredFavoriteEvents[index].image}' : 
-                      (_recent) ? '${filteredRecentEvents[index].image}' : '${filteredEvents[index].image}',
-                      fit: BoxFit.cover),
+                    trailing: Icon(Icons.keyboard_arrow_right,
+                        size: 50.0, color: Colors.blueGrey[500]),
                   ),
-                  trailing: Icon(Icons.keyboard_arrow_right,
-                      size: 50.0, color: Colors.blueGrey[500]),
-                ),
-              );
-            },
+                );
+              },
+            ),
           ),
-        ),
-      ],
-    ),
+        ],
+      ),
       floatingActionButton: SpeedDial(
         backgroundColor: Color.fromRGBO(82, 59, 92, 1.0),
         closeManually: true,
