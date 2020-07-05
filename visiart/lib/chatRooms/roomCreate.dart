@@ -1,9 +1,6 @@
 import 'dart:convert';
 import 'dart:ui';
-import 'package:flutter/foundation.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:visiart/models/Room.dart';
 import 'package:http/http.dart' as http;
 import 'package:visiart/chatRooms/roomsList.dart';
 import 'package:visiart/config/SharedPref.dart';
@@ -83,7 +80,6 @@ class _RoomsCreateScreenState extends State<RoomsCreateScreen> {
     );
     
     if (response.statusCode == 200) {
-      //TODO ajout incremente du badge invested
       _counterInvested += 1;
       if(_counterInvested <= globals.COUNTER_INVESTED) {
         SharedPref().saveInteger("counterInvested", _counterInvested);

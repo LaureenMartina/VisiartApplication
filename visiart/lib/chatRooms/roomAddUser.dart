@@ -1,15 +1,9 @@
 import 'dart:convert';
-
-import 'package:badges/badges.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:visiart/models/Hobby.dart';
 import 'package:visiart/models/Room.dart';
-import 'package:visiart/chatRooms/roomChats.dart';
-import 'package:visiart/chatRooms/roomCreate.dart';
 import 'package:visiart/config/SharedPref.dart';
-import 'package:visiart/localization/AppLocalization.dart';
-import 'package:visiart/models/Room_message.dart';
 import 'package:visiart/models/User.dart';
 import 'package:visiart/models/UserRoomPrivate.dart';
 import 'package:visiart/config/config.dart' as globals;

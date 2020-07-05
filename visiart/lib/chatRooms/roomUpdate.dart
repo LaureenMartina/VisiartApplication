@@ -1,17 +1,11 @@
 import 'dart:convert';
 import 'dart:ui';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:visiart/chatRooms/roomChats.dart';
-import 'package:visiart/chatRooms/roomsList.dart';
 import 'package:visiart/config/SharedPref.dart';
-import 'package:visiart/localization/AppLocalization.dart';
 import 'package:visiart/models/Room.dart';
 import 'package:http/http.dart' as http;
 import 'package:visiart/config/config.dart' as globals;
-
-
 
 SharedPref sharedPref = SharedPref();
 class RoomsUpdateScreen extends StatefulWidget { 

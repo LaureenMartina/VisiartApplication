@@ -339,7 +339,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       ),
                     ],
                   ),
-                  // click AlertCard
+                  // click Drawing
                   Stack(
                     children: <Widget>[
                       Container(
@@ -350,10 +350,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         child: GestureDetector(
                           onTap: () {
                             Navigator.pushNamed(context, 'awards'); // TODO change to drawing
-                            /*Navigator.push(
-                              context, MaterialPageRoute(
-                                builder: (BuildContext context) => AwardsListScreen() )
-                            );*/
                           },
                           child: _drawingCard(),
                         ),

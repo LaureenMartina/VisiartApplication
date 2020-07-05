@@ -326,7 +326,7 @@ Future<String> signInWithGoogle() async {
 
   var name = currentUser.displayName;
   var email = currentUser.email;
-  var password = " "; // TODO empty if connexion is GMAIL
+  var password = " "; // empty if connexion is GMAIL
   var data = {
       "identifier" : name,
       "password" : password

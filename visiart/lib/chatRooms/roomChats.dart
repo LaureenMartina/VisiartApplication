@@ -8,16 +8,12 @@ import 'package:visiart/chatRooms/roomUpdate.dart';
 import 'package:visiart/models/Room.dart';
 import 'package:http/http.dart' as http;
 import 'package:visiart/chatRooms/roomsList.dart';
-import 'package:visiart/localization/AppLocalization.dart';
 import 'package:visiart/models/Room_message.dart';
-import 'package:flutter/foundation.dart';
 import 'package:visiart/config/SharedPref.dart';
 import 'package:visiart/config/config.dart' as globals;
 import 'package:visiart/models/UserRoomPrivate.dart';
 
 SharedPref sharedPref = SharedPref();
-
-//void main() => runApp(new RoomsChatsScreen())
 
 class RoomsChatsScreen extends StatelessWidget {
   // This widget is the root of your application.
@@ -211,7 +207,6 @@ class _RoomsChatPageState extends State<RoomsChatPage> {
             );
 
             if (response.statusCode == 200) {
-              //TODO add badge Réactif
               _counterReagent += 1;
               if(_counterReagent <= globals.COUNTER_REAGENT) {
                 SharedPref().saveInteger("counterReagent", _counterReagent);
