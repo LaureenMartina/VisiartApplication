@@ -1,15 +1,13 @@
 import 'dart:convert';
 import 'dart:ui';
-import 'package:flutter/foundation.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:visiart/models/Room.dart';
 import 'package:http/http.dart' as http;
 import 'package:visiart/chatRooms/roomsList.dart';
 import 'package:visiart/config/SharedPref.dart';
 import 'package:visiart/models/Hobby.dart';
 import 'package:visiart/localization/AppLocalization.dart';
 import 'package:visiart/config/config.dart' as globals;
+import 'package:custom_switch/custom_switch.dart';
 
 
 SharedPref sharedPref = SharedPref();
@@ -50,10 +48,8 @@ class _RoomsCreateScreenState extends State<RoomsCreateScreen> {
           if(value == 99999) {
             _counterInvested = 0;
           } else {
-            print("value: $value");
             _counterInvested = value;
           }
-          print("_counterInvested: $_counterInvested");
         })
     });
 
@@ -68,12 +64,12 @@ class _RoomsCreateScreenState extends State<RoomsCreateScreen> {
         'display' : isDisplayed.toString(),
         'private' : isPrivate.toString(),
         "hobbies": [{
-            "id": this._data.roomThematic
+          "id": this._data.roomThematic
         }], 
         "user": userId, 
     };
     final response = await http.post(
-        'http://91.121.165.149/rooms',
+        globals.API_ROOMS,
         headers: {
             'Content-Type': 'application/json',
             'Accept': 'application/json',
@@ -83,13 +79,10 @@ class _RoomsCreateScreenState extends State<RoomsCreateScreen> {
     );
     
     if (response.statusCode == 200) {
-      //TODO ajout incremente du badge invested
       _counterInvested += 1;
       if(_counterInvested <= globals.COUNTER_INVESTED) {
         SharedPref().saveInteger("counterInvested", _counterInvested);
-        print("increment invested: $_counterInvested");
       }
-      print(">= invested : $_counterInvested");
 
       Navigator.push(
         context, MaterialPageRoute(builder: (context) => RoomsListPage()),
@@ -102,7 +95,7 @@ class _RoomsCreateScreenState extends State<RoomsCreateScreen> {
   void getListHobbies() async{
     var token = await sharedPref.read(globals.API_TOKEN_KEY);
     final response = await http.get(
-        'http://91.121.165.149/hobbies',
+        globals.API_HOBBIES,
         headers: {
             'Content-Type': 'application/json',
             'Accept': 'application/json',
@@ -127,6 +120,7 @@ class _RoomsCreateScreenState extends State<RoomsCreateScreen> {
         this.createRoom(_data.roomName, _data.roomThematic);
     }
   }
+  
   @override
   Widget build(BuildContext context) {
     final Size screenSize = MediaQuery.of(context).size;
@@ -136,87 +130,102 @@ class _RoomsCreateScreenState extends State<RoomsCreateScreen> {
 
     return new Scaffold(
       appBar: new AppBar(
+        backgroundColor: Color.fromRGBO(82, 59, 92, 1.0),
         title: new Text(AppLocalizations.of(context).translate("roomsCreate_addRomm")),
       ),
-      body: new Container(
-        padding: new EdgeInsets.all(20.0),
-        child: new Form(
+      body: Container(
+        padding: EdgeInsets.all(20.0),
+        child: Form(
           key: this._formKey,
-          child: new ListView(
+          child: ListView(
             children: <Widget>[
-              new TextFormField(
+              SizedBox(height: 25,),
+              TextFormField(
                 keyboardType: TextInputType.text,
                 decoration: new InputDecoration(
-                  hintText: 'name',
-                  //labelText: 'Nom du salon'
+                  hintText: AppLocalizations.of(context).translate("roomsCreate_roomName"),
                 ),
                 onSaved: (String value) {
                   this._data.roomName = value;
                 }
               ),
-              new DropdownButton<String>(
-                hint: Text(AppLocalizations.of(context).translate("roomsCreate_hobbyChoice")),
-                value: this.selectedHobby == null ? null : selectedHobby,
-                items: this.listHobbies.map((Hobby hobby) {
-                  return new DropdownMenuItem<String>(
-                    value: hobby.id.toString(),
-                    child: new Text(hobby.name),
-                  );
-                }).toList(),
-                onChanged: (_value) {
-                  this._data.roomThematic = _value;
-                   setState(() {
-                    selectedHobby = _value;
-                  });
-                },
+              Padding(
+                padding: EdgeInsets.only(top: 20.0, bottom: 30),
+                child: DropdownButton<String>(
+                  isExpanded: true,
+                  hint: Text(AppLocalizations.of(context).translate("roomsCreate_hobbyChoice")),
+                  value: this.selectedHobby == null ? null : selectedHobby,
+                  items: this.listHobbies.map((Hobby hobby) {
+                    return DropdownMenuItem<String>(
+                      value: hobby.id.toString(),
+                      child: Text(hobby.name),
+                    );
+                  }).toList(),
+                  onChanged: (_value) {
+                    this._data.roomThematic = _value;
+                     setState(() {
+                      selectedHobby = _value;
+                    });
+                  },
+                ),
               ),
-              new Text(AppLocalizations.of(context).translate("roomsCreate_showRomm")),
-              new Switch(
-                
-                value: isDisplayed,
-                onChanged: (value){
-                  setState(() {
-                    isDisplayed=value;
-                  });
-                },
-                activeTrackColor: Colors.lightGreenAccent,
-                activeColor: Colors.green,
-                
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  Text(AppLocalizations.of(context).translate("roomsCreate_showRomm"), 
+                    style: TextStyle(fontSize: 15),
+                  ),
+                  CustomSwitch(
+                    activeColor: Color.fromRGBO(252, 233, 216, 1.0),
+                    value: isDisplayed,
+                    onChanged: (value) {
+                      setState(() {
+                        isDisplayed = value;
+                      });
+                    },
+                  ),
+                ],
               ),
-              new Text(AppLocalizations.of(context).translate("roomsCreate_privateRomm")),
-              new Switch(
-                
-                value: isPrivate,
-                onChanged: (value){
-                  setState(() {
-                    isPrivate=value;
-                  });
-                },
-                activeTrackColor: Colors.lightGreenAccent,
-                activeColor: Colors.green,
-                
+              SizedBox(height: 25,),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  Text(AppLocalizations.of(context).translate("roomsCreate_privateRoom"),
+                    style: TextStyle(fontSize: 15),
+                  ),
+                  CustomSwitch(
+                    activeColor: Color.fromRGBO(252, 233, 216, 1.0),
+                    value: isPrivate,
+                    onChanged: (value) {
+                      setState(() {
+                        isPrivate = value;
+                      });
+                    },
+                  ),
+                ],
               ),
-              new Container(
+              SizedBox(height: 20,),
+              Container(
+                height: 105,
                 width: screenSize.width,
-                child: new RaisedButton(
-                  child: new Text(
+                padding: EdgeInsets.only(top: 60),
+                child: RaisedButton(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(18.0),
+                  ),
+                  child: Text(
                     AppLocalizations.of(context).translate("validate"),
-                    style: new TextStyle(
-                      color: Colors.white
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 18
                     ),
                   ),
                   onPressed: () => this.submit(),
-                  color: Colors.blue,
-                ),
-                margin: new EdgeInsets.only(
-                  top: 20.0
+                  color: Color.fromRGBO(82, 59, 92, 1.0),
                 ),
               ),
-            ],
-
-            
+            ], 
           ),
-          
         )
       ),
     );

@@ -55,7 +55,7 @@ class _EventDetailsState extends State<EventDetails> {
 
   void _setFavoriteEvent(changeFavorite) async{
     var token = await sharedPref.read(API_TOKEN_KEY);
-    final response = await http.put(API_EVENT + "/" + _idEvent.toString(),
+    final response = await http.put(API_EVENTS + "/" + _idEvent.toString(),
       headers: {
           'Content-Type': 'application/json',
           'Accept': 'application/json',

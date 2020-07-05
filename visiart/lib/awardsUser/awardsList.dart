@@ -60,6 +60,16 @@ class _AwardsListScreenState extends State<AwardsListScreen> {
           }
         })
     });
+    SharedPref().readInteger("counterDrawing").then((value) => {
+        setState(() {
+          //SharedPref().saveInteger("counterInvested", 0);
+          if(value == 99999) {
+            _counterDrawing = 0;
+          } else {
+            _counterDrawing = value;
+          }
+        })
+    });
 
     _setCuriousImage();
     super.initState();
