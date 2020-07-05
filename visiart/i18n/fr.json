@@ -48,6 +48,8 @@
 
   "dashboard_subtitle": "Les événements du Mois",
   "dashboard_infoDateEvent": "A partir du \n",
+  "dashboard_titleAwards": "Vos Trophées",
+  "dashboard_titleDrawing":"Vos\nDessins AR",
 
   "userInterest_userInterest": "Vos Centres d'intérêts",
   "userInterests_congratulations": "Bravooo !",

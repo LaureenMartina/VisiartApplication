@@ -50,7 +50,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
-          Text("Vos Trophées", style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold, color: Colors.white)),
+          Text(AppLocalizations.of(context).translate("dashboard_titleAwards"), 
+            style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold, color: Colors.white)),
           SizedBox(height: 4),
         ],
       ),
@@ -69,7 +70,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
-          Text("Vos\nDessins AR", style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold, color: Colors.white)),
+          Text(AppLocalizations.of(context).translate("dashboard_titleDrawing"),
+            style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold, color: Colors.white)),
           SizedBox(height: 4),
         ],
       ),
@@ -336,7 +338,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       ),
                     ],
                   ),
-                  // click AlertCard
+                  // click Drawing
                   Stack(
                     children: <Widget>[
                       Container(
