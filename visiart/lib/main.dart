@@ -6,6 +6,8 @@ import 'package:visiart/chatRooms/roomChats.dart';
 import 'package:visiart/chatRooms/roomsList.dart';
 import 'package:visiart/customFormUser/userInterests.dart';
 import 'package:visiart/dashboard/menu.dart';
+import 'package:visiart/drawingsUser/drawing.dart';
+import 'package:visiart/drawingsUser/myDrawings.dart';
 import 'package:visiart/events/eventsList.dart';
 import 'package:visiart/home.dart';
 import 'package:visiart/signUp/signup.dart';
@@ -13,7 +15,13 @@ import 'package:visiart/signUp/signup.dart';
 import 'localization/AppLocalization.dart';
 import 'splashscreen.dart';
 
-void main() => runApp(MyApp());
+//List<CameraDescription> cameras;
+//Future<Null> main() async {
+void main() async {
+  //WidgetsFlutterBinding.ensureInitialized();
+  //cameras = await availableCameras();
+  runApp(MyApp());
+}
 
 class MyApp extends StatelessWidget {
 
@@ -48,7 +56,9 @@ var _routes = <String, WidgetBuilder> {
   "dashboard": (BuildContext context) => MenuBoardScreen(),
   "awards": (BuildContext context) => AwardsListScreen(),
   "account": (BuildContext context) => AccountScreen(),
-  //"drawing": (BuildContext context) => Draw(), //merge with the drawing branch before
+  "drawing": (BuildContext context) => Draw(),
+  "drawingAndroid": (BuildContext context) => AwardsListScreen(), // TODO changer la redirection
+  "myDrawings": (BuildContext context) => MyDrawings(),
   "events": (BuildContext context) => EventsListScreen(),
   "rooms": (BuildContext context) => RoomsListPage(),
   "room_chats": (BuildContext context) => RoomsChatPage(),
