@@ -71,20 +71,22 @@ class _RoomsListPageState extends State<RoomsListPage>  with SingleTickerProvide
 
   void _getListHobbies() async{
     var token = await sharedPref.read(globals.API_TOKEN_KEY);
+    
     final response = await http.get(
-        globals.API_BASE_URL+'/hobbies',
+        globals.API_HOBBIES,
         headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json',
-            'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          'Authorization': 'Bearer $token',
         }
     );
+
     if (response.statusCode == 200) {
-        List jsonResponse = json.decode(response.body);
-        var items = jsonResponse.map((hobby) => new Hobby.fromJson(hobby)).toList();
-        setState(() {
-          this.listHobbies.addAll(items);
-        });
+      List jsonResponse = json.decode(response.body);
+      var items = jsonResponse.map((hobby) => new Hobby.fromJson(hobby)).toList();
+      setState(() {
+        this.listHobbies.addAll(items);
+      });
     } else {
       throw Exception('Failed to load hobbies from API');
     }
@@ -93,11 +95,13 @@ class _RoomsListPageState extends State<RoomsListPage>  with SingleTickerProvide
   int sortListRoomForUser(Room a, Room b) {
     bool isAUserMessage = false;
     bool isBUserMessage = false;
+    
     for (var item in a.roomMessages) {
       if (item.userId == this._userId) {
         isAUserMessage = true;
       }
     }
+    
     for (var item in b.roomMessages) {
       if (item.userId == this._userId) {
         isBUserMessage = true;
@@ -113,15 +117,14 @@ class _RoomsListPageState extends State<RoomsListPage>  with SingleTickerProvide
   }
 
   void _fetchRooms() async {
-    final roomAPIUrl = globals.API_BASE_URL+'/rooms?private=false&display=true';
+    //final roomAPIUrl = globals.API_BASE_URL + '/rooms?private=false&display=true';
     var token = await sharedPref.read(globals.API_TOKEN_KEY);
     this._userId = await sharedPref.readInteger(globals.API_USER_ID_KEY);
     
-    final response = await http.get(roomAPIUrl, headers: {
-    'Content-Type': 'application/json',
-    'Accept': 'application/json',
-    'Authorization':
-        'Bearer $token',
+    final response = await http.get(globals.API_ROOMS_NO_PRIVATE_DISPLAY, headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $token',
     });
 
     if (response.statusCode == 200) {
@@ -145,7 +148,7 @@ class _RoomsListPageState extends State<RoomsListPage>  with SingleTickerProvide
   void _fetchUserRoomsPrivate() async {
     var token = await sharedPref.read(globals.API_TOKEN_KEY);
     this._userId = await sharedPref.readInteger(globals.API_USER_ID_KEY);
-    final roomAPIUrl = globals.API_BASE_URL+'/user-room-privates?room.display=true&user.id='+_userId.toString();
+    final roomAPIUrl = globals.API_USER_ROOM_PRIVATE_FETCH_ROOM_USER + _userId.toString();
     
     final response = await http.get(roomAPIUrl, headers: {
     'Content-Type': 'application/json',

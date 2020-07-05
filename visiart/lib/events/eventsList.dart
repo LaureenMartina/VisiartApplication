@@ -87,7 +87,7 @@ class _EventsListScreenState extends State<EventsListScreen> {
   void _fetchFavoriteEvents() async {
     var token = await sharedPref.read("token");
 
-    final response = await http.get(API_EVENT_FAVORITE + userLanguage, 
+    final response = await http.get(API_EVENTS_FAVORITE + userLanguage, 
       headers: {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
@@ -110,7 +110,7 @@ class _EventsListScreenState extends State<EventsListScreen> {
   void _fetchRecentEvents() async {
     var token = await sharedPref.read("token");
 
-    final response = await http.get(API_EVENT_RECENT + userLanguage, 
+    final response = await http.get(API_EVENTS_RECENT + userLanguage, 
       headers: {
         'Content-Type': 'application/json',
         'Accept': 'application/json',

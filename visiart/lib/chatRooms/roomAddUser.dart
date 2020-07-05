@@ -70,24 +70,21 @@ class _RoomAddUserPageState extends State<RoomAddUserPage>  with SingleTickerPro
 
     if (this._usernameToSearch != null && this._usernameToSearch.isNotEmpty) {
       var token = await sharedPref.read(globals.API_TOKEN_KEY);
-      final roomAPIUrl = globals.API_BASE_URL+'/users?username_contains='
-      +this._usernameToSearch.toString()
-      +"&user_room_privates_null=true";
+      
+      final roomAPIUrl = globals.API_USERS_USERNAME + this._usernameToSearch.toString() + "&user_room_privates_null=true";
       
       final response = await http.get(roomAPIUrl, headers: {
-      'Content-Type': 'application/json',
-      'Accept': 'application/json',
-      'Authorization':
-          'Bearer $token',
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'Authorization': 'Bearer $token',
       });
 
       if (response.statusCode == 200) {
-        
-          List jsonResponse = json.decode(response.body);
-          setState(() {
-            this._listUserToAdd.clear();
-            this._listUserToAdd.addAll(jsonResponse.map((user) => new User.fromJson(user)).toList());
-          });
+        List jsonResponse = json.decode(response.body);
+        setState(() {
+          this._listUserToAdd.clear();
+          this._listUserToAdd.addAll(jsonResponse.map((user) => new User.fromJson(user)).toList());
+        });
       } else {
         throw Exception('Failed to load user rooms from API');
       }
@@ -100,16 +97,17 @@ class _RoomAddUserPageState extends State<RoomAddUserPage>  with SingleTickerPro
 
   void addUserToPrivateRoom(int userId) async {
     var token = await sharedPref.read(globals.API_TOKEN_KEY);
+    
     var data = {
         'user': userId.toString(),
         'room' : this.room.id.toString(),
     };
-    final response = await http.post(
-      'http://91.121.165.149/user-room-privates',
+
+    final response = await http.post(globals.API_USER_ROOM_PRIVATE,
       headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
-          'Authorization': 'Bearer $token',
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'Authorization': 'Bearer $token',
       },
       body: json.encode(data)
     );

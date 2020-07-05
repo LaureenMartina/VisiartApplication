@@ -31,7 +31,7 @@ class _RoomsUpdateScreenState extends State<RoomsUpdateScreen> {
   Future<http.Response> updateRoom(String newRoomName) async{
     var token = await sharedPref.read(globals.API_TOKEN_KEY);
     return http.put(
-        globals.API_BASE_URL+'/rooms/'+this.room.id.toString(),
+        globals.API_ROOMS + '/' + this.room.id.toString(),
         headers: {
             'Content-Type': 'application/json',
             'Accept': 'application/json',
@@ -42,6 +42,7 @@ class _RoomsUpdateScreenState extends State<RoomsUpdateScreen> {
         }),
     );
   }
+
   void submit() {
     // First validate form.
     if (this._formKey.currentState.validate()) {
@@ -49,6 +50,7 @@ class _RoomsUpdateScreenState extends State<RoomsUpdateScreen> {
         this.updateRoom(this.newRoomName);
     }
   }
+  
   @override
   Widget build(BuildContext context) {
     final Size screenSize = MediaQuery.of(context).size;

@@ -85,9 +85,10 @@ class _RoomsChatPageState extends State<RoomsChatPage> {
     }
 
     Future<List<RoomMessage>> _fetchRoomMessages() async {
-      //final roomAPIUrl = 'http://91.121.165.149/room-messages'; //Rajouter id
-      final roomAPIUrl = globals.API_BASE_URL+'/room-messages?room='+this.room.id.toString();
+      final roomAPIUrl = globals.API_ROOMS_MESSAGE_ID_ROOM + this.room.id.toString();
+
       var token = await sharedPref.read(globals.API_TOKEN_KEY);
+
       final response = await http.get(roomAPIUrl, headers: {
           'Content-Type': 'application/json',
           'Accept': 'application/json',
@@ -114,7 +115,7 @@ class _RoomsChatPageState extends State<RoomsChatPage> {
     void deleteRoom(roomId) async {
       var token = await sharedPref.read(globals.API_TOKEN_KEY);
       http.put(
-            globals.API_BASE_URL+'/rooms/'+roomId,
+            globals.API_ROOMS + '/' + roomId,
             headers: {
                 'Content-Type': 'application/json',
                 'Accept': 'application/json',
@@ -129,7 +130,7 @@ class _RoomsChatPageState extends State<RoomsChatPage> {
     void disableRoom(roomId) async {
       var token = await sharedPref.read(globals.API_TOKEN_KEY); 
       await http.put(
-        globals.API_BASE_URL+'/rooms/'+roomId.toString(),
+        globals.API_ROOMS + '/' + roomId.toString(),
         headers: {
             'Content-Type': 'application/json',
             'Accept': 'application/json',
@@ -141,10 +142,11 @@ class _RoomsChatPageState extends State<RoomsChatPage> {
       );
 
     }
+
     void enableRoom(roomId) async {
       var token = await sharedPref.read(globals.API_TOKEN_KEY); 
       await http.put(
-        globals.API_BASE_URL+'/rooms/'+roomId.toString(),
+        globals.API_ROOMS + '/' + roomId.toString(),
         headers: {
             'Content-Type': 'application/json',
             'Accept': 'application/json',
@@ -154,12 +156,12 @@ class _RoomsChatPageState extends State<RoomsChatPage> {
             'enabled' : true
         }),
       );
-
     }
 
     void _unlinkThisRoom() async {
-      final roomAPIUrl = globals.API_BASE_URL+'/user-room-privates/'+this.userRoomPrivate.id.toString();
+      final roomAPIUrl = globals.API_USER_ROOM_PRIVATE + '/' + this.userRoomPrivate.id.toString();
       var token = await sharedPref.read(globals.API_TOKEN_KEY);
+      
       final response = await http.put(roomAPIUrl, headers: {
           'Content-Type': 'application/json',
           'Accept': 'application/json',
@@ -176,57 +178,57 @@ class _RoomsChatPageState extends State<RoomsChatPage> {
     }
 
     void addNewMessage() async {
+      if (textEditingController.text.trim().isNotEmpty) {
+        
+        this._userid = await sharedPref.readInteger(globals.API_USER_ID_KEY);
+        var token = await sharedPref.read(globals.API_TOKEN_KEY);
+        
+        RoomMessage newMessage = RoomMessage(
+            content: textEditingController.text.trim(),
+            userId: _userid
+        ); 
 
-        if (textEditingController.text.trim().isNotEmpty) {
+        var data = {
+            "content": textEditingController.text.trim(),
+            "user": {
+                "id": _userid
+            },
+            "room": {
+                "id": this.room.id
+            }, 
+        };
+          
+        final response = await http.post(
+          globals.API_ROOMS_MESSAGE,
+          headers: {
+              'Content-Type': 'application/json',
+              'Accept': 'application/json',
+              'Authorization': 'Bearer $token',
+          },
+          body: json.encode(data)
+        );
 
-            this._userid = await sharedPref.readInteger(globals.API_USER_ID_KEY);
-
-            var token = await sharedPref.read(globals.API_TOKEN_KEY);
-            RoomMessage newMessage = RoomMessage(
-                content: textEditingController.text.trim(),
-                userId: _userid
-            ); 
-            var data = {
-                "content": textEditingController.text.trim(),
-                "user": {
-                    "id": _userid
-                },
-                "room": {
-                    "id": this.room.id
-                }, 
-            };
-            
-            final response = await http.post(
-                globals.API_BASE_URL+'/room-messages',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json',
-                    'Authorization': 'Bearer $token',
-                },
-                body: json.encode(data)
-            );
-
-            if (response.statusCode == 200) {
-              _counterReagent += 1;
-              if(_counterReagent <= globals.COUNTER_REAGENT) {
-                SharedPref().saveInteger("counterReagent", _counterReagent);
-                print("increment reagent: $_counterReagent");
-              }
-              print(">= reagent: $_counterReagent");
-              
-              newMessage = RoomMessage.fromMainJson(json.decode(response.body));
-              sharedPref.save("lastDateMessageVieweRoom_"+this.room.id.toString(), newMessage.date);
-            } else {
-                throw Exception('Failed to post message from API');
-            }
-
-            setState(() {
-                messageList.add(newMessage);
-                textEditingController.text = '';
-            });
-            /* Timer(Duration(milliseconds: 500),
-                    () => _controller.jumpTo(_controller.position.maxScrollExtent)); */
+        if (response.statusCode == 200) {
+          _counterReagent += 1;
+          if(_counterReagent <= globals.COUNTER_REAGENT) {
+            SharedPref().saveInteger("counterReagent", _counterReagent);
+            print("increment reagent: $_counterReagent");
+          }
+          print(">= reagent: $_counterReagent");
+          
+          newMessage = RoomMessage.fromMainJson(json.decode(response.body));
+          sharedPref.save("lastDateMessageVieweRoom_"+this.room.id.toString(), newMessage.date);
+        } else {
+            throw Exception('Failed to post message from API');
         }
+
+        setState(() {
+            messageList.add(newMessage);
+            textEditingController.text = '';
+        });
+        /*Timer(Duration(milliseconds: 500),
+            () => _controller.jumpTo(_controller.position.maxScrollExtent)); */
+      }
     }
 
     AppBar _privateRoomOwner() {

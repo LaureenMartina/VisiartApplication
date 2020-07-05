@@ -85,7 +85,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     var dateEvent = year + "-" + month;
     
     final response = await http.get(
-      API_EVENT_CAROUSEL + userLanguage + "&startDate_contains=" + dateEvent,
+      API_EVENTS_CAROUSEL + userLanguage + "&startDate_contains=" + dateEvent,
       headers: {
         'Content-Type': 'application/json',
         'Accept': 'application/json',

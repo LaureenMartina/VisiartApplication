@@ -70,7 +70,7 @@ class _RoomsCreateScreenState extends State<RoomsCreateScreen> {
         "user": userId, 
     };
     final response = await http.post(
-        'http://91.121.165.149/rooms',
+        globals.API_ROOMS,
         headers: {
             'Content-Type': 'application/json',
             'Accept': 'application/json',
@@ -98,7 +98,7 @@ class _RoomsCreateScreenState extends State<RoomsCreateScreen> {
   void getListHobbies() async{
     var token = await sharedPref.read(globals.API_TOKEN_KEY);
     final response = await http.get(
-        'http://91.121.165.149/hobbies',
+        globals.API_HOBBIES,
         headers: {
             'Content-Type': 'application/json',
             'Accept': 'application/json',
