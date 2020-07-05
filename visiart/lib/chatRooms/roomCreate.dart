@@ -47,10 +47,8 @@ class _RoomsCreateScreenState extends State<RoomsCreateScreen> {
           if(value == 99999) {
             _counterInvested = 0;
           } else {
-            print("value: $value");
             _counterInvested = value;
           }
-          print("_counterInvested: $_counterInvested");
         })
     });
 
@@ -65,7 +63,7 @@ class _RoomsCreateScreenState extends State<RoomsCreateScreen> {
         'display' : isDisplayed.toString(),
         'private' : isPrivate.toString(),
         "hobbies": [{
-            "id": this._data.roomThematic
+          "id": this._data.roomThematic
         }], 
         "user": userId, 
     };
@@ -83,9 +81,7 @@ class _RoomsCreateScreenState extends State<RoomsCreateScreen> {
       _counterInvested += 1;
       if(_counterInvested <= globals.COUNTER_INVESTED) {
         SharedPref().saveInteger("counterInvested", _counterInvested);
-        print("increment invested: $_counterInvested");
       }
-      print(">= invested : $_counterInvested");
 
       Navigator.push(
         context, MaterialPageRoute(builder: (context) => RoomsListPage()),

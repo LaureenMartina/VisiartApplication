@@ -212,9 +212,7 @@ class _RoomsChatPageState extends State<RoomsChatPage> {
           _counterReagent += 1;
           if(_counterReagent <= globals.COUNTER_REAGENT) {
             SharedPref().saveInteger("counterReagent", _counterReagent);
-            print("increment reagent: $_counterReagent");
           }
-          print(">= reagent: $_counterReagent");
           
           newMessage = RoomMessage.fromMainJson(json.decode(response.body));
           sharedPref.save("lastDateMessageVieweRoom_"+this.room.id.toString(), newMessage.date);
