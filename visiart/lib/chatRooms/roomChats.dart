@@ -53,7 +53,6 @@ class _RoomsChatPageState extends State<RoomsChatPage> {
     Room room;
     UserRoomPrivate userRoomPrivate;
     var _userid;
-    var _userAdded;
     List <String> _listPlayerId = [];
 
     _RoomsChatPageState(Room room, UserRoomPrivate userRoomPrivate) {
@@ -131,11 +130,13 @@ class _RoomsChatPageState extends State<RoomsChatPage> {
           List jsonResponse = json.decode(response.body);
           var list = jsonResponse.map((roomMessages) => new RoomMessage.fromMainJson(roomMessages)).toList();
           if(list.isNotEmpty) {
-            list.forEach((element) { 
-              if (element.userId != this._userid && element.playerId != null && element.playerId.isNotEmpty && !this._listPlayerId.contains(element.playerId)) {
-                this._listPlayerId.add(element.playerId);
-              }
-            });
+            if (this.room.private) {
+              list.forEach((element) { 
+                if (element.userId != this._userid && element.playerId != null && element.playerId.isNotEmpty && !this._listPlayerId.contains(element.playerId)) {
+                  this._listPlayerId.add(element.playerId);
+                }
+              });
+            }
             sharedPref.save("lastDateMessageVieweRoom_"+this.room.id.toString(), list.last.date);
           }
           this.setState(() {
