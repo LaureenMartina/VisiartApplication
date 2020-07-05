@@ -351,17 +351,17 @@ class _RoomsChatPageState extends State<RoomsChatPage> {
     }
 
     AppBar buildAppBar(context) {
-        if (this._userid == this.room.userId && this.room.private) { // Owner and private
-          return this._privateRoomOwner();
-        }
-        else if (this._userid == this.room.userId && !this.room.private) { // Owner and public
-          return this._publicRoomOwner();
-        }
-        else if (this._userid != this.room.userId && this.room.private) { // Private
-          return this._privateRoom();
-        } else { //public
-          return this._publicRoom();
-        }
+      if (this._userid == this.room.userId && this.room.private) { // Owner and private
+        return this._privateRoomOwner();
+      }
+      else if (this._userid == this.room.userId && !this.room.private) { // Owner and public
+        return this._publicRoomOwner();
+      }
+      else if (this._userid != this.room.userId && this.room.private) { // Private
+        return this._privateRoom();
+      } else { //public
+        return this._publicRoom();
+      }
     }        
                               
     Widget buildMessageTextField() {
@@ -420,24 +420,22 @@ class _RoomsChatPageState extends State<RoomsChatPage> {
     
     @override
     Widget build(BuildContext context) {
-      
-        return new Scaffold(
-            appBar: buildAppBar(context),
-            body: Stack(
-                children: <Widget>[
-                    Column(
-                        children: <Widget>[
-                        Flexible(
-                            child: _roomsListMeesageView(this.messageList, this._userid, this.allMessage),
-                        ),
-                        buildMessageTextField(),
-                        ],
-                    ),
-                ],
+      return Scaffold(
+        appBar: buildAppBar(context),
+        body: Stack(
+          children: <Widget>[
+            Column(
+              children: <Widget>[
+                Flexible(
+                  child: _roomsListMeesageView(this.messageList, this._userid, this.allMessage),
+                ),
+                buildMessageTextField(),
+              ],
             ),
-        );
-    }
-                        
+          ],
+        ),
+      );
+    }                   
 }
 
 ListView _roomsListMeesageView(data, userId, allMessage) {
