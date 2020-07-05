@@ -179,7 +179,6 @@ class _RoomsCreateScreenState extends State<RoomsCreateScreen> {
                     activeColor: Color.fromRGBO(252, 233, 216, 1.0),
                     value: isDisplayed,
                     onChanged: (value) {
-                      print("VALUE : $value");
                       setState(() {
                         isDisplayed = value;
                       });
@@ -198,7 +197,6 @@ class _RoomsCreateScreenState extends State<RoomsCreateScreen> {
                     activeColor: Color.fromRGBO(252, 233, 216, 1.0),
                     value: isPrivate,
                     onChanged: (value) {
-                      print("VALUE : $value");
                       setState(() {
                         isPrivate = value;
                       });
