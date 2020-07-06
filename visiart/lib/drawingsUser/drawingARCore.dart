@@ -1,30 +1,25 @@
-import 'package:flutter/material.dart';
 import 'package:arcore_flutter_plugin/arcore_flutter_plugin.dart';
+import 'package:flutter/material.dart';
 import 'package:vector_math/vector_math_64.dart' as vector;
 
-class RuntimeMaterials extends StatefulWidget {
+class HelloWorld extends StatefulWidget {
   @override
-  _RuntimeMaterialsState createState() => _RuntimeMaterialsState();
+  _HelloWorldState createState() => _HelloWorldState();
 }
 
-class _RuntimeMaterialsState extends State<RuntimeMaterials> {
+class _HelloWorldState extends State<HelloWorld> {
   ArCoreController arCoreController;
-  ArCoreNode sphereNode;
-
-  Color color = Colors.yellow;
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: Column(
-        children: <Widget>[
-          Text("Change color"),
-          Expanded(
-            child: ArCoreView(
-              onArCoreViewCreated: _onArCoreViewCreated,
-            ),
-          ),
-        ],
+      home: Scaffold(
+        appBar: AppBar(
+          title: const Text('Hello World'),
+        ),
+        body: ArCoreView(
+          onArCoreViewCreated: _onArCoreViewCreated,
+        ),
       ),
     );
   }
@@ -33,40 +28,55 @@ class _RuntimeMaterialsState extends State<RuntimeMaterials> {
     arCoreController = controller;
 
     _addSphere(arCoreController);
+    _addCylindre(arCoreController);
+    _addCube(arCoreController);
   }
 
   void _addSphere(ArCoreController controller) {
     final material = ArCoreMaterial(
-      color: Colors.yellow,
-    );
+        color: Color.fromARGB(120, 66, 134, 244));
     final sphere = ArCoreSphere(
       materials: [material],
       radius: 0.1,
     );
-    sphereNode = ArCoreNode(
+    final node = ArCoreNode(
       shape: sphere,
       position: vector.Vector3(0, 0, -1.5),
     );
-    controller.addArCoreNode(sphereNode);
+    controller.addArCoreNode(node);
   }
 
-  onColorChange(Color newColor) {
-    if (newColor != this.color) {
-      this.color = newColor;
-      updateMaterials();
-    }
-  }
-
-  updateMaterials() {
-    debugPrint("updateMaterials");
-    if (sphereNode == null) {
-      return;
-    }
-    debugPrint("updateMaterials sphere node not null");
+  void _addCylindre(ArCoreController controller) {
     final material = ArCoreMaterial(
-      color: color
+      color: Colors.red,
+      reflectance: 1.0,
     );
-    sphereNode.shape.materials.value = [material];
+    final cylindre = ArCoreCylinder(
+      materials: [material],
+      radius: 0.5,
+      height: 0.3,
+    );
+    final node = ArCoreNode(
+      shape: cylindre,
+      position: vector.Vector3(0.0, -0.5, -2.0),
+    );
+    controller.addArCoreNode(node);
+  }
+
+  void _addCube(ArCoreController controller) {
+    final material = ArCoreMaterial(
+      color: Color.fromARGB(120, 66, 134, 244),
+      metallic: 1.0,
+    );
+    final cube = ArCoreCube(
+      materials: [material],
+      size: vector.Vector3(0.5, 0.5, 0.5),
+    );
+    final node = ArCoreNode(
+      shape: cube,
+      position: vector.Vector3(-0.5, 0.5, -3.5),
+    );
+    controller.addArCoreNode(node);
   }
 
   @override
@@ -75,57 +85,3 @@ class _RuntimeMaterialsState extends State<RuntimeMaterials> {
     super.dispose();
   }
 }
-
-// class ObjectARControl extends StatefulWidget {
-
-//   final Color initialColor;
-//   final ValueChanged<Color> onColorChange;
-
-//   const ObjectARControl({Key key, this.initialColor, this.onColorChange}) : super(key: key);
-
-//   @override
-//   _ObjectARControlState createState() => _ObjectARControlState();
-// }
-
-// class _ObjectARControlState extends State<ObjectARControl> {
-//   Color color;
-
-//   @override
-//   void initState() {
-//     color = widget.initialColor;
-//     super.initState();
-//   }
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Padding(
-//       padding: const EdgeInsets.all(8.0),
-//       child: Column(
-//         crossAxisAlignment: CrossAxisAlignment.stretch,
-//         children: <Widget>[
-//           Row(
-//             children: <Widget>[
-//               RaisedButton(
-//                 child: Text("Random Color"),
-//                 onPressed: () {
-//                   final newColor = Colors.accents[Random().nextInt(14)];
-//                   widget.onColorChange(newColor);
-//                   setState(() {
-//                     color = newColor;
-//                   });
-//                 },
-//               ),
-//               Padding(
-//                 padding: const EdgeInsets.only(left: 20.0),
-//                 child: CircleAvatar(
-//                   radius: 20.0,
-//                   backgroundColor: color,
-//                 ),
-//               ),
-//             ],
-//           ),
-//         ],
-//       ),
-//     );
-//   }
-// }
