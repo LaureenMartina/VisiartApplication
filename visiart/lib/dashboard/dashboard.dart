@@ -65,7 +65,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     ),
     color: Colors.teal[700],
     child: Padding(
-      padding: EdgeInsets.only(top:55, left: 20),
+      padding: EdgeInsets.only(top: 60, left: 20),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
