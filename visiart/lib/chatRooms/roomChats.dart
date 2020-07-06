@@ -86,8 +86,6 @@ class _RoomsChatPageState extends State<RoomsChatPage> {
         if (mounted) {
             _listviewScrollToBottom();
             timer.cancel();
-        } else {
-          timer.cancel();
         }
       });
     }
@@ -244,6 +242,9 @@ class _RoomsChatPageState extends State<RoomsChatPage> {
 
     AppBar _privateRoomOwner() {
       return AppBar(
+              backgroundColor: Color.fromRGBO(82, 59, 92, 1.0),
+              elevation: 10,
+              automaticallyImplyLeading: false,
               title: Text(this.room.name),
               actions: <Widget>[
                   // action button
@@ -299,6 +300,9 @@ class _RoomsChatPageState extends State<RoomsChatPage> {
 
     AppBar _publicRoomOwner() {
       return AppBar(
+        backgroundColor: Color.fromRGBO(82, 59, 92, 1.0),
+              elevation: 10,
+              automaticallyImplyLeading: false,
               title: Text(this.room.name),
               actions: <Widget>[
                   // action button
@@ -344,6 +348,9 @@ class _RoomsChatPageState extends State<RoomsChatPage> {
     }
     AppBar _privateRoom() {
       return AppBar(
+            backgroundColor: Color.fromRGBO(82, 59, 92, 1.0),
+              elevation: 10,
+              automaticallyImplyLeading: false,
               title: Text(this.room.name),
               actions: <Widget>[
                   // action button
@@ -359,6 +366,9 @@ class _RoomsChatPageState extends State<RoomsChatPage> {
     }
     AppBar _publicRoom() {
       return AppBar(
+          backgroundColor: Color.fromRGBO(82, 59, 92, 1.0),
+          elevation: 10,
+          automaticallyImplyLeading: false,
           title: Text(this.room.name),
       );
     }
@@ -378,10 +388,6 @@ class _RoomsChatPageState extends State<RoomsChatPage> {
     }        
                               
     Widget buildMessageTextField() {
-      /* print("this.room.enabled");
-      print(this.room.enabled); */
-
-      //this._listviewScrollToBottom();
       if (this.room.enabled != null && !this.room.enabled) {
         return Container();
       }
@@ -468,7 +474,7 @@ ListView _roomsListMeesageView(data, userId, allMessage, controller) {
                     padding: EdgeInsets.all(12.0),
                     margin: EdgeInsets.all(5.0),
                     decoration: BoxDecoration(
-                        color: Colors.deepPurple[300],
+                        color: Color.fromRGBO(252, 233, 216, 1.0),
                         borderRadius: BorderRadius.circular(23.0),
                     ),
                     child: ListTile(
@@ -483,7 +489,7 @@ ListView _roomsListMeesageView(data, userId, allMessage, controller) {
                     padding: EdgeInsets.all(12.0),
                     margin: EdgeInsets.all(5.0),
                     decoration: BoxDecoration(
-                        color: Colors.green[500],
+                        color: Color.fromRGBO(173, 165, 177, 0.2),
                         borderRadius: BorderRadius.circular(23.0),
                     ),
                     child: ListTile(
