@@ -213,19 +213,7 @@ class _AccountState extends State<AccountScreen> {
         },
         child: Column(
           children: <Widget>[
-            Container(
-              margin: EdgeInsets.only(left: 16.0, top: 30.0, bottom: 5.0,),
-              child: Text(
-                AppLocalizations.of(context).translate("dashboard_subtitle"),
-                style: TextStyle(
-                  fontSize: 17.0,
-                  fontWeight: FontWeight.bold,
-                  color: Color.fromRGBO(173, 165, 177, 1.0),
-                ),
-              ),
-            ),
-            Divider(color: Colors.grey,),
-            SizedBox(height: 20,),
+            SizedBox(height: 40,),
             nameField,
             SizedBox(height: 10,),
             fNameField,
