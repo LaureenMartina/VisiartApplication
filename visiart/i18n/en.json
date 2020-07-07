@@ -46,7 +46,11 @@
   "menu_myDrawingsSubtitle": "Saved drawings",
   "menu_logout": "Logout",
   "menu_logoutSubtitle": "Bye Bye !",
+  "menu_bottomNavBar_Home": "Home",
+  "menu_bottomNavBar_Room": "Rooms",
+  "menu_bottomNavBar_Event": "Events",
 
+  "dashboard_title": "Hello",
   "dashboard_subtitle": "Events of the Month",
   "dashboard_infoDateEvent": "From \n",
   "dashboard_titleAwards": "Your Awards",

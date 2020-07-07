@@ -152,27 +152,24 @@ class _MenuBoardScreenState extends State<MenuBoardScreen> {
       ),
       body: _children[_selectedIndex],
       bottomNavigationBar: BottomNavigationBar(
-        items: const <BottomNavigationBarItem>[
+        items: <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(
-              Icons.forum, 
-              //color: Colors.lightBlue,
+              Icons.forum,
             ),
-            title: Text('Salons'),
+            title: Text(AppLocalizations.of(context).translate("menu_bottomNavBar_Room")),
           ),
           BottomNavigationBarItem(
             icon: Icon(
               Icons.home,
-              //color: Colors.brown
             ),
-            title: Text('Home'),
+            title: Text(AppLocalizations.of(context).translate("menu_bottomNavBar_Home")),
           ),
           BottomNavigationBarItem(
             icon: Icon(
               Icons.local_play,
-              //color: Colors.deepOrange,
             ),
-            title: Text('Events'),
+            title: Text(AppLocalizations.of(context).translate("menu_bottomNavBar_Event")),
           ),
         ],
         currentIndex: _selectedIndex,
