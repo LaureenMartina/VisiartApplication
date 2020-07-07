@@ -13,11 +13,15 @@ const String API_USERS_ME = API_BASE_URL + "/users/me";
 const String API_USERS = API_BASE_URL + "/users";
 const String API_USERS_USERNAME = API_BASE_URL + "/users?username_contains=";
 const String API_HOBBIES = API_BASE_URL + "/hobbies";
+
+const String API_DRAWINGS = API_BASE_URL + "/drawings";
+
 const String API_EVENTS = API_BASE_URL + "/events";
 const String API_EVENTS_LANG = API_BASE_URL + "/events?_limit=50&language=";
 const String API_EVENTS_CAROUSEL = API_BASE_URL + "/events?_limit=20&language=";
 const String API_EVENTS_FAVORITE = API_BASE_URL + "/events?favorite_eq=true&language=";
 const String API_EVENTS_RECENT = API_BASE_URL + "/events?_sort=startDate:ASC&language=";
+
 const String API_ROOMS = API_BASE_URL + "/rooms";
 const String API_ROOMS_MESSAGE = API_BASE_URL + "/room-messages";
 const String API_ROOMS_MESSAGE_ID_ROOM = API_BASE_URL + "/room-messages?room=";

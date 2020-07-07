@@ -7,6 +7,7 @@ import 'package:visiart/dashboard/dashboard.dart';
 import 'package:visiart/events/eventsList.dart';
 import 'package:visiart/localization/AppLocalization.dart';
 
+
 class MenuBoardScreen extends StatefulWidget {
   @override
   _MenuBoardScreenState createState() => _MenuBoardScreenState();
@@ -27,6 +28,10 @@ class _MenuBoardScreenState extends State<MenuBoardScreen> {
 
   void _navigateToAccount() {
     Navigator.pushNamed(context, 'account');
+  }
+
+  void _navigateToMyDrawings() {
+    Navigator.pushNamed(context, 'myDrawings');
   }
 
   void _navigateToLogin() {
@@ -57,16 +62,16 @@ class _MenuBoardScreenState extends State<MenuBoardScreen> {
     onTap: () {  },
   );
 
-  ListTile _paramsUser() => ListTile(
-    title: Text(AppLocalizations.of(context).translate('menu_settings'),
-      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+  ListTile _drawingUser() => ListTile(
+    title: Text(AppLocalizations.of(context).translate('menu_myDrawings'), // TODO change name
+      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Color.fromRGBO(82, 59, 92, 1.0)),
     ),
-    subtitle: Text(AppLocalizations.of(context).translate('menu_settingsSubtitle'),
+    subtitle: Text(AppLocalizations.of(context).translate('menu_myDrawingsSubtitle'),
       style: TextStyle(fontSize: 12, fontStyle: FontStyle.italic
       ),
     ),
-    leading: Icon(Icons.settings, size: 40, color: Colors.blueGrey[700]),
-    onTap: () {  },
+    leading: Icon(Icons.perm_media, size: 40, color: Colors.pink[800]),
+    onTap: () { _navigateToMyDrawings(); },
   );
 
   ListTile _logout() => ListTile(
@@ -134,12 +139,12 @@ class _MenuBoardScreenState extends State<MenuBoardScreen> {
             ),
             _account(),
             _about(),
-            _paramsUser(),
+            _drawingUser(),
             Divider(
               indent: 10,
               endIndent: 10,
               thickness: 1,
-              color: Colors.deepPurpleAccent[200],
+              color: Color.fromRGBO(82, 59, 92, 1.0),
             ),
             _logout(),
           ],

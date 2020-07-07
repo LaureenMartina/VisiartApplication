@@ -42,13 +42,15 @@
   "menu_storedData": "Vos données enregistrées",
   "menu_about": "À Propos",
   "menu_aboutSubtitle": "Notre équipe, notre application",
-  "menu_settings": "Paramètres",
-  "menu_settingsSubtitle": "Données de l\\'application",
+  "menu_myDrawings": "Mes Oeuvres Artistiques",
+  "menu_myDrawingsSubtitle": "Dessins sauvegardés",
   "menu_logout": "Déconnexion",
   "menu_logoutSubtitle": "Bye Bye !",
 
   "dashboard_subtitle": "Les événements du Mois",
   "dashboard_infoDateEvent": "A partir du \n",
+  "dashboard_titleAwards": "Vos Trophées",
+  "dashboard_titleDrawing":"Vos\nDessins AR",
 
   "userInterest_userInterest": "Vos Centres d'intérêts",
   "userInterests_congratulations": "Bravooo !",
@@ -90,6 +92,12 @@
   "awards_descriptionCurious": "Badge Curieux\nobtenu lors de l'inscription et à la connexion à Visiart",
   "awards_descriptionInvested": "Badge Investi\nobtenu après avoir rejoint ou créé des salons de discussions",
   "awards_descriptionReagent": "Badge Réactif\nobtenu en participant aux diverses discussions",
-  "awards_descriptionPassionate": "Badge Passionné\nobtenu en enregistrant vos 3 dessins favoris et en ayant obtenu les badges précédents"
+  "awards_descriptionPassionate": "Badge Passionné\nobtenu en enregistrant vos 3 dessins favoris et en ayant obtenu les badges précédents",
 
+  "drawingAR_drawing": "Dessin",
+
+  "myDrawings_title": "Vos Créations",
+  "myDrawings_infoDate": "Création du : ",
+  "myDrawings_infoSave": "La capture d'écran a été sauvegardée !",
+  "myDrawings_infoErrorSave": "Erreur lors de la capture d'écran :("
 }

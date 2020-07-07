@@ -42,13 +42,15 @@
   "menu_storedData": "Your saved data",
   "menu_about": "About",
   "menu_aboutSubtitle": "Our team, our app",
-  "menu_settings": "Settings",
-  "menu_settingsSubtitle": "Application's data",
+  "menu_myDrawings": "My artistic works",
+  "menu_myDrawingsSubtitle": "Saved drawings",
   "menu_logout": "Logout",
   "menu_logoutSubtitle": "Bye Bye !",
 
   "dashboard_subtitle": "Events of the Month",
   "dashboard_infoDateEvent": "From \n",
+  "dashboard_titleAwards": "Your Awards",
+  "dashboard_titleDrawing": "Your AR \nDrawings",
 
   "userInterest_userInterest": "Your points of interest",
   "userInterests_congratulations": "Congratulations !",
@@ -81,6 +83,12 @@
   "eventDetail_from": "From :",
   "eventDetail_to": "To :",
   "eventDetail_linkEvent": "More information on the official website",
+  "drawingAR_drawing": "Drawing",
+
+  "myDrawings_title": "Your Creations",
+  "myDrawings_infoDate": "Creation of ",
+  "myDrawings_infoSave": "The screenshot has been saved !",
+  "myDrawings_infoErrorSave": "Error taking the screenshot :(",
 
   "awards_title": "Trophies",
   "awards_titleCurious": "Curious Badge",
