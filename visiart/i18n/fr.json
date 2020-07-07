@@ -66,6 +66,7 @@
   "roomsList_roomsPublic": "Salon publique",
   "roomsList_roomsPrivate": "Salon privée",
   "roomsList_filterRooms": "Filtrer avec une categorie",
+  
 
   "roomsCreate_hobbyChoice": "Choisir le hobby",
   "roomsCreate_addRomm": "Ajout d'un salon",
@@ -75,6 +76,7 @@
   "roomsCreate_privateRoom": "Est-ce un salon privée ?",
 
   "roomsChats_addFriend": "Ajouter un ami",
+  "roomsChats_unlinkRoom": "Délier de cette room",
 
   "event_filterFavorite": "Favoris",
   "event_filterRecent": "Récents",

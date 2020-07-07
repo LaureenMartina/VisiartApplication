@@ -75,6 +75,7 @@
   "roomsCreate_privateRoom": "Is it a private room ?",
 
   "roomsChats_addFriend": "Add a friend",
+  "roomsChats_unlinkRoom": "Délier de cette room",
 
   "event_filterFavorite": "Favorite",
   "event_filterRecent": "Recent",

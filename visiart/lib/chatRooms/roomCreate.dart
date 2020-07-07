@@ -8,6 +8,7 @@ import 'package:visiart/models/Hobby.dart';
 import 'package:visiart/localization/AppLocalization.dart';
 import 'package:visiart/config/config.dart' as globals;
 import 'package:custom_switch/custom_switch.dart';
+import 'package:visiart/models/Room.dart';
 
 
 SharedPref sharedPref = SharedPref();
@@ -83,12 +84,41 @@ class _RoomsCreateScreenState extends State<RoomsCreateScreen> {
       if(_counterInvested <= globals.COUNTER_INVESTED) {
         SharedPref().saveInteger("counterInvested", _counterInvested);
       }
+      if (isPrivate) {
+        var jsonResponse = json.decode(response.body);
+       // Room room = jsonResponse.map((room) => new Room.fromJson(room)).toList();
+        _addUserToPrivateRoom(userId, jsonResponse['id']);
+      }
 
       Navigator.push(
         context, MaterialPageRoute(builder: (context) => RoomsListPage()),
       );
     } else {
       throw Exception('Failed to post room from API');
+    }
+  }
+
+  void _addUserToPrivateRoom(int userId, int roomId) async {
+    var token = await sharedPref.read(globals.API_TOKEN_KEY);
+    
+    var data = {
+        'user': userId.toString(),
+        'room' : roomId.toString(),
+    };
+
+    final response = await http.post(globals.API_USER_ROOM_PRIVATE,
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+      body: json.encode(data)
+    );
+
+    if (response.statusCode == 200) {
+      //Toast ajout utilisateur 
+    } else {
+      throw Exception("Can't add user to private room");
     }
   }
   
