@@ -299,7 +299,7 @@ class _DrawState extends State<Draw> {
         print("test TEXT");
         nodeText = ARKitNode(
           geometry: ARKitText(
-          text: 'Flutter',
+          text: 'Enjoy',
           extrusionDepth: 1,
           materials: [
             ARKitMaterial(
@@ -385,7 +385,6 @@ class _DrawState extends State<Draw> {
     }
   }
 
-
   void _convertAndSaveDrawing(File fileTosave) async {
     setState(() {
       _loading = true;
@@ -408,6 +407,7 @@ class _DrawState extends State<Draw> {
     //print("url: $url");
     _createDrawing(url, userId);
   }
+
 
   @override
   Widget build(BuildContext context) {
