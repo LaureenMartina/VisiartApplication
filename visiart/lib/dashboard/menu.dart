@@ -135,8 +135,9 @@ class _MenuBoardScreenState extends State<MenuBoardScreen> {
               ),
               decoration: BoxDecoration(
                 image: DecorationImage(
-                  image: AssetImage("assets/imgs/home.png"),
-                  fit: BoxFit.cover
+                  colorFilter: ColorFilter.mode(Colors.black.withOpacity(0.2), BlendMode.colorBurn),
+                  image: AssetImage("assets/imgs/menu.png"),
+                  fit: BoxFit.fitWidth
                 )
               ),
             ),

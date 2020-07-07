@@ -109,6 +109,7 @@
   "account_firstname": "Firstname",
   "account_username": "Username",
   "account_phone": "Phone",
+  "account_language": "Language",
   "account_save": "Save !"
   
 }

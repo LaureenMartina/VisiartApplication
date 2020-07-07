@@ -110,5 +110,6 @@
   "account_firstname": "Prénom",
   "account_username": "Pseudo",
   "account_phone": "Téléphone",
+  "account_language": "Langue",
   "account_save": "Enregistrer !"
 }
