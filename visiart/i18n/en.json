@@ -46,11 +46,15 @@
   "menu_myDrawingsSubtitle": "Saved drawings",
   "menu_logout": "Logout",
   "menu_logoutSubtitle": "Bye Bye !",
+  "menu_bottomNavBar_Home": "Home",
+  "menu_bottomNavBar_Room": "Rooms",
+  "menu_bottomNavBar_Event": "Events",
 
+  "dashboard_title": "Hello",
   "dashboard_subtitle": "Events of the Month",
   "dashboard_infoDateEvent": "From \n",
   "dashboard_titleAwards": "Your Awards",
-  "dashboard_titleDrawing": "Your AR \nDrawings",
+  "dashboard_titleDrawing": "AR\nDrawings",
 
   "userInterest_userInterest": "Your points of interest",
   "userInterests_congratulations": "Congratulations !",
@@ -99,6 +103,14 @@
   "awards_descriptionCurious": "Curious Badge\nobtained when registering and logging in to Visiart",
   "awards_descriptionInvested": "Invested Badge\nobtained after joining or creating chat rooms",
   "awards_descriptionReagent": "Reagent Badge\nobtained by participating in various discussions",
-  "awards_descriptionPassionate": "Passionate Badge\nobtained by registering your 3 favorite drawings and having obtained the previous badges"
+  "awards_descriptionPassionate": "Passionate Badge\nobtained by registering your 3 favorite drawings and having obtained the previous badges",
+
+  "account_title": "My Personal Data",
+  "account_name": "Name",
+  "account_firstname": "Firstname",
+  "account_username": "Username",
+  "account_phone": "Phone",
+  "account_language": "Language",
+  "account_save": "Save !"
   
 }

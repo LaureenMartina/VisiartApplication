@@ -65,7 +65,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     ),
     color: Colors.teal[700],
     child: Padding(
-      padding: EdgeInsets.only(top:55, left: 20),
+      padding: EdgeInsets.only(top: 60, left: 20),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
@@ -126,7 +126,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
             child: Padding(
               padding: EdgeInsets.only(top:25),
               child: Text(
-                'Bonjour ${_username[0].toUpperCase()}${_username.substring(1)}',
+                AppLocalizations.of(context).translate("dashboard_title") + ' ${_username[0].toUpperCase()}${_username.substring(1)}',
                 style: TextStyle(
                   fontSize: 22.0,
                   fontWeight: FontWeight.bold,

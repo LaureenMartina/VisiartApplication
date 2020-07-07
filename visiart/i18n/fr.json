@@ -46,11 +46,15 @@
   "menu_myDrawingsSubtitle": "Dessins sauvegardés",
   "menu_logout": "Déconnexion",
   "menu_logoutSubtitle": "Bye Bye !",
+  "menu_bottomNavBar_Home": "Home",
+  "menu_bottomNavBar_Room": "Salons",
+  "menu_bottomNavBar_Event": "Events",
 
+  "dashboard_title": "Bonjour",
   "dashboard_subtitle": "Les événements du Mois",
   "dashboard_infoDateEvent": "A partir du \n",
   "dashboard_titleAwards": "Vos Trophées",
-  "dashboard_titleDrawing":"Vos\nDessins AR",
+  "dashboard_titleDrawing":"Dessins AR",
 
   "userInterest_userInterest": "Vos Centres d'intérêts",
   "userInterests_congratulations": "Bravooo !",
@@ -101,5 +105,13 @@
   "myDrawings_title": "Vos Créations",
   "myDrawings_infoDate": "Création du : ",
   "myDrawings_infoSave": "La capture d'écran a été sauvegardée !",
-  "myDrawings_infoErrorSave": "Erreur lors de la capture d'écran :("
+  "myDrawings_infoErrorSave": "Erreur lors de la capture d'écran :(",
+
+  "account_title": "Mes Données Personnelles",
+  "account_name": "Nom",
+  "account_firstname": "Prénom",
+  "account_username": "Pseudo",
+  "account_phone": "Téléphone",
+  "account_language": "Langue",
+  "account_save": "Enregistrer !"
 }
