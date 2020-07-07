@@ -103,5 +103,12 @@
   "myDrawings_title": "Vos Créations",
   "myDrawings_infoDate": "Création du : ",
   "myDrawings_infoSave": "La capture d'écran a été sauvegardée !",
-  "myDrawings_infoErrorSave": "Erreur lors de la capture d'écran :("
+  "myDrawings_infoErrorSave": "Erreur lors de la capture d'écran :(",
+
+  "account_title": "Mes Données Personnelles",
+  "account_name": "Nom",
+  "account_firstname": "Prénom",
+  "account_username": "Pseudo",
+  "account_phone": "Téléphone",
+  "account_save": "Enregistrer !"
 }

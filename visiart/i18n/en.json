@@ -102,6 +102,13 @@
   "awards_descriptionCurious": "Curious Badge\nobtained when registering and logging in to Visiart",
   "awards_descriptionInvested": "Invested Badge\nobtained after joining or creating chat rooms",
   "awards_descriptionReagent": "Reagent Badge\nobtained by participating in various discussions",
-  "awards_descriptionPassionate": "Passionate Badge\nobtained by registering your 3 favorite drawings and having obtained the previous badges"
+  "awards_descriptionPassionate": "Passionate Badge\nobtained by registering your 3 favorite drawings and having obtained the previous badges",
+
+  "account_title": "My Personal Data",
+  "account_name": "Name",
+  "account_firstname": "Firstname",
+  "account_username": "Username",
+  "account_phone": "Phone",
+  "account_save": "Save !"
   
 }
