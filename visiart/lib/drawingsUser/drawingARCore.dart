@@ -77,11 +77,7 @@ class _RuntimeMaterialsState extends State<RuntimeMaterials> {
   Map<String,String> obj3D = {
     "sphere": "assets/imgs/sphere.png",
     "cube": "assets/imgs/cube.png",
-    "cone": "assets/imgs/cone.png",
-    "cylinder": "assets/imgs/cylinder.png",
-    "pyramid": "assets/imgs/pyramid.png",
-    "torus": "assets/imgs/torus.png",
-    "text": "assets/imgs/text.png"
+    "cylinder": "assets/imgs/cylinder.png"
   };
 
   List<String> materialsLink = [
@@ -159,6 +155,29 @@ class _RuntimeMaterialsState extends State<RuntimeMaterials> {
       onTap: () {
         setState(() {
           print("_changed: $_changed");
+          if(nodeSphere != null) {
+            this.arCoreController.removeNode(nodeName: nodeSphere.name);
+          }else if(nodeCube != null) {
+            this.arCoreController.removeNode(nodeName: nodeCube.name);
+          }else{
+            this.arCoreController.removeNode(nodeName: nodeCylinder.name);
+          }
+
+          switch(nameObj) {
+            case "sphere" : {
+                _addSphere();
+              }
+              break;
+            case "cube" : {
+                _addCube();
+              }
+              break;
+            default: {
+                _addCylinder();
+              }
+              break;
+          }
+
           _changed = true;
           _selectedObj = nameObj;
           print("object cliqué: $_selectedObj");
@@ -179,15 +198,6 @@ class _RuntimeMaterialsState extends State<RuntimeMaterials> {
       ),
     );
   }
-
-  // _getMaterials() {
-  //   Widget listWidget = ListObjectSelection(
-  //       onTap: (value) {
-  //         _selectedMaterial = value;
-  //       },
-  //   );
-  //   return listWidget;
-  // }
 
   /*=====================================================*/
 
@@ -588,6 +598,47 @@ class _RuntimeMaterialsState extends State<RuntimeMaterials> {
     );
 
     this.arCoreController.addArCoreNode(nodeSphere);
+  }
+
+  void _addCube() async {
+    print("==> _selectedMaterial ================> $_selectedMaterial");
+    final ByteData textureBytes = await rootBundle.load(_selectedMaterial);
+
+    ArCoreMaterial material = ArCoreMaterial(
+      color: testColor,
+      textureBytes: textureBytes.buffer.asUint8List()
+    );
+
+    nodeCube = ArCoreNode(
+      shape: ArCoreCube(
+        materials: [material],
+        size: vector.Vector3(0.2, 0.2, 0.2),
+      ),
+      position: vector.Vector3(0, 0, -1.5),//plane.pose.translation,
+    );
+
+    this.arCoreController.addArCoreNode(nodeCube);
+  }
+
+  void _addCylinder() async {
+    print("==> _selectedMaterial ================> $_selectedMaterial");
+    final ByteData textureBytes = await rootBundle.load(_selectedMaterial);
+
+    ArCoreMaterial material = ArCoreMaterial(
+      color: testColor,
+      textureBytes: textureBytes.buffer.asUint8List()
+    );
+
+    nodeCylinder = ArCoreNode(
+      shape: ArCoreCylinder(
+        radius: 0.08,
+        height: 0.15,
+        materials: [material],
+      ),
+      position: vector.Vector3(0, 0, -1.5),//plane.pose.translation,
+    );
+
+    this.arCoreController.addArCoreNode(nodeCylinder);
   }
 
   _onArCoreViewCreated(ArCoreController controller, String obj, String decor) async {
