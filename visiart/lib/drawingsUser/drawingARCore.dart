@@ -590,10 +590,12 @@ class _RuntimeMaterialsState extends State<RuntimeMaterials> {
   //   _addSphere(hit);
   // }
 
-  void _addSphere(/*ArCoreHitTestResult plane*/) {
+  void _addSphere(/*ArCoreHitTestResult plane*/) async {
+    final ByteData textureBytes = await rootBundle.load('assets/imgs/' + _selectedMaterial);
+
     ArCoreMaterial material = ArCoreMaterial(
       color: Color.fromARGB(120, 66, 134, 244),
-      //textureBytes: textureBytes.buffer.asUint8List()
+      textureBytes: textureBytes.buffer.asUint8List()
     );
 
     nodeSphere = ArCoreNode(
