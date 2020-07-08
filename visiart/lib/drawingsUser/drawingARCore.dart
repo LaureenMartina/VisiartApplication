@@ -48,7 +48,7 @@ class _RuntimeMaterialsState extends State<RuntimeMaterials> {
   double opacity = 1.0;
   
   String _selectedObj = "cube";
-  String _selectedMaterial = "";
+  String _selectedMaterial = "assets/imgs/art.png";
 
   List<DrawingPoints> points = List();
 
@@ -568,13 +568,13 @@ class _RuntimeMaterialsState extends State<RuntimeMaterials> {
   }
 
   void _addSphere(/*ArCoreHitTestResult plane*/) async {
-    if(_selectedMaterial == "") _selectedMaterial = "assets/imgs/art.png";
+    //if(_selectedMaterial == "") _selectedMaterial = "assets/imgs/art.png";
     print("==> _selectedMaterial ================> $_selectedMaterial");
-    final ByteData textureBytes = await rootBundle.load(_selectedMaterial);
+    //final ByteData textureBytes = await rootBundle.load(_selectedMaterial);
 
     ArCoreMaterial material = ArCoreMaterial(
       color: Color.fromARGB(120, 66, 134, 244),
-      textureBytes: textureBytes.buffer.asUint8List()
+      //textureBytes: textureBytes.buffer.asUint8List()
     );
 
     nodeSphere = ArCoreNode(
@@ -648,20 +648,21 @@ class _RuntimeMaterialsState extends State<RuntimeMaterials> {
   }
 
   onMaterialChange(String newMaterial) {
-    if (newMaterial != this._selectedMaterial) {
-      this._selectedMaterial = newMaterial;
-      updateMaterials(newMaterial);
+    if (newMaterial != _selectedMaterial) {
+      _selectedMaterial = newMaterial;
+      updateMaterials(/*newMaterial*/);
     }
   }
 
-  updateMaterials(String newMaterial) async {
+  updateMaterials(/*String newMaterial*/) async {
     debugPrint("updateMaterials");
     if (nodeSphere == null) return;
     debugPrint("updateMaterials sphere node not null");
-    ByteData textureBytes = await rootBundle.load(newMaterial);
+    //ByteData textureBytes = await rootBundle.load(newMaterial);
 
     final material = ArCoreMaterial(
-      textureBytes: textureBytes.buffer.asUint8List()
+      color: Color.fromARGB(10, 66, 134, 244),
+      //textureBytes: textureBytes.buffer.asUint8List()
     );
     nodeSphere.shape.materials.value = [material];
   }
@@ -749,9 +750,9 @@ class _ListObjectSelectionState extends State<ListObjectSelection> {
                 print("materialsLink[index] clicked =======================> $materialsLink[index]");
                 //materialValue = materialsLink[index];
                 //print("selected clicked =======================> $selected");
-                widget.onMaterialChange(materialValue);
+                widget.onMaterialChange(materialsLink[index]);
                   setState(() {
-                    materialValue = materialValue;
+                    materialValue = materialsLink[index];
                   });
               });
             },
