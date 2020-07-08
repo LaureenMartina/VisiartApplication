@@ -150,7 +150,7 @@ class _ObjectControlState extends State<ObjectControl> {
     return Container(
       height: 150.0,
       child: ListView.builder(
-        itemCount: obj3D.length,
+        itemCount: gifs.length,
         scrollDirection: Axis.horizontal,
         itemBuilder: (context, index) {
           return GestureDetector(
