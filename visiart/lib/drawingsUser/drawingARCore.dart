@@ -449,10 +449,8 @@ class _RuntimeMaterialsState extends State<RuntimeMaterials> {
                       runSpacing: 10.0,
                       children: <Widget>[
                         ListObjectSelection(
-                            onTap: (value) {
-                              print("value clicked =======================> $value");
-                              _selectedMaterial = value;
-                            },
+                          initialMaterialValue: _selectedMaterial,
+                          onMaterialChange: onMaterialChange
                         ),
                       ],
                       //children: _getMaterials(),
@@ -649,6 +647,25 @@ class _RuntimeMaterialsState extends State<RuntimeMaterials> {
     // }
   }
 
+  onMaterialChange(String newMaterial) {
+    if (newMaterial != this._selectedMaterial) {
+      this._selectedMaterial = newMaterial;
+      updateMaterials(newMaterial);
+    }
+  }
+
+  updateMaterials(String newMaterial) async {
+    debugPrint("updateMaterials");
+    if (nodeSphere == null) return;
+    debugPrint("updateMaterials sphere node not null");
+    ByteData textureBytes = await rootBundle.load(newMaterial);
+
+    final material = ArCoreMaterial(
+      textureBytes: textureBytes.buffer.asUint8List()
+    );
+    nodeSphere.shape.materials.value = [material];
+  }
+
 }
 
 class DrawingPainter extends CustomPainter {
@@ -683,16 +700,17 @@ class DrawingPoints {
 
 
 class ListObjectSelection extends StatefulWidget {
-  final Function onTap;
+  final String initialMaterialValue;
+  final ValueChanged<String> onMaterialChange;
 
-  ListObjectSelection({this.onTap});
+  ListObjectSelection({Key key, this.initialMaterialValue, this.onMaterialChange}): super(key: key);
 
   @override
   _ListObjectSelectionState createState() => _ListObjectSelectionState();
 }
 
 class _ListObjectSelectionState extends State<ListObjectSelection> {
-  String selected;
+  String materialValue;
 
   List<String> materialsLink = [
     "assets/imgs/art.png",
@@ -713,6 +731,7 @@ class _ListObjectSelectionState extends State<ListObjectSelection> {
 
   @override
   void initState() {
+    materialValue = widget.initialMaterialValue;
     super.initState();
   }
 
@@ -728,9 +747,12 @@ class _ListObjectSelectionState extends State<ListObjectSelection> {
             onTap: () {
               setState(() {
                 print("materialsLink[index] clicked =======================> $materialsLink[index]");
-                selected = materialsLink[index];
-                print("selected clicked =======================> $selected");
-                widget.onTap(materialsLink[index]);
+                //materialValue = materialsLink[index];
+                //print("selected clicked =======================> $selected");
+                widget.onMaterialChange(materialValue);
+                  setState(() {
+                    materialValue = materialValue;
+                  });
               });
             },
             child: ClipOval(
