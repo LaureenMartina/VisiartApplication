@@ -155,13 +155,9 @@ class _RuntimeMaterialsState extends State<RuntimeMaterials> {
       onTap: () {
         setState(() {
           print("_changed: $_changed");
-          if(nodeSphere != null) {
-            this.arCoreController.removeNode(nodeName: nodeSphere.name);
-          }else if(nodeCube != null) {
-            this.arCoreController.removeNode(nodeName: nodeCube.name);
-          }else{
-            this.arCoreController.removeNode(nodeName: nodeCylinder.name);
-          }
+          if(nodeSphere != null) this.arCoreController.removeNode(nodeName: nodeSphere.name);
+          if(nodeCube != null) this.arCoreController.removeNode(nodeName: nodeCube.name);
+          if(nodeCylinder != null) this.arCoreController.removeNode(nodeName: nodeCylinder.name);
 
           switch(nameObj) {
             case "sphere" : {
