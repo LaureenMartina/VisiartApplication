@@ -572,7 +572,7 @@ class _RuntimeMaterialsState extends State<RuntimeMaterials> {
   void _addSphere(/*ArCoreHitTestResult plane*/) async {
     if(_selectedMaterial == "") _selectedMaterial = "art.png";
     print("==> _selectedMaterial ================> $_selectedMaterial");
-    final ByteData textureBytes = await rootBundle.load('assets/imgs/' + _selectedMaterial);
+    final ByteData textureBytes = await rootBundle.load(_selectedMaterial);
 
     ArCoreMaterial material = ArCoreMaterial(
       color: Color.fromARGB(120, 66, 134, 244),
