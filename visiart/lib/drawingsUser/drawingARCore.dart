@@ -52,14 +52,24 @@ class _RuntimeMaterialsState extends State<RuntimeMaterials> {
   void _addObject(ArCoreHitTestResult plane) {
     if (objectSelected != null) {
       //"https://github.com/KhronosGroup/glTF-Sample-Models/raw/master/2.0/Duck/glTF/Duck.gltf"
-      final toucanoNode = ArCoreReferenceNode(
-          name: objectSelected,
-          obcject3DFileName: objectSelected,
-          position: plane.pose.translation,
-          rotation: plane.pose.rotation
-      );
+      // final toucanoNode = ArCoreReferenceNode(
+      //     name: objectSelected,
+      //     obcject3DFileName: objectSelected,
+      //     position: plane.pose.translation,
+      //     rotation: plane.pose.rotation
+      // );
+      final material = ArCoreMaterial(
+          color: Color.fromARGB(120, 66, 134, 244),);
 
-      arCoreController.addArCoreNodeWithAnchor(toucanoNode);
+      final sphere = ArCoreSphere(
+        materials: [material],
+        radius: 0.1,
+      );
+      final node = ArCoreNode(
+        shape: sphere,
+        position: vector.Vector3(0, 0, -1.5),
+      );
+      arCoreController.addArCoreNodeWithAnchor(node);
     } else {
       showDialog<void>(
         context: context,
