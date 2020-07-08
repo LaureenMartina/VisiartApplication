@@ -97,10 +97,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
       sharedPref.save("token", token);
 
       Navigator.pushNamed(context, 'hobbies');
-      //return jsonResponse;
     } else if (response.statusCode == 400) {
       String errorMsg = jsonResponse['message'][0]['messages'][0]['message'];
-      //debugPrint("errormsg: " + errorMsg);
         showAlert(context, "Error", errorMsg, "Close");
       throw Exception(errorMsg);
     } else {
@@ -108,7 +106,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
     }
   }
 
-  void _navigateToRGPD() { //Replacement
+  void _navigateToRGPD() {
     Navigator.of(context).push(
         new MaterialPageRoute(builder: (context) => PrivacyPolicy()));
   }
@@ -369,12 +367,6 @@ Future<String> signInWithGoogle() async {
   assert(user.uid == currentUser.uid);
 
   return 'signInWithGoogle succeeded: $user';
-}
-
- // ------ Get value from SharedPreferences ------
-void displayIdFromSharedPrefs() async {
-  var _id = await sharedPref.readInteger("userId");
-  print("_id -> $_id");
 }
 
 Future<void> createUser(String newUsername, String newName, String newEmail, String newPassword) async {

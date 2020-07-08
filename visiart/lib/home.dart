@@ -103,14 +103,12 @@ class _HomeState extends State<HomeScreen> {
       _sharedPref.save("token", token);
       List<dynamic> hobbies = jsonResponse['user']['hobbies'];
       if (hobbies.isEmpty) {
-        //_sharedPref.saveBool("curiousBadgeEnabled", true);
         _navigateToUserInterestsScreen();
       } else {
         _navigateToDashboard();
       }
     } else if (response.statusCode == 400){
       String errorMsg = jsonResponse['message'][0]['messages'][0]['message'];
-      //debugPrint("errormsg: " + errorMsg);
       showAlert(context, "Error", errorMsg, "Close");
       throw Exception(errorMsg);
     } else {

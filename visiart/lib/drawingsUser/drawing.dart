@@ -103,11 +103,9 @@ class _DrawState extends State<Draw> {
       if(_animationState == "simple") {
          _animationState = "ar";
          _detectAR = true;
-         print("_detectAR $_detectAR");
       }else{
         _animationState = "simple";
         _detectAR = false;
-        print("_detectAR $_detectAR");
       }
     });
   }
@@ -155,10 +153,8 @@ class _DrawState extends State<Draw> {
     return GestureDetector(
       onTap: () {
         setState(() {
-          print("_changed: $_changed");
           _changed = true;
           _selectedObj = nameObj;
-          print("object cliqué: $_selectedObj");
         });
       },
       child: ClipOval(
@@ -218,13 +214,9 @@ class _DrawState extends State<Draw> {
     ARKitMaterial material = ARKitMaterial(
       diffuse: ARKitMaterialProperty(image: decor),
     );
-    
-    //print("choice: $obj");
-    //print("decor: $decor");
 
     switch (obj) {
       case "sphere": {
-          print("sphere"); 
           nodeSphere = ARKitNode(
             geometry: ARKitSphere(
               radius: 0.2,
@@ -238,7 +230,6 @@ class _DrawState extends State<Draw> {
         }
         break;
       case "cone": {
-          print("cone");
           nodeCone = ARKitNode(
             geometry: ARKitCone(
               topRadius: 0,
@@ -253,7 +244,6 @@ class _DrawState extends State<Draw> {
         }
         break;
       case "cylinder": {
-        print("test cylindre");
         nodeCylinder = ARKitNode(
           geometry: ARKitCylinder(
             radius: 0.08,
@@ -267,7 +257,6 @@ class _DrawState extends State<Draw> {
       }
         break;
       case "pyramid": {
-        print("test pyramide");
         nodePyramid = ARKitNode(
           geometry: ARKitPyramid(
             width: 0.20,
@@ -282,7 +271,6 @@ class _DrawState extends State<Draw> {
       }
         break;
       case "torus": {
-        print("test donut");
         nodeTorus = ARKitNode(
           geometry: ARKitTorus(
             ringRadius: 0.04,
@@ -296,7 +284,6 @@ class _DrawState extends State<Draw> {
       }
         break;
       case "text": {
-        print("test TEXT");
         nodeText = ARKitNode(
           geometry: ARKitText(
           text: 'Flutter',
@@ -315,8 +302,6 @@ class _DrawState extends State<Draw> {
       }
         break;
       default: {
-          print("carré");
-          print("choice: $_selectedObj");
           nodeCube = ARKitNode(
             geometry: ARKitBox(
               materials: [material],
@@ -363,22 +348,14 @@ class _DrawState extends State<Draw> {
     Map<String, dynamic> jsonResponse = json.decode(response.body);
 
     if (response.statusCode == 200) {
-      print("API_REGISTER ==> 200");
-      //print(response.toString());
       setState(() {
         _counterDrawing += 1;
-        print("_counterDrawing: $_counterDrawing");
         if(_counterDrawing <= COUNTER_DRAWING) {
           SharedPref().saveInteger("_counterDrawing", _counterDrawing);
-          print("increment draw: $_counterDrawing");
         }
-        print(">= draw : $_counterDrawing");
-
       });
-
     } else if (response.statusCode == 400) {
       String errorMsg = jsonResponse['message'][0]['messages'][0]['message'];
-      print("errormsg: " + errorMsg);
       throw Exception(errorMsg);
     } else {
       throw Exception('Failed to create drawing from API');
@@ -405,13 +382,11 @@ class _DrawState extends State<Draw> {
     
     final ref = FirebaseStorage.instance.ref().child(fileName);
     var url = await ref.getDownloadURL();
-    //print("url: $url");
     _createDrawing(url, userId);
   }
 
   @override
   Widget build(BuildContext context) {
-    //print("state build widget");
     return Scaffold(
       key: _scaffoldKey,
       backgroundColor: Colors.transparent,
@@ -496,7 +471,6 @@ class _DrawState extends State<Draw> {
                         onPressed: () {
                           setState(() async {
                             String path = await NativeScreenshot.takeScreenshot();
-                            debugPrint('Screenshot taken, path: $path');
 
                             if( path == null || path.isEmpty ) {
                               _scaffoldKey.currentState.showSnackBar(
@@ -512,10 +486,9 @@ class _DrawState extends State<Draw> {
                               SnackBar(
                                 content: Text(AppLocalizations.of(context).translate("myDrawings_infoSave"))
                               )
-                            ); // showSnackBar()
+                            );
 
                             File imgFile = File(path);
-                            //print("imgFile: $imgFile");
                             //_imgHolder = Image.file(imgFile);
 
                             setState(() {});
@@ -580,12 +553,10 @@ class _DrawState extends State<Draw> {
                     )
                     : Slider(
                       value: strokeWidth,
-                      max: 50.0, //(selectedMode == SelectedMode.StrokeWidth) ? 50.0 : 1.0,
+                      max: 50.0,
                       min: 0.0,
                       onChanged: (val) {
                         setState(() {
-                          // print("value slider : $strokeWidth");
-                          // print("value slider : ${(selectedMode == SelectedMode.StrokeWidth)}");
                           if (selectedMode == SelectedMode.StrokeWidth)
                             strokeWidth = val;
                         });
@@ -625,7 +596,6 @@ class _DrawState extends State<Draw> {
                 //showFeaturePoints: true,
                 //planeDetection: ARPlaneDetection.horizontalAndVertical,
                 onARKitViewCreated: (controller) {
-                  //print("is _changed 1: $_changed");
                   return _onArKitViewCreated(controller, _selectedObj, _selectedMaterial);
                 }
               ),
@@ -665,7 +635,6 @@ class _DrawState extends State<Draw> {
                 child: Stack(
                   children: <Widget>[
                     ARKitSceneView(onARKitViewCreated: (controller) {
-                      //print("is _changed 2: $_changed");
                       return _onArKitViewCreated(controller, _selectedObj, _selectedMaterial);
                     }),
                     CustomPaint(
@@ -682,23 +651,17 @@ class _DrawState extends State<Draw> {
               GestureDetector(
               onPanUpdate: (details) {
                 setState(() {
-                  print("update details: $details");
-                  
                 });
               },
               onPanStart: (details) {
                 setState(() {
-                  print("start details: $details");
-                  
                 });
               },
               onPanEnd: (details) {
                 setState(() {
-                  print("end details: $details");
                 });
               },
               child: ARKitSceneView(onARKitViewCreated: (controller) {
-                  //print("is _changed 3: $_changed");
                   return _onArKitViewCreated(controller, _selectedObj, _selectedMaterial);
                 }
               ),

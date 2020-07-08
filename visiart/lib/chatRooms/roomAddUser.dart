@@ -57,8 +57,6 @@ class _RoomAddUserPageState extends State<RoomAddUserPage>  with SingleTickerPro
   @override
   void initState() {
     super.initState();
-    print("_RoomAddUserPageState");
-    print(this.room);
     sharedPref.readInteger(globals.API_USER_ID_KEY).then((value) => {
         setState(() {
             this._userId = value;

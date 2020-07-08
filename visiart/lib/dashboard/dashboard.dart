@@ -98,7 +98,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
     if (response.statusCode == 200) {
         List jsonResponse = json.decode(response.body);
-        //print("event: ${jsonResponse[0]}");
         this.futureEvent = jsonResponse.map( (event) => new Event.fromJson(event) ).toList();
         setState(() {
           events.addAll(futureEvent);
@@ -349,7 +348,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         child: GestureDetector(
                           onTap: () {
                             Platform.isAndroid ? Navigator.pushNamed(context, "drawingAndroid") :
-                            Navigator.pushNamed(context, 'drawing'); // TODO change to drawing
+                            Navigator.pushNamed(context, 'drawing');
                           },
                           child: _drawingCard(),
                         ),

@@ -40,19 +40,15 @@ class _AwardsListScreenState extends State<AwardsListScreen> {
     
     SharedPref().readInteger("counterInvested").then((value) => {
         setState(() {
-          //SharedPref().saveInteger("counterInvested", 0);
           if(value == 99999) {
             _counterInvested = 0;
           } else {
-            //print("value: $value");
             _counterInvested = value;
           }
-          //print("_counterInvested: $_counterInvested");
         })
     });
     SharedPref().readInteger("counterReagent").then((value) => {
         setState(() {
-          //SharedPref().saveInteger("counterInvested", 0);
           if(value == 99999) {
             _counterReagent = 0;
           } else {
@@ -62,7 +58,6 @@ class _AwardsListScreenState extends State<AwardsListScreen> {
     });
     SharedPref().readInteger("counterDrawing").then((value) => {
         setState(() {
-          //SharedPref().saveInteger("counterInvested", 0);
           if(value == 99999) {
             _counterDrawing = 0;
           } else {

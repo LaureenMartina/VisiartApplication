@@ -47,7 +47,7 @@ class _RoomsChatPageState extends State<RoomsChatPage> {
     var _userid;
     var _userAdded;
 
-    int _counterReagent;
+    int _counterReagent = 0;
 
     _RoomsChatPageState(Room room, UserRoomPrivate userRoomPrivate) {
       this.room = room;
@@ -74,10 +74,8 @@ class _RoomsChatPageState extends State<RoomsChatPage> {
           if(value == 99999) {
             _counterReagent = 0;
           } else {
-            print("value: $value");
             _counterReagent = value;
           }
-          print("_counterReagent: $_counterReagent");
         })
       });
 
