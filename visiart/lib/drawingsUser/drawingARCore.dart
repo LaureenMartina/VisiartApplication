@@ -585,134 +585,105 @@ class _RuntimeMaterialsState extends State<RuntimeMaterials> {
     super.dispose();
   }
 
+  void _handleOnPlaneTap(List<ArCoreHitTestResult> hits) {
+    final hit = hits.first;
+    _addSphere(hit);
+  }
+
+  void _addSphere(ArCoreHitTestResult plane) {
+    ArCoreMaterial material = ArCoreMaterial(
+      color: Color.fromARGB(120, 66, 134, 244),
+      //textureBytes: textureBytes.buffer.asUint8List()
+    );
+
+    nodeSphere = ArCoreNode(
+      shape: ArCoreSphere(
+        radius: 0.2,
+        materials: [material]
+      ),
+      position: plane.pose.translation,
+    );
+
+    this.arCoreController.addArCoreNode(nodeSphere);
+  }
+
   void onTapHandler(String name) {
     print("Flutter: onNodeTap");
     showDialog<void>(
       context: context,
-      builder: (BuildContext context) =>
-          AlertDialog(content: Text('onNodeTap on $name')),
+      builder: (BuildContext context) => AlertDialog(
+        content: Row(
+          children: <Widget>[
+            Text('Remove $name?'),
+            // IconButton(
+            //     icon: Icon(
+            //       Icons.delete,
+            //     ),
+            //     onPressed: () {
+            //       arCoreController.removeNode(nodeName: name);
+            //       Navigator.pop(context);
+            //     })
+          ],
+        ),
+      ),
     );
   }
 
   _onArCoreViewCreated(ArCoreController controller, String obj, String decor) async {
     this.arCoreController = controller;
     arCoreController.onNodeTap = (name) => onTapHandler(name);
-    //arCoreController.onPlaneTap  = _handleOnPlaneTap;
+    arCoreController.onPlaneTap = _handleOnPlaneTap;
 
-    ByteData textureBytes = await rootBundle.load('assets/imgs/' + decor);
+    //ByteData textureBytes = await rootBundle.load('assets/imgs/' + decor);
     
-    ArCoreMaterial material = ArCoreMaterial(
-      color: Color.fromARGB(120, 66, 134, 244),
-      textureBytes: textureBytes.buffer.asUint8List()
-    );
+    // ArCoreMaterial material = ArCoreMaterial(
+    //   color: Color.fromARGB(120, 66, 134, 244),
+    //   //textureBytes: textureBytes.buffer.asUint8List()
+    // );
 
-    switch (obj) {
-      case "sphere": {
-          print("sphere"); 
-          nodeSphere = ArCoreNode(
-            shape: ArCoreSphere(
-              radius: 0.2,
-              materials: [material]
-            ),
-            position: vector.Vector3(0, 0, -0.5),
-          );
+    // switch (obj) {
+    //   case "sphere": {
+    //       print("sphere"); 
+    //       nodeSphere = ArCoreNode(
+    //         shape: ArCoreSphere(
+    //           radius: 0.2,
+    //           materials: [material]
+    //         ),
+    //         position: vector.Vector3(0, 0, -0.5),
+    //       );
 
-          this.arCoreController.addArCoreNode(nodeSphere);
-        }
-        break;
-      case "cone": {
-          print("cone");
-          // nodeCone = ArCoreNode(
-          //   shape: ARKitCone(
-          //     topRadius: 0,
-          //     bottomRadius: 0.10,
-          //     height: 0.18,
-          //     materials: [material],
-          //   ),
-          //   position: vector.Vector3(0, -0.1, -0.5),
-          // );
+    //       this.arCoreController.addArCoreNode(nodeSphere);
+    //     }
+    //     break;
+    //   case "cylinder": {
+    //     print("test cylindre");
+    //     nodeCylinder = ArCoreNode(
+    //       shape: ArCoreCylinder(
+      //       radius: 0.08,
+      //       height: 0.15,
+      //       materials: [material],
+      //     ),
+      //     position: vector.Vector3(0, -0.1, -0.5),
+      //   );
 
-          // this.arCoreController.addArCoreNode(nodeCone);
-        }
-        break;
-      case "cylinder": {
-        print("test cylindre");
-        nodeCylinder = ArCoreNode(
-          shape: ArCoreCylinder(
-            radius: 0.08,
-            height: 0.15,
-            materials: [material],
-          ),
-          position: vector.Vector3(0, -0.1, -0.5),
-        );
+      //   this.arCoreController.addArCoreNode(nodeCylinder);
+      // }
+      //   break;
+      // default: {
+      //     print("carré");
+      //     print("choice: $_selectedObj");
+      //     nodeCube = ArCoreNode(
+      //       shape: ArCoreCube(
+      //         materials: [material],
+      //         size: vector.Vector3(0.2, 0.2, 0.2),
+      //       ),
+      //       position: vector.Vector3(0, 0, -0.5),
+      //     );
 
-        this.arCoreController.addArCoreNode(nodeCylinder);
-      }
-        break;
-      case "pyramid": {
-        print("test pyramide");
-        // nodePyramid = ArCoreNode(
-        //   shape: ArCoreCy(
-        //     width: 0.20,
-        //     height: 0.20,
-        //     length: 0.20,
-        //     materials: [material],
-        //   ),
-        //   position: vector.Vector3(0, -0.05, -0.5),
-        // );
-
-        // this.arCoreController.addArCoreNode(nodePyramid);
-      }
-        break;
-      case "torus": {
-        print("test donut");
-        // nodeTorus = ArCoreNode(
-        //   shape: ARKitTorus(
-        //     ringRadius: 0.04,
-        //     pipeRadius: 0.02,
-        //     materials: [material],
-        //   ),
-        //   position: vector.Vector3(0.1, -0.1, -0.5),
-        // );
-
-        // this.arCoreController.addArCoreNode(nodeTorus);
-      }
-        break;
-      case "text": {
-        print("test TEXT");
-        // nodeText = ArCoreNode(
-        //   shape: ARKitText(
-        //   text: 'Flutter',
-        //   extrusionDepth: 1,
-        //   materials: [
-        //     ArCoreMaterial(
-        //       color: Colors.lightBlueAccent
-        //       //diffuse: ARKitMaterialProperty(color: Colors.blue),
-        //     )
-        //   ],
-        // ),
-        //   position: vector.Vector3(-0.3, 0.3, -1.4),
-        //   scale: vector.Vector3(0.02, 0.02, 0.02),
-        // );
-
-        // this.arCoreController.addArCoreNode(nodeText);
-      }
-        break;
-      default: {
-          print("carré");
-          print("choice: $_selectedObj");
-          nodeCube = ArCoreNode(
-            shape: ArCoreCube(
-              materials: [material],
-              size: vector.Vector3(0.2, 0.2, 0.2),
-            ),
-            position: vector.Vector3(0, 0, -0.5),
-          );
-
-          this.arCoreController.addArCoreNode(nodeCube);
-        }
-        break;
-    }
+    //       this.arCoreController.addArCoreNode(nodeCube);
+    //     }
+    //     break;
+    // }
   }
 
 }
