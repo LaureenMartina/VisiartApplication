@@ -29,6 +29,8 @@ class _RuntimeMaterialsState extends State<RuntimeMaterials> {
 
   String _animationState = "simple";
 
+  Color testColor = Colors.red;
+
   ArCoreController arCoreController;
 
   bool _detectAR = false;
@@ -570,11 +572,11 @@ class _RuntimeMaterialsState extends State<RuntimeMaterials> {
   void _addSphere(/*ArCoreHitTestResult plane*/) async {
     //if(_selectedMaterial == "") _selectedMaterial = "assets/imgs/art.png";
     print("==> _selectedMaterial ================> $_selectedMaterial");
-    //final ByteData textureBytes = await rootBundle.load(_selectedMaterial);
+    final ByteData textureBytes = await rootBundle.load(_selectedMaterial);
 
     ArCoreMaterial material = ArCoreMaterial(
-      color: Color.fromARGB(120, 66, 134, 244),
-      //textureBytes: textureBytes.buffer.asUint8List()
+      color: testColor,
+      textureBytes: textureBytes.buffer.asUint8List()
     );
 
     nodeSphere = ArCoreNode(
@@ -657,14 +659,22 @@ class _RuntimeMaterialsState extends State<RuntimeMaterials> {
   updateMaterials(/*String newMaterial*/) async {
     debugPrint("updateMaterials");
     if (nodeSphere == null) return;
-    debugPrint("updateMaterials sphere node not null");
-    //ByteData textureBytes = await rootBundle.load(newMaterial);
 
+    this.arCoreController.removeNode(nodeName: nodeSphere.name);
+    _addSphere();
+
+    /* debugPrint("updateMaterials sphere node not null");
+    setState(() {
+      testColor = Colors.green;
+      //_selectedMaterial = "assets/imgs/happy.png";
+    });
+    ByteData textureBytes = await rootBundle.load(_selectedMaterial);
     final material = ArCoreMaterial(
-      color: Color.fromARGB(10, 66, 134, 244),
+      color: testColor,
       //textureBytes: textureBytes.buffer.asUint8List()
     );
-    nodeSphere.shape.materials.value = [material];
+    nodeSphere.shape.materials.value = [material]; */
+
   }
 
 }
