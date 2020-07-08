@@ -158,7 +158,9 @@ class _RuntimeMaterialsState extends State<RuntimeMaterials> {
           if(nodeSphere != null) this.arCoreController.removeNode(nodeName: nodeSphere.name);
           if(nodeCube != null) this.arCoreController.removeNode(nodeName: nodeCube.name);
           if(nodeCylinder != null) this.arCoreController.removeNode(nodeName: nodeCylinder.name);
-
+          nodeSphere = null;
+          nodeCube = null; 
+          nodeCylinder = null;
           switch(nameObj) {
             case "sphere" : {
                 _addSphere();
@@ -639,8 +641,15 @@ class _RuntimeMaterialsState extends State<RuntimeMaterials> {
 
   _onArCoreViewCreated(ArCoreController controller, String obj, String decor) async {
     this.arCoreController = controller;
-
-    _addSphere();
+    if (obj == "sphere") {
+      _addSphere();
+    }
+    else if (obj == "cube") {
+      _addCube();
+    }
+    else if (obj == "cylinder") {
+      _addCylinder();
+    }
     //arCoreController.onNodeTap = (name) => onTapHandler(name);
     //arCoreController.onPlaneTap = _handleOnPlaneTap;
 
@@ -705,10 +714,25 @@ class _RuntimeMaterialsState extends State<RuntimeMaterials> {
 
   updateMaterials(/*String newMaterial*/) async {
     debugPrint("updateMaterials");
-    if (nodeSphere == null) return;
+    //if (nodeSphere == null) return;
 
-    this.arCoreController.removeNode(nodeName: nodeSphere.name);
-    _addSphere();
+    //this.arCoreController.removeNode(nodeName: nodeSphere.name);
+    //_addSphere();
+
+    if(nodeSphere != null) {
+      this.arCoreController.removeNode(nodeName: nodeSphere.name);
+      nodeSphere = null;
+      _addSphere();
+    } 
+    if(nodeCube != null) {
+      this.arCoreController.removeNode(nodeName: nodeCube.name);
+      nodeCube = null;
+      _addCube();
+    } 
+    if(nodeCylinder != null){
+      this.arCoreController.removeNode(nodeName: nodeCylinder.name);
+      _addCylinder();
+    } 
 
     /* debugPrint("updateMaterials sphere node not null");
     setState(() {
