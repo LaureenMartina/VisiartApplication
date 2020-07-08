@@ -585,15 +585,14 @@ class _RuntimeMaterialsState extends State<RuntimeMaterials> {
     super.dispose();
   }
 
-  void _handleOnPlaneTap(List<ArCoreHitTestResult> hits) {
-    final hit = hits.first;
-    _addSphere(hit);
-  }
+  // void _handleOnPlaneTap(List<ArCoreHitTestResult> hits) {
+  //   final hit = hits.first;
+  //   _addSphere(hit);
+  // }
 
-  void _addSphere(ArCoreHitTestResult plane) {
-    
+  void _addSphere(/*ArCoreHitTestResult plane*/) {
     ArCoreMaterial material = ArCoreMaterial(
-      color: Color.fromARGB(120, 66, 134, 244)//,
+      color: Color.fromARGB(120, 66, 134, 244),
       //textureBytes: textureBytes.buffer.asUint8List()
     );
 
@@ -602,38 +601,40 @@ class _RuntimeMaterialsState extends State<RuntimeMaterials> {
         radius: 0.2,
         materials: [material]
       ),
-      position: plane.pose.translation,
+      position: vector.Vector3(0, 0, -1.5),//plane.pose.translation,
     );
 
     this.arCoreController.addArCoreNode(nodeSphere);
   }
 
-  void onTapHandler(String name) {
-    print("Flutter: onNodeTap");
-    showDialog<void>(
-      context: context,
-      builder: (BuildContext context) => AlertDialog(
-        content: Row(
-          children: <Widget>[
-            Text('Remove $name?'),
-            // IconButton(
-            //     icon: Icon(
-            //       Icons.delete,
-            //     ),
-            //     onPressed: () {
-            //       arCoreController.removeNode(nodeName: name);
-            //       Navigator.pop(context);
-            //     })
-          ],
-        ),
-      ),
-    );
-  }
+  // void onTapHandler(String name) {
+  //   print("Flutter: onNodeTap");
+  //   showDialog<void>(
+  //     context: context,
+  //     builder: (BuildContext context) => AlertDialog(
+  //       content: Row(
+  //         children: <Widget>[
+  //           Text('Remove $name?'),
+  //           // IconButton(
+  //           //     icon: Icon(
+  //           //       Icons.delete,
+  //           //     ),
+  //           //     onPressed: () {
+  //           //       arCoreController.removeNode(nodeName: name);
+  //           //       Navigator.pop(context);
+  //           //     })
+  //         ],
+  //       ),
+  //     ),
+  //   );
+  // }
 
   _onArCoreViewCreated(ArCoreController controller, String obj, String decor) async {
     this.arCoreController = controller;
-    arCoreController.onNodeTap = (name) => onTapHandler(name);
-    arCoreController.onPlaneTap = _handleOnPlaneTap;
+
+    _addSphere();
+    //arCoreController.onNodeTap = (name) => onTapHandler(name);
+    //arCoreController.onPlaneTap = _handleOnPlaneTap;
 
     //ByteData textureBytes = await rootBundle.load('assets/imgs/' + decor);
     
