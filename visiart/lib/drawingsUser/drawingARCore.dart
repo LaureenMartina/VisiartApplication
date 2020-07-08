@@ -38,7 +38,7 @@ class _RuntimeMaterialsState extends State<RuntimeMaterials> {
 
   int _counterDrawing;
 
-  ArCoreNode nodeSphere, nodeCube, nodeCone, nodeCylinder, nodePyramid, nodeTorus, nodeText;
+  ArCoreNode nodeSphere, nodeCube, nodeCylinder;
 
   Color selectedColor = Colors.black;
   Color pickerColor = Colors.black;
@@ -178,37 +178,14 @@ class _RuntimeMaterialsState extends State<RuntimeMaterials> {
     );
   }
 
-  _getMaterials() {
-    List<Widget> listWidget = List();
-
-    for(var link in materialsLink) {
-      listWidget.add(materialsDisplay(link));
-    }
-    return listWidget;
-  }
-
-   Widget materialsDisplay(String path) {
-    return GestureDetector(
-      onTap: () {
-        setState(() {
-          _selectedMaterial = path;
-        });
-      },
-      child: ClipOval(
-        child: Container(
-          padding: const EdgeInsets.only(bottom: 16.0, top: 20),
-          height: 40,
-          width: 40,
-          decoration: BoxDecoration(
-            image: DecorationImage(
-              fit: BoxFit.fill,
-              image: AssetImage(path)
-            ),
-          ),
-        ),
-      ),
-    );
-  }
+  // _getMaterials() {
+  //   Widget listWidget = ListObjectSelection(
+  //       onTap: (value) {
+  //         _selectedMaterial = value;
+  //       },
+  //   );
+  //   return listWidget;
+  // }
 
   /*=====================================================*/
 
@@ -284,7 +261,6 @@ class _RuntimeMaterialsState extends State<RuntimeMaterials> {
     //print("url: $url");
     _createDrawing(url, userId);
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -471,7 +447,15 @@ class _RuntimeMaterialsState extends State<RuntimeMaterials> {
                       direction: Axis.horizontal,
                       spacing: 10.0,
                       runSpacing: 10.0,
-                      children: _getMaterials(),
+                      children: <Widget>[
+                        ListObjectSelection(
+                            onTap: (value) {
+                              print("value clicked =======================> $value");
+                              _selectedMaterial = value;
+                            },
+                        ),
+                      ],
+                      //children: _getMaterials(),
                     ),
                     visible: _showBottomList,
                   ),
@@ -528,10 +512,10 @@ class _RuntimeMaterialsState extends State<RuntimeMaterials> {
                 },
                 child: Stack(
                   children: <Widget>[
-                  //   ArCoreView(onArCoreViewCreated: (controller) {
-                  //     print("is _changed 2: $_changed");
-                  //     return _onArCoreViewCreated(controller, _selectedObj, _selectedMaterial);
-                  //   }),
+                    // ArCoreView(onArCoreViewCreated: (controller) {
+                    //   print("is _changed 2: $_changed");
+                    //   return _onArCoreViewCreated(controller, _selectedObj, _selectedMaterial);
+                    // }),
                     CustomPaint(
                       size: Size.infinite,
                       painter: DrawingPainter(
@@ -585,13 +569,9 @@ class _RuntimeMaterialsState extends State<RuntimeMaterials> {
     super.dispose();
   }
 
-  // void _handleOnPlaneTap(List<ArCoreHitTestResult> hits) {
-  //   final hit = hits.first;
-  //   _addSphere(hit);
-  // }
-
   void _addSphere(/*ArCoreHitTestResult plane*/) async {
     if(_selectedMaterial == "") _selectedMaterial = "art.png";
+    print("==> _selectedMaterial ================> $_selectedMaterial");
     final ByteData textureBytes = await rootBundle.load('assets/imgs/' + _selectedMaterial);
 
     ArCoreMaterial material = ArCoreMaterial(
@@ -609,28 +589,6 @@ class _RuntimeMaterialsState extends State<RuntimeMaterials> {
 
     this.arCoreController.addArCoreNode(nodeSphere);
   }
-
-  // void onTapHandler(String name) {
-  //   print("Flutter: onNodeTap");
-  //   showDialog<void>(
-  //     context: context,
-  //     builder: (BuildContext context) => AlertDialog(
-  //       content: Row(
-  //         children: <Widget>[
-  //           Text('Remove $name?'),
-  //           // IconButton(
-  //           //     icon: Icon(
-  //           //       Icons.delete,
-  //           //     ),
-  //           //     onPressed: () {
-  //           //       arCoreController.removeNode(nodeName: name);
-  //           //       Navigator.pop(context);
-  //           //     })
-  //         ],
-  //       ),
-  //     ),
-  //   );
-  // }
 
   _onArCoreViewCreated(ArCoreController controller, String obj, String decor) async {
     this.arCoreController = controller;
@@ -721,4 +679,76 @@ class DrawingPoints {
   Paint paint;
   Offset points;
   DrawingPoints({this.points, this.paint});
+}
+
+
+class ListObjectSelection extends StatefulWidget {
+  final Function onTap;
+
+  ListObjectSelection({this.onTap});
+
+  @override
+  _ListObjectSelectionState createState() => _ListObjectSelectionState();
+}
+
+class _ListObjectSelectionState extends State<ListObjectSelection> {
+  String selected;
+
+  List<String> materialsLink = [
+    "assets/imgs/art.png",
+    "assets/imgs/brique.png",
+    "assets/imgs/carte.png",
+    "assets/imgs/cartoon.png",
+    "assets/imgs/citrus.png",
+    "assets/imgs/ecailles.png",
+    "assets/imgs/happy.png",
+    "assets/imgs/hexagone.png",
+    "assets/imgs/leaf.png",
+    "assets/imgs/lotus.png",
+    "assets/imgs/mosaique.png",
+    "assets/imgs/sun.png",
+    "assets/imgs/wave.png",
+    "assets/imgs/zebre.png"
+  ];
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 40.0,
+      child: ListView.builder(
+        itemCount: materialsLink.length,
+        scrollDirection: Axis.horizontal,
+        itemBuilder: (context, index) {
+          return GestureDetector(
+            onTap: () {
+              setState(() {
+                print("materialsLink[index] clicked =======================> $materialsLink[index]");
+                selected = materialsLink[index];
+                print("selected clicked =======================> $selected");
+                widget.onTap(materialsLink[index]);
+              });
+            },
+            child: ClipOval(
+              child: Container(
+                padding: EdgeInsets.only(bottom: 16.0, top: 20),
+                height: 40,
+                width: 40,
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                    fit: BoxFit.fill,
+                    image: AssetImage(materialsLink[index])
+                  ),
+                ),
+              ),
+            ),
+          );
+        },
+      ),
+    );
+  }
 }
