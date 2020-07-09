@@ -81,23 +81,6 @@ class _DrawState extends State<Draw> {
     "text": "assets/imgs/text.png"
   };
 
-  List<String> materialsLink = [
-    "assets/imgs/art.png",
-    "assets/imgs/brique.png",
-    "assets/imgs/carte.png",
-    "assets/imgs/cartoon.png",
-    "assets/imgs/citrus.png",
-    "assets/imgs/ecailles.png",
-    "assets/imgs/happy.png",
-    "assets/imgs/hexagone.png",
-    "assets/imgs/leaf.png",
-    "assets/imgs/lotus.png",
-    "assets/imgs/mosaique.png",
-    "assets/imgs/sun.png",
-    "assets/imgs/wave.png",
-    "assets/imgs/zebre.png"
-  ];
-
   @override
   void didUpdateWidget(Draw widget) {
     super.didUpdateWidget(widget);
@@ -184,7 +167,7 @@ class _DrawState extends State<Draw> {
               break;
             case "torus" : { _addTorus(_selectedMaterial); }
               break;
-            case "text" : { _addText(); }
+            case "text" : { _addText(_selectedMaterial); }
               break;
             default: { _addCube(_selectedMaterial); }
               break;
@@ -304,8 +287,8 @@ class _DrawState extends State<Draw> {
 
     nodeTorus = ARKitNode(
       geometry: ARKitTorus(
-        ringRadius: 0.04,
-        pipeRadius: 0.02,
+        ringRadius: 0.10,
+        pipeRadius: 0.04,
         materials: [material],
       ),
       position: vector.Vector3(0.1, -0.1, -0.5),
@@ -314,56 +297,23 @@ class _DrawState extends State<Draw> {
     this.arkitController.add(nodeTorus);
   }
 
-  void _addText() {
+  void _addText(String decor) {
+    ARKitMaterial material = ARKitMaterial(
+      diffuse: ARKitMaterialProperty(image: decor),
+    );
+
     nodeText = ARKitNode(
       geometry: ARKitText(
-      text: 'Flutter',
+      text: 'Enjoy',
       extrusionDepth: 1,
-      materials: [
-        ARKitMaterial(
-          diffuse: ARKitMaterialProperty(color: Colors.blue),
-        )
-      ],
+      materials: [material]
     ),
-      position: vector.Vector3(-0.3, 0.3, -1.4),
+      position: vector.Vector3(0, 0.1, -1.0),
       scale: vector.Vector3(0.02, 0.02, 0.02),
     );
 
     this.arkitController.add(nodeText);
   }
-
-  // _getMaterials() {
-  //   List<Widget> listWidget = List();
-
-  //   for(var link in materialsLink) {
-  //     listWidget.add(materialsDisplay(link));
-  //   }
-
-  //   return listWidget;
-  // }
-
-  // Widget materialsDisplay(String path) {
-  //   return GestureDetector(
-  //     onTap: () {
-  //       setState(() {
-  //         _selectedMaterial = path;
-  //       });
-  //     },
-  //     child: ClipOval(
-  //       child: Container(
-  //         padding: const EdgeInsets.only(bottom: 16.0, top: 20),
-  //         height: 40,
-  //         width: 40,
-  //         decoration: BoxDecoration(
-  //           image: DecorationImage(
-  //             fit: BoxFit.fill,
-  //             image: AssetImage(path)
-  //           ),
-  //         ),
-  //       ),
-  //     ),
-  //   );
-  // }
   
   void _createDrawing(String urlImage, int userId) async {
     var token = await SharedPref().read("token");
@@ -708,6 +658,7 @@ class _DrawState extends State<Draw> {
     );
   }
 
+
   _onArKitViewCreated(ARKitController controller, String obj, String decor) {
     this.arkitController = controller;
 
@@ -724,7 +675,7 @@ class _DrawState extends State<Draw> {
     } else if (obj == "torus") {
       _addTorus(decor);
     } else {
-      _addText();
+      _addText(decor);
     }
   }
 
@@ -771,7 +722,7 @@ class _DrawState extends State<Draw> {
       case "cylinder": { _addCylinder(_selectedMaterial); } break;
       case "pyramid": { _addPyramid(_selectedMaterial); } break;
       case "torus": { _addTorus(_selectedMaterial); } break;
-      case "text": { _addText(); } break;
+      case "text": { _addText(_selectedMaterial); } break;
       default : { _addCube(_selectedMaterial); } break;
     }
   }
