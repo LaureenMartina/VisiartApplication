@@ -332,38 +332,38 @@ class _DrawState extends State<Draw> {
     this.arkitController.add(nodeText);
   }
 
-  _getMaterials() {
-    List<Widget> listWidget = List();
+  // _getMaterials() {
+  //   List<Widget> listWidget = List();
 
-    for(var link in materialsLink) {
-      listWidget.add(materialsDisplay(link));
-    }
+  //   for(var link in materialsLink) {
+  //     listWidget.add(materialsDisplay(link));
+  //   }
 
-    return listWidget;
-  }
+  //   return listWidget;
+  // }
 
-  Widget materialsDisplay(String path) {
-    return GestureDetector(
-      onTap: () {
-        setState(() {
-          _selectedMaterial = path;
-        });
-      },
-      child: ClipOval(
-        child: Container(
-          padding: const EdgeInsets.only(bottom: 16.0, top: 20),
-          height: 40,
-          width: 40,
-          decoration: BoxDecoration(
-            image: DecorationImage(
-              fit: BoxFit.fill,
-              image: AssetImage(path)
-            ),
-          ),
-        ),
-      ),
-    );
-  }
+  // Widget materialsDisplay(String path) {
+  //   return GestureDetector(
+  //     onTap: () {
+  //       setState(() {
+  //         _selectedMaterial = path;
+  //       });
+  //     },
+  //     child: ClipOval(
+  //       child: Container(
+  //         padding: const EdgeInsets.only(bottom: 16.0, top: 20),
+  //         height: 40,
+  //         width: 40,
+  //         decoration: BoxDecoration(
+  //           image: DecorationImage(
+  //             fit: BoxFit.fill,
+  //             image: AssetImage(path)
+  //           ),
+  //         ),
+  //       ),
+  //     ),
+  //   );
+  // }
   
   void _createDrawing(String urlImage, int userId) async {
     var token = await SharedPref().read("token");
@@ -606,7 +606,13 @@ class _DrawState extends State<Draw> {
                       direction: Axis.horizontal,
                       spacing: 10.0,
                       runSpacing: 10.0,
-                      children: _getMaterials(),
+                      //children: _getMaterials(),
+                      children: <Widget>[
+                        ListMaterialsSelection(
+                          initialMaterialValue: _selectedMaterial,
+                          onMaterialChange: onMaterialChange
+                        ),
+                      ],
                     ),
                     visible: _showBottomList,
                   ),
@@ -702,7 +708,6 @@ class _DrawState extends State<Draw> {
     );
   }
 
-  
   _onArKitViewCreated(ARKitController controller, String obj, String decor) {
     this.arkitController = controller;
 
@@ -720,6 +725,54 @@ class _DrawState extends State<Draw> {
       _addTorus(decor);
     } else {
       _addText();
+    }
+  }
+
+  onMaterialChange(String newMaterial) {
+    if (newMaterial != _selectedMaterial) {
+      _selectedMaterial = newMaterial;
+      updateMaterials();
+    }
+  }
+
+  updateMaterials() async {
+    if(nodeSphere != null) {
+      this.arkitController.remove(nodeSphere.name);
+      nodeSphere = null;
+    } 
+    if(nodeCube != null) {
+      this.arkitController.remove(nodeCube.name);
+      nodeCube = null;
+    } 
+    if(nodeCone != null){
+      this.arkitController.remove(nodeCone.name);
+      nodeCone = null;
+    }
+    if(nodeCylinder != null){
+      this.arkitController.remove(nodeCylinder.name);
+      nodeCylinder = null;
+    } 
+    if(nodePyramid != null){
+      this.arkitController.remove(nodePyramid.name);
+      nodePyramid = null;
+    }
+    if(nodeTorus != null){
+      this.arkitController.remove(nodeTorus.name);
+      nodeTorus = null;
+    } 
+    if(nodeText != null){
+      this.arkitController.remove(nodeText.name);
+      nodeText = null;
+    } 
+
+    switch(_selectedObj) {
+      case "sphere": { _addSphere(_selectedMaterial); } break;
+      case "cone": { _addCone(_selectedMaterial); } break;
+      case "cylinder": { _addCylinder(_selectedMaterial); } break;
+      case "pyramid": { _addPyramid(_selectedMaterial); } break;
+      case "torus": { _addTorus(_selectedMaterial); } break;
+      case "text": { _addText(); } break;
+      default : { _addCube(_selectedMaterial); } break;
     }
   }
 
@@ -761,3 +814,76 @@ class DrawingPoints {
   DrawingPoints({this.points, this.paint});
 }
 
+class ListMaterialsSelection extends StatefulWidget {
+  final String initialMaterialValue;
+  final ValueChanged<String> onMaterialChange;
+
+  ListMaterialsSelection({Key key, this.initialMaterialValue, this.onMaterialChange}): super(key: key);
+
+  @override
+  _ListMaterialsSelectionState createState() => _ListMaterialsSelectionState();
+}
+
+class _ListMaterialsSelectionState extends State<ListMaterialsSelection> {
+  String materialValue;
+
+  List<String> materialsLink = [
+    "assets/imgs/art.png",
+    "assets/imgs/brique.png",
+    "assets/imgs/carte.png",
+    "assets/imgs/cartoon.png",
+    "assets/imgs/citrus.png",
+    "assets/imgs/ecailles.png",
+    "assets/imgs/happy.png",
+    "assets/imgs/hexagone.png",
+    "assets/imgs/leaf.png",
+    "assets/imgs/lotus.png",
+    "assets/imgs/mosaique.png",
+    "assets/imgs/sun.png",
+    "assets/imgs/wave.png",
+    "assets/imgs/zebre.png"
+  ];
+
+  @override
+  void initState() {
+    materialValue = widget.initialMaterialValue;
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 40.0,
+      child: ListView.builder(
+        itemCount: materialsLink.length,
+        scrollDirection: Axis.horizontal,
+        itemBuilder: (context, index) {
+          return GestureDetector(
+            onTap: () {
+              setState(() {
+                widget.onMaterialChange(materialsLink[index]);
+                setState(() {
+                  materialValue = materialsLink[index];
+                });
+              });
+            },
+            child: ClipOval(
+              child: Container(
+                padding: EdgeInsets.only(bottom: 16.0, top: 20),
+                margin: EdgeInsets.only(left: 5, right: 5),
+                height: 45,
+                width: 45,
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                    fit: BoxFit.fill,
+                    image: AssetImage(materialsLink[index])
+                  ),
+                ),
+              ),
+            ),
+          );
+        },
+      ),
+    );
+  }
+}
