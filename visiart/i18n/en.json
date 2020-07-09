@@ -111,6 +111,8 @@
   "account_username": "Username",
   "account_phone": "Phone",
   "account_language": "Language",
-  "account_save": "Save !"
-  
+  "account_save": "Save !",
+
+  "ml_createRoom": "There is no room in honor to this painter, create one ?",
+  "ml_goToRoom": "A room in his honor already exists, go to it ?"
 }

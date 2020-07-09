@@ -1,32 +1,45 @@
 import 'dart:convert';
 import 'dart:ui';
+<<<<<<< HEAD
+=======
+
+import 'package:flutter/foundation.dart';
+>>>>>>> 8ee59fc... WIP
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:visiart/chatRooms/roomsList.dart';
 import 'package:visiart/config/SharedPref.dart';
-import 'package:visiart/models/Hobby.dart';
-import 'package:visiart/localization/AppLocalization.dart';
 import 'package:visiart/config/config.dart' as globals;
+<<<<<<< HEAD
 import 'package:custom_switch/custom_switch.dart';
 import 'package:visiart/models/Room.dart';
 
+=======
+import 'package:visiart/localization/AppLocalization.dart';
+import 'package:visiart/models/Hobby.dart';
+>>>>>>> 8ee59fc... WIP
 
 SharedPref sharedPref = SharedPref();
-class RoomsCreateScreen extends StatefulWidget { 
+
+class RoomsCreateScreen extends StatefulWidget {
+  RoomsCreateScreen({Key key, this.defaultRoomName = ""}) : super(key: key);
+  final String defaultRoomName;
+
   @override
   _RoomsCreateScreenState createState() => _RoomsCreateScreenState();
 }
-
 
 class _RoomsCreateData {
   String roomName = '';
   String roomThematic = '';
 }
-class _RoomsCreateScreenState extends State<RoomsCreateScreen> {
 
-   
+class _RoomsCreateScreenState extends State<RoomsCreateScreen> {
   final GlobalKey<FormState> _formKey = new GlobalKey<FormState>();
   _RoomsCreateData _data = new _RoomsCreateData();
+
+  bool nameReadOnly;
+  String formHintName;
 
   List<Hobby> listHobbies = [];
   var selectedHobby;
@@ -43,6 +56,7 @@ class _RoomsCreateScreenState extends State<RoomsCreateScreen> {
   @override
   void initState() {
     getListHobbies();
+<<<<<<< HEAD
     
     SharedPref().readInteger("counterInvested").then((value) => {
         setState(() {
@@ -55,6 +69,17 @@ class _RoomsCreateScreenState extends State<RoomsCreateScreen> {
     });
 
     super.initState();
+=======
+    nameReadOnly = widget.defaultRoomName != "";
+    if (nameReadOnly) {
+      formHintName = widget.defaultRoomName;
+      isPrivate = false;
+      isDisplayed = true;
+    } else {
+      formHintName = 'name';
+    }
+      super.initState();
+>>>>>>> 8ee59fc... WIP
   }
 
   void createRoom(String newRoomName, String newRoomThematic) async {
@@ -70,7 +95,11 @@ class _RoomsCreateScreenState extends State<RoomsCreateScreen> {
         "user": userId, 
     };
     final response = await http.post(
+<<<<<<< HEAD
         globals.API_ROOMS,
+=======
+        globals.API_ROOMS_CREATE,
+>>>>>>> 8ee59fc... WIP
         headers: {
             'Content-Type': 'application/json',
             'Accept': 'application/json',
@@ -136,7 +165,11 @@ class _RoomsCreateScreenState extends State<RoomsCreateScreen> {
         List jsonResponse = json.decode(response.body);
         var items = jsonResponse.map((hobby) => new Hobby.fromJson(hobby)).toList();
         setState(() {
-          this.listHobbies.addAll(items);
+          if (nameReadOnly) {
+            this.listHobbies.addAll(items.where((element) => element.id == 7));
+          } else {
+            this.listHobbies.addAll(items);
+          }
         });
     } else {
       throw Exception('Failed to load hobbies from API');
@@ -169,13 +202,25 @@ class _RoomsCreateScreenState extends State<RoomsCreateScreen> {
           key: this._formKey,
           child: ListView(
             children: <Widget>[
+<<<<<<< HEAD
               SizedBox(height: 25,),
               TextFormField(
                 keyboardType: TextInputType.text,
                 decoration: new InputDecoration(
                   hintText: AppLocalizations.of(context).translate("roomsCreate_roomName"),
+=======
+              new TextFormField(
+                readOnly: nameReadOnly,
+                keyboardType: TextInputType.text,
+                decoration: new InputDecoration(
+                  hintText: formHintName,
+                  //labelText: 'Nom du salon'
+>>>>>>> 8ee59fc... WIP
                 ),
                 onSaved: (String value) {
+                  if (nameReadOnly) {
+                    value = widget.defaultRoomName;
+                  }
                   this._data.roomName = value;
                 }
               ),
@@ -199,6 +244,7 @@ class _RoomsCreateScreenState extends State<RoomsCreateScreen> {
                   },
                 ),
               ),
+<<<<<<< HEAD
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
@@ -233,6 +279,35 @@ class _RoomsCreateScreenState extends State<RoomsCreateScreen> {
                     },
                   ),
                 ],
+=======
+              new Text(AppLocalizations.of(context).translate("roomsCreate_showRomm")),
+              new Switch(
+                
+                value: isDisplayed,
+                onChanged: (value){
+                  if (nameReadOnly) return;
+                  setState(() {
+                    isDisplayed=value;
+                  });
+                },
+                activeTrackColor: Colors.lightGreenAccent,
+                activeColor: Colors.green,
+                
+              ),
+              new Text(AppLocalizations.of(context).translate("roomsCreate_privateRomm")),
+              new Switch(
+                
+                value: isPrivate,
+                onChanged: (value){
+                  if (nameReadOnly) return;
+                  setState(() {
+                    isPrivate=value;
+                  });
+                },
+                activeTrackColor: Colors.lightGreenAccent,
+                activeColor: Colors.green,
+                
+>>>>>>> 8ee59fc... WIP
               ),
               SizedBox(height: 20,),
               Container(

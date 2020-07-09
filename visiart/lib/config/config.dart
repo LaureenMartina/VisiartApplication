@@ -30,6 +30,8 @@ const String API_ROOMS_MESSAGE_ID_ROOM = API_BASE_URL + "/room-messages?room=";
 const String API_USER_ROOM_PRIVATE = API_BASE_URL + "/user-room-privates";
 const String API_ROOMS_NO_PRIVATE_DISPLAY = API_BASE_URL + "/rooms?private=false&display=true";
 const String API_USER_ROOM_PRIVATE_FETCH_ROOM_USER = API_BASE_URL + "/user-room-privates?room.display=true&user.id=";
+const String API_ROOMS_CREATE = API_BASE_URL + "/rooms";
+const String API_ML = API_BASE_URL + "/ml";
 
 const API_HEADERS = {
   'Content-Type': 'application/json',
