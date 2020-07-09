@@ -8,6 +8,7 @@ import 'package:visiart/chatRooms/roomsList.dart';
 import 'package:visiart/customFormUser/userInterests.dart';
 import 'package:visiart/dashboard/menu.dart';
 import 'package:visiart/drawingsUser/drawing.dart';
+import 'package:visiart/drawingsUser/drawingARCore.dart';
 import 'package:visiart/drawingsUser/myDrawings.dart';
 import 'package:visiart/events/eventsList.dart';
 import 'package:visiart/home.dart';
@@ -56,7 +57,7 @@ var _routes = <String, WidgetBuilder> {
   "awards": (BuildContext context) => AwardsListScreen(),
   "account": (BuildContext context) => AccountScreen(),
   "drawing": (BuildContext context) => Draw(),
-  "drawingAndroid": (BuildContext context) => AwardsListScreen(),
+  "drawingAndroid": (BuildContext context) => DrawArCore(),
   "myDrawings": (BuildContext context) => MyDrawings(),
   "events": (BuildContext context) => EventsListScreen(),
   "rooms": (BuildContext context) => RoomsListPage(),
