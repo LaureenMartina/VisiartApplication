@@ -31,11 +31,10 @@ class _DrawState extends State<Draw> {
   String _animationState = "simple";
 
   bool _detectAR = false;
-  bool _changed = false;
   bool _showBottomList = false;
   bool _loading = false;
 
-  int _counterDrawing;
+  int _counterDrawing = 0;
 
   ARKitNode nodeSphere, nodeCube, nodeCone, nodeCylinder, nodePyramid, nodeTorus, nodeText;
 
@@ -80,6 +79,20 @@ class _DrawState extends State<Draw> {
     "torus": "assets/imgs/torus.png",
     "text": "assets/imgs/text.png"
   };
+
+  @override
+  void initState() {
+    SharedPref().readInteger("counterDrawing").then((value) => {
+        setState(() {
+          if(value == 99999) {
+            _counterDrawing = 0;
+          } else {
+            _counterDrawing = value;
+          }
+        })
+    });
+    super.initState();
+  }
 
   @override
   void didUpdateWidget(Draw widget) {
@@ -173,7 +186,6 @@ class _DrawState extends State<Draw> {
               break;
           }
 
-          _changed = true;
           _selectedObj = nameObj;
         });
       },
@@ -341,7 +353,7 @@ class _DrawState extends State<Draw> {
       setState(() {
         _counterDrawing += 1;
         if(_counterDrawing <= COUNTER_DRAWING) {
-          SharedPref().saveInteger("_counterDrawing", _counterDrawing);
+          SharedPref().saveInteger("counterDrawing", _counterDrawing);
         }
       });
     } else if (response.statusCode == 400) {

@@ -7,7 +7,6 @@ import 'package:visiart/config/SharedPref.dart';
 import 'package:visiart/config/config.dart';
 import 'package:visiart/customFormUser/userInterests.dart';
 import 'package:visiart/localization/AppLocalization.dart';
-import 'package:visiart/signUp/privacyPolicy.dart';
 import 'package:visiart/utils/AlertUtils.dart';
 import 'package:visiart/utils/FormUtils.dart';
 import 'package:visiart/models/User.dart';
