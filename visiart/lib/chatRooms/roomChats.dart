@@ -47,14 +47,14 @@ class _RoomsChatPageState extends State<RoomsChatPage> {
     var _userid;
     var _userAdded;
 
-    int _counterReagent;
+    int _counterReagent = 0;
 
     _RoomsChatPageState(Room room, UserRoomPrivate userRoomPrivate) {
       this.room = room;
       this.userRoomPrivate = userRoomPrivate;
     }
 
-    ScrollController _controller = ScrollController(initialScrollOffset: 50.0);
+    ScrollController _scrollController = ScrollController(initialScrollOffset: 50.0);
     TextEditingController textEditingController = new TextEditingController();
     List<RoomMessage> messageList = [];
 
@@ -62,6 +62,7 @@ class _RoomsChatPageState extends State<RoomsChatPage> {
     
     @override
     void initState() {
+      super.initState();
       sharedPref.readInteger(globals.API_USER_ID_KEY).then((value) => {
         setState(() {
             this._userid = value;
@@ -73,15 +74,22 @@ class _RoomsChatPageState extends State<RoomsChatPage> {
           if(value == 99999) {
             _counterReagent = 0;
           } else {
-            print("value: $value");
             _counterReagent = value;
           }
-          print("_counterReagent: $_counterReagent");
         })
       });
 
       this._fetchRoomMessages();
-      super.initState();
+      Timer.periodic(Duration(milliseconds: 500), (timer) {
+        if (mounted) {
+            _listviewScrollToBottom();
+            timer.cancel();
+        }
+      });
+    }
+
+    void _listviewScrollToBottom() {
+      _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
     }
 
     Future<List<RoomMessage>> _fetchRoomMessages() async {
@@ -105,6 +113,7 @@ class _RoomsChatPageState extends State<RoomsChatPage> {
           this.setState(() {
             this.messageList.addAll(list);
           });
+          
         return list;
       } else {
         throw Exception('Failed to load rooms from API');
@@ -225,12 +234,15 @@ class _RoomsChatPageState extends State<RoomsChatPage> {
             textEditingController.text = '';
         });
         /*Timer(Duration(milliseconds: 500),
-            () => _controller.jumpTo(_controller.position.maxScrollExtent)); */
+            () => _scrollController.jumpTo(_scrollController.position.maxScrollExtent)); */
       }
     }
 
     AppBar _privateRoomOwner() {
       return AppBar(
+              backgroundColor: Color.fromRGBO(82, 59, 92, 1.0),
+              elevation: 10,
+              automaticallyImplyLeading: false,
               title: Text(this.room.name),
               actions: <Widget>[
                   // action button
@@ -286,6 +298,9 @@ class _RoomsChatPageState extends State<RoomsChatPage> {
 
     AppBar _publicRoomOwner() {
       return AppBar(
+        backgroundColor: Color.fromRGBO(82, 59, 92, 1.0),
+              elevation: 10,
+              automaticallyImplyLeading: false,
               title: Text(this.room.name),
               actions: <Widget>[
                   // action button
@@ -331,6 +346,9 @@ class _RoomsChatPageState extends State<RoomsChatPage> {
     }
     AppBar _privateRoom() {
       return AppBar(
+            backgroundColor: Color.fromRGBO(82, 59, 92, 1.0),
+              elevation: 10,
+              automaticallyImplyLeading: false,
               title: Text(this.room.name),
               actions: <Widget>[
                   // action button
@@ -346,6 +364,9 @@ class _RoomsChatPageState extends State<RoomsChatPage> {
     }
     AppBar _publicRoom() {
       return AppBar(
+          backgroundColor: Color.fromRGBO(82, 59, 92, 1.0),
+          elevation: 10,
+          automaticallyImplyLeading: false,
           title: Text(this.room.name),
       );
     }
@@ -365,8 +386,6 @@ class _RoomsChatPageState extends State<RoomsChatPage> {
     }        
                               
     Widget buildMessageTextField() {
-      /* print("this.room.enabled");
-      print(this.room.enabled); */
       if (this.room.enabled != null && !this.room.enabled) {
         return Container();
       }
@@ -397,7 +416,7 @@ class _RoomsChatPageState extends State<RoomsChatPage> {
                     onTap: () {
                         /*  Timer(
                         Duration(milliseconds: 300),
-                        () => _controller.jumpTo(_controller.position.maxScrollExtent)); */
+                        () => _scrollController.jumpTo(_scrollController.position.maxScrollExtent)); */
                     },
                     ),
                     
@@ -427,7 +446,7 @@ class _RoomsChatPageState extends State<RoomsChatPage> {
             Column(
               children: <Widget>[
                 Flexible(
-                  child: _roomsListMeesageView(this.messageList, this._userid, this.allMessage),
+                  child: _roomsListMeesageView(this.messageList, this._userid, this.allMessage, this._scrollController),
                 ),
                 buildMessageTextField(),
               ],
@@ -438,8 +457,11 @@ class _RoomsChatPageState extends State<RoomsChatPage> {
     }                   
 }
 
-ListView _roomsListMeesageView(data, userId, allMessage) {
+ListView _roomsListMeesageView(data, userId, allMessage, controller) {
     return ListView.builder(
+
+      controller: controller,
+      shrinkWrap: true,
         itemCount: data.length,
         itemBuilder: (context, index) {
             if (data[index].userId == userId) {
@@ -450,7 +472,7 @@ ListView _roomsListMeesageView(data, userId, allMessage) {
                     padding: EdgeInsets.all(12.0),
                     margin: EdgeInsets.all(5.0),
                     decoration: BoxDecoration(
-                        color: Colors.deepPurple[300],
+                        color: Color.fromRGBO(252, 233, 216, 1.0),
                         borderRadius: BorderRadius.circular(23.0),
                     ),
                     child: ListTile(
@@ -465,7 +487,7 @@ ListView _roomsListMeesageView(data, userId, allMessage) {
                     padding: EdgeInsets.all(12.0),
                     margin: EdgeInsets.all(5.0),
                     decoration: BoxDecoration(
-                        color: Colors.green[500],
+                        color: Color.fromRGBO(173, 165, 177, 0.2),
                         borderRadius: BorderRadius.circular(23.0),
                     ),
                     child: ListTile(
@@ -474,5 +496,7 @@ ListView _roomsListMeesageView(data, userId, allMessage) {
                     ),
                 );
             }
+
+      
     });
 }

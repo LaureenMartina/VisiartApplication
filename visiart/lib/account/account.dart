@@ -1,11 +1,12 @@
 import 'dart:convert';
-
+import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'package:visiart/config/SharedPref.dart';
 import 'package:visiart/config/config.dart';
+import 'package:visiart/localization/AppLocalization.dart';
 import 'package:visiart/utils/AlertUtils.dart';
 import 'package:visiart/utils/FormUtils.dart';
 
@@ -19,11 +20,13 @@ class _AccountState extends State<AccountScreen> {
   final _fNameController = TextEditingController();
   final _usernameController = TextEditingController();
   final _phoneController = TextEditingController();
+  final _languageController = TextEditingController();
 
   final _nameFocus = FocusNode();
   final _fNameFocus = FocusNode();
   final _usernameFocus = FocusNode();
   final _phoneFocus = FocusNode();
+  final _languageFocus = FocusNode();
 
   void _getMyInfo() async {
     http.get(API_USERS_ME, headers: {
@@ -86,6 +89,7 @@ class _AccountState extends State<AccountScreen> {
   @override
   Widget build(BuildContext context) {
     _getMyInfo();
+    _languageController.text = window.locale.languageCode.toUpperCase();
 
     final nameField = Padding(
       padding: EdgeInsets.all(10),
@@ -100,7 +104,7 @@ class _AccountState extends State<AccountScreen> {
         decoration: InputDecoration(
             icon: Icon(Icons.person),
             contentPadding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
-            labelText: "Nom",
+            labelText: AppLocalizations.of(context).translate("account_name"),
             border:
                 OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))),
       ),
@@ -119,7 +123,7 @@ class _AccountState extends State<AccountScreen> {
         decoration: InputDecoration(
             icon: Icon(Icons.person),
             contentPadding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
-            labelText: "Prénom",
+            labelText: AppLocalizations.of(context).translate("account_firstname"),
             border:
                 OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))),
       ),
@@ -138,7 +142,7 @@ class _AccountState extends State<AccountScreen> {
         decoration: InputDecoration(
             icon: Icon(Icons.person),
             contentPadding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
-            labelText: "Pseudo",
+            labelText: AppLocalizations.of(context).translate("account_username"),
             border:
                 OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))),
       ),
@@ -158,21 +162,36 @@ class _AccountState extends State<AccountScreen> {
         decoration: InputDecoration(
             icon: Icon(Icons.phone_android),
             contentPadding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
-            labelText: "Télephone",
-            border:
-                OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))),
+            labelText: AppLocalizations.of(context).translate("account_phone"),
+            border: OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))),
+      ),
+    );
+
+    final languageField = Padding(
+      padding: EdgeInsets.all(10),
+      child: TextFormField(
+        controller: _languageController,
+        textInputAction: TextInputAction.done,
+        focusNode: _languageFocus,
+        keyboardType: TextInputType.phone,
+        style: TextStyle(fontFamily: 'Montserrat', fontSize: 18.0),
+        decoration: InputDecoration(
+          icon: Icon(Icons.language),
+          contentPadding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
+          labelText: AppLocalizations.of(context).translate("account_language"),
+          border: OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))),
       ),
     );
 
     final saveButton = Material(
       elevation: 5.0,
       borderRadius: BorderRadius.circular(30.0),
-      color: Color(0xff01A0C7),
+      color: Color.fromRGBO(82, 59, 92, 0.8),
       child: MaterialButton(
         onPressed: () {
           _onClickSaveButton();
         },
-        child: Text("Save !",
+        child: Text(AppLocalizations.of(context).translate("account_save"),
             textAlign: TextAlign.center,
             style: TextStyle(fontFamily: 'Montserrat', fontSize: 18.0)
                 .copyWith(color: Colors.white, fontWeight: FontWeight.bold)),
@@ -182,16 +201,32 @@ class _AccountState extends State<AccountScreen> {
     return Scaffold(
       resizeToAvoidBottomPadding: false,
       appBar: AppBar(
-        title: const Text("Mes données"),
+        backgroundColor: Color.fromRGBO(82, 59, 92, 1.0),
+        title: Text(AppLocalizations.of(context).translate("account_title")),
       ),
-      body: Column(
-        children: <Widget>[
-          nameField,
-          fNameField,
-          usernamenameField,
-          phoneField,
-          saveButton,
-        ],
+      body: GestureDetector(
+        onTap: () {
+          FocusScopeNode currentFocus = FocusScope.of(context);
+          if (!currentFocus.hasPrimaryFocus) {
+            currentFocus.unfocus();
+          }
+        },
+        child: Column(
+          children: <Widget>[
+            SizedBox(height: 40,),
+            nameField,
+            SizedBox(height: 10,),
+            fNameField,
+            SizedBox(height: 10,),
+            usernamenameField,
+            SizedBox(height: 10,),
+            phoneField,
+            SizedBox(height: 10,),
+            languageField,
+            SizedBox(height: 30,),
+            saveButton,
+          ],
+        ),
       ),
     );
   }

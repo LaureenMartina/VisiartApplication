@@ -103,14 +103,13 @@ class _HomeState extends State<HomeScreen> {
       _sharedPref.save("token", token);
       List<dynamic> hobbies = jsonResponse['user']['hobbies'];
       if (hobbies.isEmpty) {
-        //_sharedPref.saveBool("curiousBadgeEnabled", true);
         _navigateToUserInterestsScreen();
       } else {
+        SharedPref().saveBool("curiousBadgeEnabled", true);
         _navigateToDashboard();
       }
     } else if (response.statusCode == 400){
       String errorMsg = jsonResponse['message'][0]['messages'][0]['message'];
-      //debugPrint("errormsg: " + errorMsg);
       showAlert(context, "Error", errorMsg, "Close");
       throw Exception(errorMsg);
     } else {
@@ -120,8 +119,7 @@ class _HomeState extends State<HomeScreen> {
 
   Future<String> _signInWithGoogle() async {
     final GoogleSignInAccount googleSignInAccount = await _googleSignIn.signIn();
-    final GoogleSignInAuthentication googleSignInAuthentication =
-    await googleSignInAccount.authentication;
+    final GoogleSignInAuthentication googleSignInAuthentication = await googleSignInAccount.authentication;
 
     final AuthCredential credential = GoogleAuthProvider.getCredential(
       accessToken: googleSignInAuthentication.accessToken,
@@ -129,6 +127,7 @@ class _HomeState extends State<HomeScreen> {
     );
 
     final AuthResult authResult = await _auth.signInWithCredential(credential);
+
     final FirebaseUser user = authResult.user;
 
     //assert(user.email != null);
@@ -147,14 +146,12 @@ class _HomeState extends State<HomeScreen> {
       _login(email, password);
     }
 
-
     assert(user.uid == currentUser.uid);
 
     return 'signInWithGoogle succeeded: $user';
   }
 
  void _createUser(String newUsername, String newName, String newEmail, String newPassword) async {
-
     Map data = {
       'username': newUsername,
       'name': newName,
@@ -330,18 +327,6 @@ class _HomeState extends State<HomeScreen> {
                                   fontSize: 22,
                                   fontStyle: FontStyle.italic,
                                   letterSpacing: 2,
-                                  // shadows: [
-                                  //   Shadow(
-                                  //     color: Colors.red[200],
-                                  //     blurRadius: 5,
-                                  //     offset: Offset(1, 0.0),
-                                  //   ),
-                                  //   Shadow(
-                                  //     color: Colors.orange[200],
-                                  //     blurRadius: 5,
-                                  //     offset: Offset(1, 0.0),
-                                  //   ),
-                                  // ],
                                 ),
                             ),
                         ),
@@ -383,15 +368,7 @@ class _HomeState extends State<HomeScreen> {
                     children: <Widget>[
                       GestureDetector(
                         onTap: () {
-                          _signInWithGoogle().whenComplete(() {
-                            Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (context) {
-                                  return UserInterestsScreen();
-                                },
-                              ),
-                            );
-                          });
+                          _signInWithGoogle().whenComplete(() {});
                         },
                         child: Container(
                           width: 100,

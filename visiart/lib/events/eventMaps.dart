@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'dart:ui' as ui;
+import 'package:location/location.dart' as loc;
 
 class EventMaps extends StatefulWidget {
   final List<double> coordinate;
@@ -25,6 +26,9 @@ class EventMapsState extends State<EventMaps> {
   CameraPosition _cameraPosition;
   List<Marker> _markers = <Marker>[];
   BitmapDescriptor _userIcon;
+  loc.PermissionStatus _permissionGranted;
+  bool _serviceEnabled;
+  loc.Location location;
   
   EventMapsState(List<double> coordinate, String eventName) {
     this.coordinate = coordinate;
@@ -43,8 +47,27 @@ class EventMapsState extends State<EventMaps> {
     );
   }
 
+  _askPermissions() async {
+    _serviceEnabled = await location.serviceEnabled();
+      if (!_serviceEnabled) {
+        _serviceEnabled = await location.requestService();
+        if (!_serviceEnabled) {
+          return;
+        }
+      }
+
+    _permissionGranted = await location.hasPermission();
+      if (_permissionGranted == loc.PermissionStatus.denied) {
+        _permissionGranted = await location.requestPermission();
+        if (_permissionGranted != loc.PermissionStatus.granted) {
+          return;
+        }
+      }
+  }
+
   @override
   void initState() {
+    _askPermissions();
     _getLocation();
     _getValidMakerIcon().then((value) => {
       _userIcon = BitmapDescriptor.fromBytes(value)

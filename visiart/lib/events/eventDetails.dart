@@ -9,6 +9,7 @@ import 'package:visiart/events/eventMaps.dart';
 import 'package:visiart/localization/AppLocalization.dart';
 import 'package:visiart/models/Event.dart';
 import 'package:http/http.dart' as http;
+import 'package:visiart/models/UserEventFavorite.dart';
 
 SharedPref sharedPref = SharedPref();
 
@@ -24,19 +25,21 @@ class EventDetails extends StatefulWidget {
 class _EventDetailsState extends State<EventDetails> {
 
   var _favorite = false;
-  int _idEvent;
-  var specificEvent = List<Event>();
+  int _idEvent, _idUserEventFavorite;
+
+  List<Event> specificEvent = List<Event>();
+  List<UserEventFavorite> _getAllFavorite = List<UserEventFavorite>();
+  List<UserEventFavorite> _allFavoriteEvents = List<UserEventFavorite>();
 
   @override
   void initState() {
+    _getFavoriteEvent();
     super.initState();
   }
 
   Future<void> _launchedUrlSite(url) async {
     if(await canLaunch(url)) {
       await launch(url, forceSafariVC: false, forceWebView: true);
-    }else{
-      print("error open url");
     }
   }
 
@@ -44,48 +47,113 @@ class _EventDetailsState extends State<EventDetails> {
     setState(() {
       if (_favorite) {
         _favorite = false;
-        _setFavoriteEvent(_favorite);
+        _removeFavoriteEvent();
       } else {
         _favorite = true;
         _setFavoriteEvent(_favorite);
       }
-      
     });
   }
 
+  void _getFavoriteEvent() async {
+    String token = await sharedPref.read(API_TOKEN_KEY);
+    int userId = await sharedPref.readInteger("userId");
+
+    final response = await http.get(API_USER_EVENT_FAVORITES_USERID + userId.toString(),
+      headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          'Authorization': 'Bearer $token',
+      }
+    );
+    
+    if(response.statusCode == 200) {
+      List jsonResponse = json.decode(response.body);
+      setState(() {
+        _getAllFavorite.addAll(
+            jsonResponse.map((favori) => new UserEventFavorite.fromJson(favori)).toList());
+        _allFavoriteEvents.addAll(_getAllFavorite);
+      });
+
+    } else {
+      throw Exception('Failed to get all user-event-favorite in API');
+    }
+  }
+  
   void _setFavoriteEvent(changeFavorite) async{
-    var token = await sharedPref.read(API_TOKEN_KEY);
-    final response = await http.put(API_EVENTS + "/" + _idEvent.toString(),
+    String token = await sharedPref.read(API_TOKEN_KEY);
+    int userId = await sharedPref.readInteger("userId");
+
+    var data = {
+      "user": {
+        "id": userId
+      },
+      "event": {
+        "id": _idEvent
+      },
+      'favorite' : true 
+    };
+
+    final response = await http.post(API_USER_EVENT_FAVORITES,
       headers: {
           'Content-Type': 'application/json',
           'Accept': 'application/json',
           'Authorization': 'Bearer $token',
       },
-      body: jsonEncode(<String, bool>{
-        'favorite' : changeFavorite
-      }),
+      body: jsonEncode(data),
     );
     
     if(response.statusCode == 200) {
-      print(response.statusCode);
     } else {
-      throw Exception('Failed to update event in API');
+      throw Exception('Failed to create user-event-favorite in API');
+    }
+  }
+
+  void _removeFavoriteEvent() async {
+    String token = await sharedPref.read(API_TOKEN_KEY);
+
+    if(_allFavoriteEvents != []) {
+      for(int i = 0; i < _allFavoriteEvents.length; i++){
+        if(_allFavoriteEvents[i].event.id == _idEvent && _allFavoriteEvents[i].favorite == true) {
+          _favorite = false;
+          _idUserEventFavorite = _allFavoriteEvents[i].id;
+        }
+      }
+    }
+
+    final response = await http.delete(API_USER_EVENT_FAVORITES + "/" + _idUserEventFavorite.toString(),
+      headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          'Authorization': 'Bearer $token',
+      }
+    );
+    
+    if(response.statusCode == 200) {
+    } else {
+      throw Exception('Failed to delete user-event-favorite in API');
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    //print("id: ${widget.specificEvent.id}");
     String city = widget.specificEvent.city;
     String urlSite = widget.specificEvent.urlSite;
     _idEvent = widget.specificEvent.id;
-    
-    bool favoriteEvent = widget.specificEvent.favorite;
-    if(favoriteEvent == null) _favorite = false;
-
     List<double> geoJson = widget.specificEvent.geoJson;
+    
+    if(_allFavoriteEvents != []) {
+      for(int i = 0; i < _allFavoriteEvents.length; i++){
+        if(_allFavoriteEvents[i].event.id == _idEvent && _allFavoriteEvents[i].favorite == true) {
+          _favorite = true;
+        }else{
+          _favorite = false;
+        }
+      }
+    }
 
-    return Scaffold(
+    return 
+    Scaffold(
       body: Column(
         children: <Widget>[
           Stack(
@@ -134,7 +202,9 @@ class _EventDetailsState extends State<EventDetails> {
                         color: Colors.red[500],
                         iconSize: 35,
                         onPressed: () {
-                          _changeFavorite();
+                          setState(() {
+                            _changeFavorite();
+                          });
                         },
                       ),
                     ),

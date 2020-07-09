@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:ui';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:visiart/chatRooms/roomChats.dart';
 import 'package:visiart/config/SharedPref.dart';
 import 'package:visiart/models/Room.dart';
 import 'package:http/http.dart' as http;
@@ -28,9 +29,9 @@ class _RoomsUpdateScreenState extends State<RoomsUpdateScreen> {
       this.room = room;
     }
 
-  Future<http.Response> updateRoom(String newRoomName) async{
+  void updateRoom(String newRoomName) async{
     var token = await sharedPref.read(globals.API_TOKEN_KEY);
-    return http.put(
+    var response = await http.put(
         globals.API_ROOMS + '/' + this.room.id.toString(),
         headers: {
             'Content-Type': 'application/json',
@@ -41,6 +42,15 @@ class _RoomsUpdateScreenState extends State<RoomsUpdateScreen> {
             'name': newRoomName,
         }),
     );
+
+    if (response.statusCode == 200) {
+          Map<String, dynamic> map = json.decode(response.body);
+          var list = new Room.fromJson(map);
+           Navigator.push(context, 
+                    MaterialPageRoute(builder: (context) => RoomsChatsScreen(room: list)));
+      } else {
+        throw Exception('Failed to load rooms from API');
+      }
   }
 
   void submit() {
@@ -84,8 +94,8 @@ class _RoomsUpdateScreenState extends State<RoomsUpdateScreen> {
                   ),
                   onPressed: () => {
                     this.submit(),
-                    Navigator.pop(context)
-                    
+                    //Navigator.pop(context)
+                   
                   },
                   color: Colors.blue,
                 ),

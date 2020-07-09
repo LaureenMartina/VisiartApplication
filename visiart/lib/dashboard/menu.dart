@@ -5,6 +5,7 @@ import 'package:visiart/chatRooms/roomsList.dart';
 import 'package:visiart/config/SharedPref.dart';
 import 'package:visiart/dashboard/dashboard.dart';
 import 'package:visiart/events/eventsList.dart';
+import 'package:visiart/home.dart';
 import 'package:visiart/localization/AppLocalization.dart';
 
 
@@ -35,7 +36,7 @@ class _MenuBoardScreenState extends State<MenuBoardScreen> {
   }
 
   void _navigateToLogin() {
-    Navigator.pushNamed(context, 'connexion');
+    Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => HomeScreen()));
   }
 
   ListTile _account() => ListTile(
@@ -46,7 +47,7 @@ class _MenuBoardScreenState extends State<MenuBoardScreen> {
       style: TextStyle(fontSize: 12, fontStyle: FontStyle.italic
       ),
     ),
-    leading: Icon(Icons.face, size: 40, color: Colors.teal[300]),
+    leading: Icon(Icons.fingerprint, size: 40, color: Colors.teal[700]),
     onTap: () { _navigateToAccount(); },
   );
 
@@ -58,12 +59,12 @@ class _MenuBoardScreenState extends State<MenuBoardScreen> {
       style: TextStyle(fontSize: 12, fontStyle: FontStyle.italic
       ),
     ),
-    leading: Icon(Icons.announcement, size: 40, color: Colors.indigoAccent[400]),
+    leading: Icon(Icons.info_outline, size: 40, color: Colors.lightBlue[900]),
     onTap: () {  },
   );
 
   ListTile _drawingUser() => ListTile(
-    title: Text(AppLocalizations.of(context).translate('menu_myDrawings'), // TODO change name
+    title: Text(AppLocalizations.of(context).translate('menu_myDrawings'),
       style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Color.fromRGBO(82, 59, 92, 1.0)),
     ),
     subtitle: Text(AppLocalizations.of(context).translate('menu_myDrawingsSubtitle'),
@@ -82,7 +83,7 @@ class _MenuBoardScreenState extends State<MenuBoardScreen> {
       style: TextStyle(fontSize: 12, fontStyle: FontStyle.italic
       ),
     ),
-    leading: Icon(Icons.launch, size: 40, color: Colors.brown[900],),
+    leading: Icon(Icons.directions_run, size: 40, color: Colors.brown[900],),
     onTap: () {  
       _sharedPref.remove("token");
       _navigateToLogin();
@@ -120,26 +121,31 @@ class _MenuBoardScreenState extends State<MenuBoardScreen> {
           children: <Widget>[
             UserAccountsDrawerHeader(
               accountName: Text(_username,
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: Colors.white, letterSpacing: 2),
+                style: TextStyle(
+                  fontWeight: FontWeight.bold, fontSize: 18, 
+                  color: Color.fromRGBO(252, 233, 216, 1.0), letterSpacing: 2),
               ),
               accountEmail: Text(_mail,
-                style: TextStyle(fontSize: 12, color: Colors.cyanAccent[100]),
+                style: TextStyle(fontSize: 14, color: Color.fromRGBO(252, 233, 216, 1.0), fontWeight: FontWeight.w500),
               ),
               currentAccountPicture: CircleAvatar(
-                backgroundColor: Colors.white,
-                foregroundColor: Colors.indigo[900],
-                child: Text(_pictureText),
+                backgroundColor: Color.fromRGBO(82, 59, 92, 0.8),
+                child: Text(_pictureText.toUpperCase(), 
+                  style: TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.w500),
+                ),
               ),
               decoration: BoxDecoration(
                 image: DecorationImage(
-                  image: AssetImage("assets/imgs/pattern.png"),
-                  fit: BoxFit.fill
+                  colorFilter: ColorFilter.mode(Colors.black.withOpacity(0.2), BlendMode.colorBurn),
+                  image: AssetImage("assets/imgs/menu.png"),
+                  fit: BoxFit.fitWidth
                 )
               ),
             ),
             _account(),
-            _about(),
             _drawingUser(),
+            _about(),
+            SizedBox(height: 15,),
             Divider(
               indent: 10,
               endIndent: 10,
@@ -152,27 +158,24 @@ class _MenuBoardScreenState extends State<MenuBoardScreen> {
       ),
       body: _children[_selectedIndex],
       bottomNavigationBar: BottomNavigationBar(
-        items: const <BottomNavigationBarItem>[
+        items: <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(
-              Icons.forum, 
-              //color: Colors.lightBlue,
+              Icons.forum,
             ),
-            title: Text('Salons'),
+            title: Text(AppLocalizations.of(context).translate("menu_bottomNavBar_Room")),
           ),
           BottomNavigationBarItem(
             icon: Icon(
               Icons.home,
-              //color: Colors.brown
             ),
-            title: Text('Home'),
+            title: Text(AppLocalizations.of(context).translate("menu_bottomNavBar_Home")),
           ),
           BottomNavigationBarItem(
             icon: Icon(
               Icons.local_play,
-              //color: Colors.deepOrange,
             ),
-            title: Text('Events'),
+            title: Text(AppLocalizations.of(context).translate("menu_bottomNavBar_Event")),
           ),
         ],
         currentIndex: _selectedIndex,

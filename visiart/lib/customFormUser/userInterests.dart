@@ -89,6 +89,7 @@ class _UserInterestsScreenState extends State<UserInterestsScreen> {
 
     return Scaffold(
       appBar: AppBar(
+        leading: Container(),
         backgroundColor: Color.fromRGBO(82, 59, 92, 1.0),
         brightness: Brightness.light,
         elevation: 2,
