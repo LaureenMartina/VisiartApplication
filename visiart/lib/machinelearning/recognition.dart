@@ -53,44 +53,55 @@ class _PaintingRecognitionScreenState extends State<PaintingRecognitionScreen> {
       },
       body: json.encode(data),
     )
-        .then((response) {
-      Map<String, dynamic> jsonResponse = json.decode(response.body);
-      Room room = new Room.fromJson(jsonResponse['room']);
-      setState(() {
-        _painter = jsonResponse['painter'];
-      });
-      bool roomAlreadyExist = jsonResponse['roomAlreadyExists'];
-      String alertBody;
-      if (roomAlreadyExist) {
-        alertBody = AppLocalizations.of(ctx).translate("ml_goToRoom");
-      } else {
-        alertBody = AppLocalizations.of(ctx).translate("ml_createRoom");
-      }
-
-      showAlert(
-        ctx,
-        _painter,
-        alertBody,
-        AppLocalizations.of(ctx).translate("yes"),
-        () {
-          if (roomAlreadyExist) {
-            Navigator.push(
-                ctx,
-                MaterialPageRoute(
-                  builder: (BuildContext context) => RoomsChatPage(
-                    room: room,
-                  )));
-          } else {
-            Navigator.push(
-                ctx,
-                MaterialPageRoute(
-                    builder: (BuildContext context) => RoomsCreateScreen(
-                          defaultRoomName: _painter,
-                        )));
+      .then((response) {
+        if (response.statusCode == 200) {
+          Map<String, dynamic> jsonResponse = json.decode(response.body);
+          Room room;
+          if (jsonResponse.containsKey('room')) {
+            room = new Room.fromJson(jsonResponse['room']);
           }
-        },
-        AppLocalizations.of(ctx).translate("no"),
-      );
+          setState(() {
+            _painter = jsonResponse['painter'];
+          });
+          bool roomAlreadyExist = jsonResponse['roomAlreadyExists'];
+          String alertBody;
+          if (roomAlreadyExist) {
+            alertBody = AppLocalizations.of(ctx).translate("ml_goToRoom");
+          } else {
+            alertBody = AppLocalizations.of(ctx).translate("ml_createRoom");
+          }
+
+          showAlert(
+            ctx,
+            _painter,
+            alertBody,
+            AppLocalizations.of(ctx).translate("yes"),
+            () {
+              if (roomAlreadyExist) {
+                Navigator.push(
+                    ctx,
+                    MaterialPageRoute(
+                      builder: (BuildContext context) => RoomsChatPage(
+                        room: room,
+                      )));
+              } else {
+                Navigator.push(
+                    ctx,
+                    MaterialPageRoute(
+                        builder: (BuildContext context) => RoomsCreateScreen(
+                              defaultRoomName: _painter,
+                            )));
+              }
+            },
+            AppLocalizations.of(ctx).translate("no"),
+          );
+        } else {
+          setState(() {
+            _painter = AppLocalizations.of(ctx).translate("none");
+          });
+        }
+
+        
     });
   }
 
