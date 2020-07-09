@@ -16,20 +16,18 @@ import 'package:visiart/localization/AppLocalization.dart';
 
 enum SelectedMode { StrokeWidth, Opacity, Color, Object3D, Material }
 
-class RuntimeMaterials extends StatefulWidget {
+class DrawArCore extends StatefulWidget {
   @override
-  _RuntimeMaterialsState createState() => _RuntimeMaterialsState();
+  _DrawArCoreState createState() => _DrawArCoreState();
 }
 
-class _RuntimeMaterialsState extends State<RuntimeMaterials> {
+class _DrawArCoreState extends State<DrawArCore> {
 
   GlobalKey _globalKey = GlobalKey();
   final _scaffoldKey = GlobalKey<ScaffoldState>();
   Widget _imgHolder;
 
   String _animationState = "simple";
-
-  Color testColor = Colors.red;
 
   ArCoreController arCoreController;
 
@@ -44,7 +42,7 @@ class _RuntimeMaterialsState extends State<RuntimeMaterials> {
 
   Color selectedColor = Colors.black;
   Color pickerColor = Colors.black;
-  Color color = Colors.yellow;
+  Color _baseColor = Colors.yellow;
 
   double strokeWidth = 5.0;
   double opacity = 1.0;
@@ -80,45 +78,24 @@ class _RuntimeMaterialsState extends State<RuntimeMaterials> {
     "cylinder": "assets/imgs/cylinder.png"
   };
 
-  List<String> materialsLink = [
-    "assets/imgs/art.png",
-    "assets/imgs/brique.png",
-    "assets/imgs/carte.png",
-    "assets/imgs/cartoon.png",
-    "assets/imgs/citrus.png",
-    "assets/imgs/ecailles.png",
-    "assets/imgs/happy.png",
-    "assets/imgs/hexagone.png",
-    "assets/imgs/leaf.png",
-    "assets/imgs/lotus.png",
-    "assets/imgs/mosaique.png",
-    "assets/imgs/sun.png",
-    "assets/imgs/wave.png",
-    "assets/imgs/zebre.png"
-  ];
-
   void _counterAnimation() {
     setState(() {
       if(_animationState == "simple") {
          _animationState = "ar";
          _detectAR = true;
-         print("_detectAR $_detectAR");
       }else{
         _animationState = "simple";
         _detectAR = false;
-        print("_detectAR $_detectAR");
       }
     });
   }
 
-  /*=====================================================*/
   _getColorList() {
     List<Widget> listWidget = List();
 
     for (Color color in colors) {
       listWidget.add(colorCircle(color));
     }
-
     return listWidget;
   }
 
@@ -197,10 +174,9 @@ class _RuntimeMaterialsState extends State<RuntimeMaterials> {
     );
   }
 
-  /*=====================================================*/
 
   @override
-  void didUpdateWidget(RuntimeMaterials widget) {
+  void didUpdateWidget(DrawArCore widget) {
     super.didUpdateWidget(widget);
   }
 
@@ -226,9 +202,8 @@ class _RuntimeMaterialsState extends State<RuntimeMaterials> {
 
     Map<String, dynamic> jsonResponse = json.decode(response.body);
 
+    // TODO save counter for Awards
     if (response.statusCode == 200) {
-      print("API_REGISTER ==> 200");
-      //print(response.toString());
       setState(() {
         _counterDrawing += 1;
         print("_counterDrawing: $_counterDrawing");
@@ -242,7 +217,6 @@ class _RuntimeMaterialsState extends State<RuntimeMaterials> {
 
     } else if (response.statusCode == 400) {
       String errorMsg = jsonResponse['message'][0]['messages'][0]['message'];
-      print("errormsg: " + errorMsg);
       throw Exception(errorMsg);
     } else {
       throw Exception('Failed to create drawing from API');
@@ -268,7 +242,7 @@ class _RuntimeMaterialsState extends State<RuntimeMaterials> {
     
     final ref = FirebaseStorage.instance.ref().child(fileName);
     var url = await ref.getDownloadURL();
-    //print("url: $url");
+
     _createDrawing(url, userId);
   }
 
@@ -358,7 +332,7 @@ class _RuntimeMaterialsState extends State<RuntimeMaterials> {
                         onPressed: () {
                           setState(() async {
                             String path = await NativeScreenshot.takeScreenshot();
-                            debugPrint('Screenshot taken, path: $path');
+                            //debugPrint('Screenshot taken, path: $path');
 
                             if( path == null || path.isEmpty ) {
                               _scaffoldKey.currentState.showSnackBar(
@@ -374,10 +348,9 @@ class _RuntimeMaterialsState extends State<RuntimeMaterials> {
                               SnackBar(
                                 content: Text(AppLocalizations.of(context).translate("myDrawings_infoSave"))
                               )
-                            ); // showSnackBar()
+                            );
 
                             File imgFile = File(path);
-                            //print("imgFile: $imgFile");
                             //_imgHolder = Image.file(imgFile);
 
                             setState(() {});
@@ -433,12 +406,10 @@ class _RuntimeMaterialsState extends State<RuntimeMaterials> {
                     )
                     : Slider(
                       value: strokeWidth,
-                      max: 50.0, //(selectedMode == SelectedMode.StrokeWidth) ? 50.0 : 1.0,
+                      max: 50.0,
                       min: 0.0,
                       onChanged: (val) {
                         setState(() {
-                          // print("value slider : $strokeWidth");
-                          // print("value slider : ${(selectedMode == SelectedMode.StrokeWidth)}");
                           if (selectedMode == SelectedMode.StrokeWidth)
                             strokeWidth = val;
                         });
@@ -458,12 +429,11 @@ class _RuntimeMaterialsState extends State<RuntimeMaterials> {
                       spacing: 10.0,
                       runSpacing: 10.0,
                       children: <Widget>[
-                        ListObjectSelection(
+                        ListMaterialsSelection(
                           initialMaterialValue: _selectedMaterial,
                           onMaterialChange: onMaterialChange
                         ),
                       ],
-                      //children: _getMaterials(),
                     ),
                     visible: _showBottomList,
                   ),
@@ -482,7 +452,7 @@ class _RuntimeMaterialsState extends State<RuntimeMaterials> {
               child: ArCoreView(
                 enableTapRecognizer: true,
                 onArCoreViewCreated: (controller) {
-                  return _onArCoreViewCreated(controller, _selectedObj, _selectedMaterial);
+                  return _onArCoreViewCreated(controller, _selectedObj);
                 }
               ),
             ),
@@ -520,10 +490,6 @@ class _RuntimeMaterialsState extends State<RuntimeMaterials> {
                 },
                 child: Stack(
                   children: <Widget>[
-                    // ArCoreView(onArCoreViewCreated: (controller) {
-                    //   print("is _changed 2: $_changed");
-                    //   return _onArCoreViewCreated(controller, _selectedObj, _selectedMaterial);
-                    // }),
                     CustomPaint(
                       size: Size.infinite,
                       painter: DrawingPainter(
@@ -537,27 +503,15 @@ class _RuntimeMaterialsState extends State<RuntimeMaterials> {
             :
               GestureDetector(
                 onPanUpdate: (details) {
-                  setState(() {
-                    print("update details: $details");
-                    
-                  });
+                  setState(() {});
                 },
                 onPanStart: (details) {
-                  setState(() {
-                    print("start details: $details");
-                    
-                  });
+                  setState(() {});
                 },
                 onPanEnd: (details) {
-                  setState(() {
-                    print("end details: $details");
-                  });
+                  setState(() {});
                 },
-                child: Center(//ArCoreView(onArCoreViewCreated: (controller) {
-                    //print("is _changed 3: $_changed");
-                    //return _onArCoreViewCreated(controller, _selectedObj, _selectedMaterial);
-                  //}
-                ),
+                child: Center(),
               ),
 
             (_loading) ? Center(child: CircularProgressIndicator(),) : Center(),
@@ -577,13 +531,11 @@ class _RuntimeMaterialsState extends State<RuntimeMaterials> {
     super.dispose();
   }
 
-  void _addSphere(/*ArCoreHitTestResult plane*/) async {
-    //if(_selectedMaterial == "") _selectedMaterial = "assets/imgs/art.png";
-    print("==> _selectedMaterial ================> $_selectedMaterial");
+  void _addSphere() async {
     final ByteData textureBytes = await rootBundle.load(_selectedMaterial);
 
     ArCoreMaterial material = ArCoreMaterial(
-      color: testColor,
+      color: _baseColor,
       textureBytes: textureBytes.buffer.asUint8List()
     );
 
@@ -592,18 +544,17 @@ class _RuntimeMaterialsState extends State<RuntimeMaterials> {
         radius: 0.2,
         materials: [material]
       ),
-      position: vector.Vector3(0, 0, -1.5),//plane.pose.translation,
+      position: vector.Vector3(0, 0, -1.5),
     );
 
     this.arCoreController.addArCoreNode(nodeSphere);
   }
 
   void _addCube() async {
-    print("==> _selectedMaterial ================> $_selectedMaterial");
     final ByteData textureBytes = await rootBundle.load(_selectedMaterial);
 
     ArCoreMaterial material = ArCoreMaterial(
-      color: testColor,
+      color: _baseColor,
       textureBytes: textureBytes.buffer.asUint8List()
     );
 
@@ -612,18 +563,17 @@ class _RuntimeMaterialsState extends State<RuntimeMaterials> {
         materials: [material],
         size: vector.Vector3(0.2, 0.2, 0.2),
       ),
-      position: vector.Vector3(0, 0, -1.5),//plane.pose.translation,
+      position: vector.Vector3(0, 0, -1.5),
     );
 
     this.arCoreController.addArCoreNode(nodeCube);
   }
 
   void _addCylinder() async {
-    print("==> _selectedMaterial ================> $_selectedMaterial");
     final ByteData textureBytes = await rootBundle.load(_selectedMaterial);
 
     ArCoreMaterial material = ArCoreMaterial(
-      color: testColor,
+      color: _baseColor,
       textureBytes: textureBytes.buffer.asUint8List()
     );
 
@@ -633,13 +583,13 @@ class _RuntimeMaterialsState extends State<RuntimeMaterials> {
         height: 0.15,
         materials: [material],
       ),
-      position: vector.Vector3(0, 0, -1.5),//plane.pose.translation,
+      position: vector.Vector3(0, 0, -1.5),
     );
 
     this.arCoreController.addArCoreNode(nodeCylinder);
   }
 
-  _onArCoreViewCreated(ArCoreController controller, String obj, String decor) async {
+  _onArCoreViewCreated(ArCoreController controller, String obj) async {
     this.arCoreController = controller;
     if (obj == "sphere") {
       _addSphere();
@@ -650,74 +600,17 @@ class _RuntimeMaterialsState extends State<RuntimeMaterials> {
     else if (obj == "cylinder") {
       _addCylinder();
     }
-    //arCoreController.onNodeTap = (name) => onTapHandler(name);
-    //arCoreController.onPlaneTap = _handleOnPlaneTap;
-
-    //ByteData textureBytes = await rootBundle.load('assets/imgs/' + decor);
-    
-    // ArCoreMaterial material = ArCoreMaterial(
-    //   color: Color.fromARGB(120, 66, 134, 244),
-    //   //textureBytes: textureBytes.buffer.asUint8List()
-    // );
-
-    // switch (obj) {
-    //   case "sphere": {
-    //       print("sphere"); 
-    //       nodeSphere = ArCoreNode(
-    //         shape: ArCoreSphere(
-    //           radius: 0.2,
-    //           materials: [material]
-    //         ),
-    //         position: vector.Vector3(0, 0, -0.5),
-    //       );
-
-    //       this.arCoreController.addArCoreNode(nodeSphere);
-    //     }
-    //     break;
-    //   case "cylinder": {
-    //     print("test cylindre");
-    //     nodeCylinder = ArCoreNode(
-    //       shape: ArCoreCylinder(
-      //       radius: 0.08,
-      //       height: 0.15,
-      //       materials: [material],
-      //     ),
-      //     position: vector.Vector3(0, -0.1, -0.5),
-      //   );
-
-      //   this.arCoreController.addArCoreNode(nodeCylinder);
-      // }
-      //   break;
-      // default: {
-      //     print("carré");
-      //     print("choice: $_selectedObj");
-      //     nodeCube = ArCoreNode(
-      //       shape: ArCoreCube(
-      //         materials: [material],
-      //         size: vector.Vector3(0.2, 0.2, 0.2),
-      //       ),
-      //       position: vector.Vector3(0, 0, -0.5),
-      //     );
-
-    //       this.arCoreController.addArCoreNode(nodeCube);
-    //     }
-    //     break;
-    // }
   }
 
   onMaterialChange(String newMaterial) {
     if (newMaterial != _selectedMaterial) {
       _selectedMaterial = newMaterial;
-      updateMaterials(/*newMaterial*/);
+      updateMaterials();
     }
   }
 
-  updateMaterials(/*String newMaterial*/) async {
-    debugPrint("updateMaterials");
-    //if (nodeSphere == null) return;
-
-    //this.arCoreController.removeNode(nodeName: nodeSphere.name);
-    //_addSphere();
+  updateMaterials() async {
+    //debugPrint("updateMaterials");
 
     if(nodeSphere != null) {
       this.arCoreController.removeNode(nodeName: nodeSphere.name);
@@ -733,19 +626,6 @@ class _RuntimeMaterialsState extends State<RuntimeMaterials> {
       this.arCoreController.removeNode(nodeName: nodeCylinder.name);
       _addCylinder();
     } 
-
-    /* debugPrint("updateMaterials sphere node not null");
-    setState(() {
-      testColor = Colors.green;
-      //_selectedMaterial = "assets/imgs/happy.png";
-    });
-    ByteData textureBytes = await rootBundle.load(_selectedMaterial);
-    final material = ArCoreMaterial(
-      color: testColor,
-      //textureBytes: textureBytes.buffer.asUint8List()
-    );
-    nodeSphere.shape.materials.value = [material]; */
-
   }
 
 }
@@ -781,17 +661,17 @@ class DrawingPoints {
 }
 
 
-class ListObjectSelection extends StatefulWidget {
+class ListMaterialsSelection extends StatefulWidget {
   final String initialMaterialValue;
   final ValueChanged<String> onMaterialChange;
 
-  ListObjectSelection({Key key, this.initialMaterialValue, this.onMaterialChange}): super(key: key);
+  ListMaterialsSelection({Key key, this.initialMaterialValue, this.onMaterialChange}): super(key: key);
 
   @override
-  _ListObjectSelectionState createState() => _ListObjectSelectionState();
+  _ListMaterialsSelectionState createState() => _ListMaterialsSelectionState();
 }
 
-class _ListObjectSelectionState extends State<ListObjectSelection> {
+class _ListMaterialsSelectionState extends State<ListMaterialsSelection> {
   String materialValue;
 
   List<String> materialsLink = [
@@ -828,13 +708,10 @@ class _ListObjectSelectionState extends State<ListObjectSelection> {
           return GestureDetector(
             onTap: () {
               setState(() {
-                print("materialsLink[index] clicked =======================> $materialsLink[index]");
-                //materialValue = materialsLink[index];
-                //print("selected clicked =======================> $selected");
                 widget.onMaterialChange(materialsLink[index]);
-                  setState(() {
-                    materialValue = materialsLink[index];
-                  });
+                setState(() {
+                  materialValue = materialsLink[index];
+                });
               });
             },
             child: ClipOval(
