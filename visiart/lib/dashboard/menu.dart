@@ -54,14 +54,14 @@ class _MenuBoardScreenState extends State<MenuBoardScreen> {
   );
 
   ListTile _recognition() => ListTile(
-    title: Text("Painting Reco",
+    title: Text(AppLocalizations.of(context).translate("ml_paintingReco"),
       style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
     ),
-    subtitle: Text(AppLocalizations.of(context).translate('menu_storedData'),
+    subtitle: Text(AppLocalizations.of(context).translate('ml_paintingRecoDetail'),
       style: TextStyle(fontSize: 12, fontStyle: FontStyle.italic
       ),
     ),
-    leading: Icon(Icons.face, size: 40, color: Colors.teal[300]),
+    leading: Icon(Icons.brush, size: 40, color: Colors.teal[300]),
     onTap: () { _navigateToPaintingRecognition(); },
   );
 

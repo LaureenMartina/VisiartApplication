@@ -25,7 +25,7 @@ class PaintingRecognitionScreen extends StatefulWidget {
 
 class _PaintingRecognitionScreenState extends State<PaintingRecognitionScreen> {
   File _image;
-  String _painter = "COUCOU";
+  String _painter = "";
   final picker = ImagePicker();
 
   BuildContext ctx;
@@ -35,7 +35,7 @@ class _PaintingRecognitionScreenState extends State<PaintingRecognitionScreen> {
 
     setState(() {
       _image = File(pickedFile.path);
-      _painter = "Calculating...";
+      _painter = AppLocalizations.of(ctx).translate("ml_calculating");
     });
 
     final imageBytes = File(pickedFile.path).readAsBytesSync();
@@ -54,7 +54,6 @@ class _PaintingRecognitionScreenState extends State<PaintingRecognitionScreen> {
       body: json.encode(data),
     )
         .then((response) {
-      debugPrint("response: " + response.body);
       Map<String, dynamic> jsonResponse = json.decode(response.body);
       Room room = new Room.fromJson(jsonResponse['room']);
       setState(() {
@@ -74,7 +73,6 @@ class _PaintingRecognitionScreenState extends State<PaintingRecognitionScreen> {
         alertBody,
         AppLocalizations.of(ctx).translate("yes"),
         () {
-          debugPrint("COUCOU: " + "click on yes");
           if (roomAlreadyExist) {
             Navigator.push(
                 ctx,
@@ -83,7 +81,6 @@ class _PaintingRecognitionScreenState extends State<PaintingRecognitionScreen> {
                     room: room,
                   )));
           } else {
-            debugPrint("COUCOU: " + "push controller");
             Navigator.push(
                 ctx,
                 MaterialPageRoute(
@@ -112,9 +109,11 @@ class _PaintingRecognitionScreenState extends State<PaintingRecognitionScreen> {
         ),
         body: Center(
             child: Column(
-          children: <Widget>[
-            Text(_painter),
-            _image == null ? Text('No image selected.') : Image.file(_image),
+              children: <Widget>[
+                SizedBox(height: 20),
+                Text(_painter),
+                SizedBox(height: 20),
+                _image == null ? Text(AppLocalizations.of(context).translate("ml_noImage")) : Image.file(_image),
           ],
         )),
         floatingActionButton: FloatingActionButton(

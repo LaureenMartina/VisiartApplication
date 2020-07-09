@@ -115,6 +115,10 @@
   "account_language": "Langue",
   "account_save": "Enregistrer !",
 
-  "ml_createRoom": "Il n'y a pas de salon en l'honeur de ce peintre, en créer une ?",
-  "ml_goToRoom": "Un salon existe un salon en l'honeur de ce peintre, y aller ?"
+  "ml_createRoom": "Il n'y a pas de salon en l'honneur de ce peintre, en créer une ?",
+  "ml_goToRoom": "Un salon existe un salon en l'honneur de ce peintre, y aller ?",
+  "ml_paintingReco": "Reconaissance de peintre",
+  "ml_calculating": "Recherche....",
+  "ml_paintingRecoDetail": "Machine Learning",
+  "ml_noImage": "Aucune image selectionnée"
 }
