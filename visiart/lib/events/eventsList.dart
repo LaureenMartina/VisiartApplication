@@ -67,7 +67,6 @@ class _EventsListScreenState extends State<EventsListScreen> {
   void _fetchEvents(int _count) async {
     var token = await sharedPref.read("token");
 
-    // TODO fix pb 
     final response = await http.get(API_BASE_URL + "/events?_limit=" + _count.toString() + "&language=" + userLanguage, headers: {
       'Content-Type': 'application/json',
       'Accept': 'application/json',

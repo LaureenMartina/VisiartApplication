@@ -31,11 +31,10 @@ class _DrawState extends State<Draw> {
   String _animationState = "simple";
 
   bool _detectAR = false;
-  bool _changed = false;
   bool _showBottomList = false;
   bool _loading = false;
 
-  int _counterDrawing;
+  int _counterDrawing = 0;
 
   ARKitNode nodeSphere, nodeCube, nodeCone, nodeCylinder, nodePyramid, nodeTorus, nodeText;
 
@@ -81,38 +80,37 @@ class _DrawState extends State<Draw> {
     "text": "assets/imgs/text.png"
   };
 
-  List<String> materialsLink = [
-    "assets/imgs/art.png",
-    "assets/imgs/brique.png",
-    "assets/imgs/carte.png",
-    "assets/imgs/cartoon.png",
-    "assets/imgs/citrus.png",
-    "assets/imgs/ecailles.png",
-    "assets/imgs/happy.png",
-    "assets/imgs/hexagone.png",
-    "assets/imgs/leaf.png",
-    "assets/imgs/lotus.png",
-    "assets/imgs/mosaique.png",
-    "assets/imgs/sun.png",
-    "assets/imgs/wave.png",
-    "assets/imgs/zebre.png"
-  ];
+  @override
+  void initState() {
+    SharedPref().readInteger("counterDrawing").then((value) => {
+        setState(() {
+          if(value == 99999) {
+            _counterDrawing = 0;
+          } else {
+            _counterDrawing = value;
+          }
+        })
+    });
+    super.initState();
+  }
+
+  @override
+  void didUpdateWidget(Draw widget) {
+    super.didUpdateWidget(widget);
+  }
 
   void _counterAnimation() {
     setState(() {
       if(_animationState == "simple") {
          _animationState = "ar";
          _detectAR = true;
-         print("_detectAR $_detectAR");
       }else{
         _animationState = "simple";
         _detectAR = false;
-        print("_detectAR $_detectAR");
       }
     });
   }
 
-  /*=====================================================*/
   _getColorList() {
     List<Widget> listWidget = List();
 
@@ -155,10 +153,40 @@ class _DrawState extends State<Draw> {
     return GestureDetector(
       onTap: () {
         setState(() {
-          print("_changed: $_changed");
-          _changed = true;
+          if(nodeSphere != null) this.arkitController.remove(nodeSphere.name);
+          if(nodeCube != null) this.arkitController.remove(nodeCube.name);
+          if(nodeCylinder != null) this.arkitController.remove(nodeCylinder.name);
+          if(nodeCone != null) this.arkitController.remove(nodeCone.name);
+          if(nodePyramid != null) this.arkitController.remove(nodePyramid.name);
+          if(nodeTorus != null) this.arkitController.remove(nodeTorus.name);
+          if(nodeText != null) this.arkitController.remove(nodeText.name);
+
+          nodeSphere = null;
+          nodeCube = null; 
+          nodeCylinder = null;
+          nodeCone = null;
+          nodePyramid = null;
+          nodeTorus = null;
+          nodeText = null;
+
+          switch(nameObj) {
+            case "sphere" : { _addSphere(_selectedMaterial); }
+              break;
+            case "cone" : { _addCone(_selectedMaterial); }
+              break;
+            case "cylinder" : { _addCylinder(_selectedMaterial); }
+              break;
+            case "pyramid" : { _addPyramid(_selectedMaterial); }
+              break;
+            case "torus" : { _addTorus(_selectedMaterial); }
+              break;
+            case "text" : { _addText(_selectedMaterial); }
+              break;
+            default: { _addCube(_selectedMaterial); }
+              break;
+          }
+
           _selectedObj = nameObj;
-          print("object cliqué: $_selectedObj");
         });
       },
       child: ClipOval(
@@ -177,169 +205,128 @@ class _DrawState extends State<Draw> {
     );
   }
 
-  _getMaterials() {
-    List<Widget> listWidget = List();
-
-    for(var link in materialsLink) {
-      listWidget.add(materialsDisplay(link));
-    }
-
-    return listWidget;
-  }
-
-  Widget materialsDisplay(String path) {
-    return GestureDetector(
-      onTap: () {
-        setState(() {
-          _selectedMaterial = path;
-        });
-      },
-      child: ClipOval(
-        child: Container(
-          padding: const EdgeInsets.only(bottom: 16.0, top: 20),
-          height: 40,
-          width: 40,
-          decoration: BoxDecoration(
-            image: DecorationImage(
-              fit: BoxFit.fill,
-              image: AssetImage(path)
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  /*=====================================================*/
-
-  _onArKitViewCreated(ARKitController controller, String obj, String decor) {
-    this.arkitController = controller;
-    
+  void _addSphere(String decor) {
     ARKitMaterial material = ARKitMaterial(
       diffuse: ARKitMaterialProperty(image: decor),
     );
-    
-    //print("choice: $obj");
-    //print("decor: $decor");
 
-    switch (obj) {
-      case "sphere": {
-          print("sphere"); 
-          nodeSphere = ARKitNode(
-            geometry: ARKitSphere(
-              radius: 0.2,
-              materials: [material]
-            ),
-            position: vector.Vector3(0, 0, -0.5),
-          );
+    nodeSphere = ARKitNode(
+      geometry: ARKitSphere(
+        radius: 0.2,
+        materials: [material]
+      ),
+      position: vector.Vector3(0, 0, -0.5),
+    );
 
-          //this.arkitController.remove(nodeCube.name);
-          this.arkitController.add(nodeSphere);
-        }
-        break;
-      case "cone": {
-          print("cone");
-          nodeCone = ARKitNode(
-            geometry: ARKitCone(
-              topRadius: 0,
-              bottomRadius: 0.10,
-              height: 0.18,
-              materials: [material],
-            ),
-            position: vector.Vector3(0, -0.1, -0.5),
-          );
-
-          this.arkitController.add(nodeCone);
-        }
-        break;
-      case "cylinder": {
-        print("test cylindre");
-        nodeCylinder = ARKitNode(
-          geometry: ARKitCylinder(
-            radius: 0.08,
-            height: 0.15,
-            materials: [material],
-          ),
-          position: vector.Vector3(0, -0.1, -0.5),
-        );
-
-        this.arkitController.add(nodeCylinder);
-      }
-        break;
-      case "pyramid": {
-        print("test pyramide");
-        nodePyramid = ARKitNode(
-          geometry: ARKitPyramid(
-            width: 0.20,
-            height: 0.20,
-            length: 0.20,
-            materials: [material],
-          ),
-          position: vector.Vector3(0, -0.05, -0.5),
-        );
-
-        this.arkitController.add(nodePyramid);
-      }
-        break;
-      case "torus": {
-        print("test donut");
-        nodeTorus = ARKitNode(
-          geometry: ARKitTorus(
-            ringRadius: 0.04,
-            pipeRadius: 0.02,
-            materials: [material],
-          ),
-          position: vector.Vector3(0.1, -0.1, -0.5),
-        );
-
-        this.arkitController.add(nodeTorus);
-      }
-        break;
-      case "text": {
-        print("test TEXT");
-        nodeText = ARKitNode(
-          geometry: ARKitText(
-          text: 'Flutter',
-          extrusionDepth: 1,
-          materials: [
-            ARKitMaterial(
-              diffuse: ARKitMaterialProperty(color: Colors.blue),
-            )
-          ],
-        ),
-          position: vector.Vector3(-0.3, 0.3, -1.4),
-          scale: vector.Vector3(0.02, 0.02, 0.02),
-        );
-
-        this.arkitController.add(nodeText);
-      }
-        break;
-      default: {
-          print("carré");
-          print("choice: $_selectedObj");
-          nodeCube = ARKitNode(
-            geometry: ARKitBox(
-              materials: [material],
-              width: 0.2,
-              height: 0.2,
-              length: 0.2
-            ),
-            position: vector.Vector3(0, 0, -0.5),
-          );
-
-          this.arkitController.add(nodeCube);
-        }
-        break;
-    }
+    this.arkitController.add(nodeSphere);
   }
 
+  void _addCube(String decor) {
+    ARKitMaterial material = ARKitMaterial(
+      diffuse: ARKitMaterialProperty(image: decor),
+    );
 
-  @override
-  void didUpdateWidget(Draw widget) {
-    super.didUpdateWidget(widget);
+    nodeCube = ARKitNode(
+      geometry: ARKitBox(
+        materials: [material],
+        width: 0.2,
+        height: 0.2,
+        length: 0.2
+      ),
+      position: vector.Vector3(0, 0, -0.5),
+    );
+
+    this.arkitController.add(nodeCube);
+  }
+
+  void _addCone(String decor) {
+    ARKitMaterial material = ARKitMaterial(
+      diffuse: ARKitMaterialProperty(image: decor),
+    );
+
+    nodeCone = ARKitNode(
+      geometry: ARKitCone(
+        topRadius: 0,
+        bottomRadius: 0.10,
+        height: 0.18,
+        materials: [material],
+      ),
+      position: vector.Vector3(0, -0.1, -0.5),
+    );
+
+    this.arkitController.add(nodeCone);
+  }
+
+  void _addCylinder(String decor) {
+    ARKitMaterial material = ARKitMaterial(
+      diffuse: ARKitMaterialProperty(image: decor),
+    );
+
+    nodeCylinder = ARKitNode(
+      geometry: ARKitCylinder(
+        radius: 0.08,
+        height: 0.15,
+        materials: [material],
+      ),
+      position: vector.Vector3(0, -0.1, -0.5),
+    );
+
+    this.arkitController.add(nodeCylinder);
+  }
+
+  void _addPyramid(String decor) {
+    ARKitMaterial material = ARKitMaterial(
+      diffuse: ARKitMaterialProperty(image: decor),
+    );
+
+    nodePyramid = ARKitNode(
+      geometry: ARKitPyramid(
+        width: 0.20,
+        height: 0.20,
+        length: 0.20,
+        materials: [material],
+      ),
+      position: vector.Vector3(0, -0.05, -0.5),
+    );
+
+    this.arkitController.add(nodePyramid);
+  }
+
+  void _addTorus(String decor) {
+    ARKitMaterial material = ARKitMaterial(
+      diffuse: ARKitMaterialProperty(image: decor),
+    );
+
+    nodeTorus = ARKitNode(
+      geometry: ARKitTorus(
+        ringRadius: 0.10,
+        pipeRadius: 0.04,
+        materials: [material],
+      ),
+      position: vector.Vector3(0.1, -0.1, -0.5),
+    );
+
+    this.arkitController.add(nodeTorus);
+  }
+
+  void _addText(String decor) {
+    ARKitMaterial material = ARKitMaterial(
+      diffuse: ARKitMaterialProperty(image: decor),
+    );
+
+    nodeText = ARKitNode(
+      geometry: ARKitText(
+      text: 'Enjoy',
+      extrusionDepth: 1,
+      materials: [material]
+    ),
+      position: vector.Vector3(0, 0.1, -1.0),
+      scale: vector.Vector3(0.02, 0.02, 0.02),
+    );
+
+    this.arkitController.add(nodeText);
   }
   
-
   void _createDrawing(String urlImage, int userId) async {
     var token = await SharedPref().read("token");
 
@@ -363,28 +350,19 @@ class _DrawState extends State<Draw> {
     Map<String, dynamic> jsonResponse = json.decode(response.body);
 
     if (response.statusCode == 200) {
-      print("API_REGISTER ==> 200");
-      //print(response.toString());
       setState(() {
         _counterDrawing += 1;
-        print("_counterDrawing: $_counterDrawing");
         if(_counterDrawing <= COUNTER_DRAWING) {
-          SharedPref().saveInteger("_counterDrawing", _counterDrawing);
-          print("increment draw: $_counterDrawing");
+          SharedPref().saveInteger("counterDrawing", _counterDrawing);
         }
-        print(">= draw : $_counterDrawing");
-
       });
-
     } else if (response.statusCode == 400) {
       String errorMsg = jsonResponse['message'][0]['messages'][0]['message'];
-      print("errormsg: " + errorMsg);
       throw Exception(errorMsg);
     } else {
       throw Exception('Failed to create drawing from API');
     }
   }
-
 
   void _convertAndSaveDrawing(File fileTosave) async {
     setState(() {
@@ -405,13 +383,12 @@ class _DrawState extends State<Draw> {
     
     final ref = FirebaseStorage.instance.ref().child(fileName);
     var url = await ref.getDownloadURL();
-    //print("url: $url");
     _createDrawing(url, userId);
   }
 
+  
   @override
   Widget build(BuildContext context) {
-    //print("state build widget");
     return Scaffold(
       key: _scaffoldKey,
       backgroundColor: Colors.transparent,
@@ -496,7 +473,6 @@ class _DrawState extends State<Draw> {
                         onPressed: () {
                           setState(() async {
                             String path = await NativeScreenshot.takeScreenshot();
-                            debugPrint('Screenshot taken, path: $path');
 
                             if( path == null || path.isEmpty ) {
                               _scaffoldKey.currentState.showSnackBar(
@@ -512,10 +488,9 @@ class _DrawState extends State<Draw> {
                               SnackBar(
                                 content: Text(AppLocalizations.of(context).translate("myDrawings_infoSave"))
                               )
-                            ); // showSnackBar()
+                            );
 
                             File imgFile = File(path);
-                            //print("imgFile: $imgFile");
                             //_imgHolder = Image.file(imgFile);
 
                             setState(() {});
@@ -537,7 +512,7 @@ class _DrawState extends State<Draw> {
                   )
                 :
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: <Widget>[
                       IconButton(
                         icon: Icon(Icons.apps, size: 30, color: Colors.cyan[900],),
@@ -559,15 +534,6 @@ class _DrawState extends State<Draw> {
                           });
                         }
                       ),
-                      IconButton(
-                        icon: Icon(Icons.file_download),
-                        onPressed: () {
-                          setState(() {
-                            _showBottomList = false;
-                            //paint.save();
-                          });
-                        }
-                      ),
                     ],
                   ), 
                 (!_detectAR) ?
@@ -580,12 +546,10 @@ class _DrawState extends State<Draw> {
                     )
                     : Slider(
                       value: strokeWidth,
-                      max: 50.0, //(selectedMode == SelectedMode.StrokeWidth) ? 50.0 : 1.0,
+                      max: 50.0,
                       min: 0.0,
                       onChanged: (val) {
                         setState(() {
-                          // print("value slider : $strokeWidth");
-                          // print("value slider : ${(selectedMode == SelectedMode.StrokeWidth)}");
                           if (selectedMode == SelectedMode.StrokeWidth)
                             strokeWidth = val;
                         });
@@ -604,7 +568,13 @@ class _DrawState extends State<Draw> {
                       direction: Axis.horizontal,
                       spacing: 10.0,
                       runSpacing: 10.0,
-                      children: _getMaterials(),
+                      //children: _getMaterials(),
+                      children: <Widget>[
+                        ListMaterialsSelection(
+                          initialMaterialValue: _selectedMaterial,
+                          onMaterialChange: onMaterialChange
+                        ),
+                      ],
                     ),
                     visible: _showBottomList,
                   ),
@@ -616,16 +586,12 @@ class _DrawState extends State<Draw> {
 
       body: RepaintBoundary(
         key: _globalKey,
-        child:
-         Stack(
+        child: Stack(
           alignment: Alignment.center,
           children: <Widget>[ 
             Container(
               child: ARKitSceneView(
-                //showFeaturePoints: true,
-                //planeDetection: ARPlaneDetection.horizontalAndVertical,
                 onARKitViewCreated: (controller) {
-                  //print("is _changed 1: $_changed");
                   return _onArKitViewCreated(controller, _selectedObj, _selectedMaterial);
                 }
               ),
@@ -664,10 +630,6 @@ class _DrawState extends State<Draw> {
                 },
                 child: Stack(
                   children: <Widget>[
-                    ARKitSceneView(onARKitViewCreated: (controller) {
-                      //print("is _changed 2: $_changed");
-                      return _onArKitViewCreated(controller, _selectedObj, _selectedMaterial);
-                    }),
                     CustomPaint(
                       size: Size.infinite,
                       painter: DrawingPainter(
@@ -680,29 +642,21 @@ class _DrawState extends State<Draw> {
               )
             :
               GestureDetector(
-              onPanUpdate: (details) {
-                setState(() {
-                  print("update details: $details");
-                  
-                });
-              },
-              onPanStart: (details) {
-                setState(() {
-                  print("start details: $details");
-                  
-                });
-              },
-              onPanEnd: (details) {
-                setState(() {
-                  print("end details: $details");
-                });
-              },
-              child: ARKitSceneView(onARKitViewCreated: (controller) {
-                  //print("is _changed 3: $_changed");
-                  return _onArKitViewCreated(controller, _selectedObj, _selectedMaterial);
-                }
+                onPanUpdate: (details) {
+                  setState(() {});
+                },
+                onPanStart: (details) {
+                  setState(() {});
+                },
+                onPanEnd: (details) {
+                  setState(() {});
+                },
+                child: Center(),
+                // ARKitSceneView(onARKitViewCreated: (controller) {
+                //     return _onArKitViewCreated(controller, _selectedObj, _selectedMaterial);
+                //   }
+                // ),
               ),
-            ),
 
             (_loading) ? Center(child: CircularProgressIndicator(),) : Center(),
             Container(
@@ -714,6 +668,75 @@ class _DrawState extends State<Draw> {
         
       ),
     );
+  }
+
+
+  _onArKitViewCreated(ARKitController controller, String obj, String decor) {
+    this.arkitController = controller;
+
+    if (obj == "sphere") {
+      _addSphere(decor);
+    } else if (obj == "cube") {
+      _addCube(decor);
+    } else if (obj == "cylinder") {
+      _addCylinder(decor);
+    } else if (obj == "cone") {
+      _addCone(decor);
+    } else if (obj == "pyramid") {
+      _addPyramid(decor);
+    } else if (obj == "torus") {
+      _addTorus(decor);
+    } else {
+      _addText(decor);
+    }
+  }
+
+  onMaterialChange(String newMaterial) {
+    if (newMaterial != _selectedMaterial) {
+      _selectedMaterial = newMaterial;
+      updateMaterials();
+    }
+  }
+
+  updateMaterials() async {
+    if(nodeSphere != null) {
+      this.arkitController.remove(nodeSphere.name);
+      nodeSphere = null;
+    } 
+    if(nodeCube != null) {
+      this.arkitController.remove(nodeCube.name);
+      nodeCube = null;
+    } 
+    if(nodeCone != null){
+      this.arkitController.remove(nodeCone.name);
+      nodeCone = null;
+    }
+    if(nodeCylinder != null){
+      this.arkitController.remove(nodeCylinder.name);
+      nodeCylinder = null;
+    } 
+    if(nodePyramid != null){
+      this.arkitController.remove(nodePyramid.name);
+      nodePyramid = null;
+    }
+    if(nodeTorus != null){
+      this.arkitController.remove(nodeTorus.name);
+      nodeTorus = null;
+    } 
+    if(nodeText != null){
+      this.arkitController.remove(nodeText.name);
+      nodeText = null;
+    } 
+
+    switch(_selectedObj) {
+      case "sphere": { _addSphere(_selectedMaterial); } break;
+      case "cone": { _addCone(_selectedMaterial); } break;
+      case "cylinder": { _addCylinder(_selectedMaterial); } break;
+      case "pyramid": { _addPyramid(_selectedMaterial); } break;
+      case "torus": { _addTorus(_selectedMaterial); } break;
+      case "text": { _addText(_selectedMaterial); } break;
+      default : { _addCube(_selectedMaterial); } break;
+    }
   }
 
   @override
@@ -754,3 +777,76 @@ class DrawingPoints {
   DrawingPoints({this.points, this.paint});
 }
 
+class ListMaterialsSelection extends StatefulWidget {
+  final String initialMaterialValue;
+  final ValueChanged<String> onMaterialChange;
+
+  ListMaterialsSelection({Key key, this.initialMaterialValue, this.onMaterialChange}): super(key: key);
+
+  @override
+  _ListMaterialsSelectionState createState() => _ListMaterialsSelectionState();
+}
+
+class _ListMaterialsSelectionState extends State<ListMaterialsSelection> {
+  String materialValue;
+
+  List<String> materialsLink = [
+    "assets/imgs/art.png",
+    "assets/imgs/brique.png",
+    "assets/imgs/carte.png",
+    "assets/imgs/cartoon.png",
+    "assets/imgs/citrus.png",
+    "assets/imgs/ecailles.png",
+    "assets/imgs/happy.png",
+    "assets/imgs/hexagone.png",
+    "assets/imgs/leaf.png",
+    "assets/imgs/lotus.png",
+    "assets/imgs/mosaique.png",
+    "assets/imgs/sun.png",
+    "assets/imgs/wave.png",
+    "assets/imgs/zebre.png"
+  ];
+
+  @override
+  void initState() {
+    materialValue = widget.initialMaterialValue;
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 40.0,
+      child: ListView.builder(
+        itemCount: materialsLink.length,
+        scrollDirection: Axis.horizontal,
+        itemBuilder: (context, index) {
+          return GestureDetector(
+            onTap: () {
+              setState(() {
+                widget.onMaterialChange(materialsLink[index]);
+                setState(() {
+                  materialValue = materialsLink[index];
+                });
+              });
+            },
+            child: ClipOval(
+              child: Container(
+                padding: EdgeInsets.only(bottom: 16.0, top: 20),
+                margin: EdgeInsets.only(left: 5, right: 5),
+                height: 45,
+                width: 45,
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                    fit: BoxFit.fill,
+                    image: AssetImage(materialsLink[index])
+                  ),
+                ),
+              ),
+            ),
+          );
+        },
+      ),
+    );
+  }
+}
