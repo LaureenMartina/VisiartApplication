@@ -40,8 +40,6 @@ class _EventDetailsState extends State<EventDetails> {
   Future<void> _launchedUrlSite(url) async {
     if(await canLaunch(url)) {
       await launch(url, forceSafariVC: false, forceWebView: true);
-    }else{
-      print("error open url");
     }
   }
 
@@ -106,7 +104,6 @@ class _EventDetailsState extends State<EventDetails> {
     );
     
     if(response.statusCode == 200) {
-      //print(response.statusCode);
     } else {
       throw Exception('Failed to create user-event-favorite in API');
     }
@@ -118,7 +115,6 @@ class _EventDetailsState extends State<EventDetails> {
     if(_allFavoriteEvents != []) {
       for(int i = 0; i < _allFavoriteEvents.length; i++){
         if(_allFavoriteEvents[i].event.id == _idEvent && _allFavoriteEvents[i].favorite == true) {
-          print("id : ${_allFavoriteEvents[i].id}");
           _favorite = false;
           _idUserEventFavorite = _allFavoriteEvents[i].id;
         }
@@ -134,7 +130,6 @@ class _EventDetailsState extends State<EventDetails> {
     );
     
     if(response.statusCode == 200) {
-      //print(response.statusCode);
     } else {
       throw Exception('Failed to delete user-event-favorite in API');
     }
@@ -142,7 +137,6 @@ class _EventDetailsState extends State<EventDetails> {
 
   @override
   Widget build(BuildContext context) {
-    //print("id: ${widget.specificEvent.id}");
     String city = widget.specificEvent.city;
     String urlSite = widget.specificEvent.urlSite;
     _idEvent = widget.specificEvent.id;

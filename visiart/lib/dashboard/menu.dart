@@ -5,6 +5,7 @@ import 'package:visiart/chatRooms/roomsList.dart';
 import 'package:visiart/config/SharedPref.dart';
 import 'package:visiart/dashboard/dashboard.dart';
 import 'package:visiart/events/eventsList.dart';
+import 'package:visiart/home.dart';
 import 'package:visiart/localization/AppLocalization.dart';
 
 
@@ -35,7 +36,7 @@ class _MenuBoardScreenState extends State<MenuBoardScreen> {
   }
 
   void _navigateToLogin() {
-    Navigator.pushNamed(context, 'connexion');
+    Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => HomeScreen()));
   }
 
   ListTile _account() => ListTile(
@@ -63,7 +64,7 @@ class _MenuBoardScreenState extends State<MenuBoardScreen> {
   );
 
   ListTile _drawingUser() => ListTile(
-    title: Text(AppLocalizations.of(context).translate('menu_myDrawings'), // TODO change name
+    title: Text(AppLocalizations.of(context).translate('menu_myDrawings'),
       style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Color.fromRGBO(82, 59, 92, 1.0)),
     ),
     subtitle: Text(AppLocalizations.of(context).translate('menu_myDrawingsSubtitle'),

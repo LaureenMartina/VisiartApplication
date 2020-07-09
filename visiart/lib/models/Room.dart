@@ -26,7 +26,7 @@ class Room {
     var listHobbies = json['hobbies'] as List;
     List<Hobby> currentListHobbies;
     if (listHobbies != null) {
-      currentListHobbies = listHobbies.map((hobby) => Hobby.fromJson(hobby)).toList();//RoomMessage.fromJson(index)).toList();
+      currentListHobbies = listHobbies.map((hobby) => Hobby.fromJson(hobby)).toList();
     }
     
     var userId = json['user'];
@@ -36,10 +36,8 @@ class Room {
       } else {
         userId = json['user']['id'];
       }
-    }/* 
-    print("model");
-    print(json['name']);
-    print(json['enabled']); */
+    }
+
     return Room(
       id: json['id'],
       name: json['name'],

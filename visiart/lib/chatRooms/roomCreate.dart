@@ -8,23 +8,21 @@ import 'package:visiart/models/Hobby.dart';
 import 'package:visiart/localization/AppLocalization.dart';
 import 'package:visiart/config/config.dart' as globals;
 import 'package:custom_switch/custom_switch.dart';
-import 'package:visiart/models/Room.dart';
-
 
 SharedPref sharedPref = SharedPref();
+
 class RoomsCreateScreen extends StatefulWidget { 
   @override
   _RoomsCreateScreenState createState() => _RoomsCreateScreenState();
 }
 
-
 class _RoomsCreateData {
   String roomName = '';
   String roomThematic = '';
 }
+
 class _RoomsCreateScreenState extends State<RoomsCreateScreen> {
 
-   
   final GlobalKey<FormState> _formKey = new GlobalKey<FormState>();
   _RoomsCreateData _data = new _RoomsCreateData();
 
@@ -38,7 +36,7 @@ class _RoomsCreateScreenState extends State<RoomsCreateScreen> {
   var isPrivate = false;
   var isDisplayed = false;
 
-  int _counterInvested;
+  int _counterInvested = 0;
 
   @override
   void initState() {
@@ -47,6 +45,7 @@ class _RoomsCreateScreenState extends State<RoomsCreateScreen> {
     SharedPref().readInteger("counterInvested").then((value) => {
         setState(() {
           if(value == 99999) {
+            print("value");
             _counterInvested = 0;
           } else {
             _counterInvested = value;

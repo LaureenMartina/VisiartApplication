@@ -24,8 +24,9 @@ class _MyDrawingsState extends State<MyDrawings> {
   
   void _fetchDrawings() async {
     var token = await SharedPref().read("token");
+    var userId = await SharedPref().readInteger(API_USER_ID_KEY);
 
-    final response = await http.get(API_DRAWINGS, headers: {
+    final response = await http.get(API_DRAWINGS + "?user.id=" + userId.toString(), headers: {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
       'Authorization': 'Bearer $token',
