@@ -9,10 +9,12 @@ import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'package:image/image.dart' as img;
 import 'package:image_picker/image_picker.dart';
+import 'package:visiart/chatRooms/roomChats.dart';
 import 'package:visiart/chatRooms/roomCreate.dart';
 import 'package:visiart/config/SharedPref.dart';
 import 'package:visiart/config/config.dart';
 import 'package:visiart/localization/AppLocalization.dart';
+import 'package:visiart/models/Room.dart';
 import 'package:visiart/utils/AlertUtils.dart';
 
 class PaintingRecognitionScreen extends StatefulWidget {
@@ -54,8 +56,9 @@ class _PaintingRecognitionScreenState extends State<PaintingRecognitionScreen> {
         .then((response) {
       debugPrint("response: " + response.body);
       Map<String, dynamic> jsonResponse = json.decode(response.body);
+      Room room = new Room.fromJson(jsonResponse['room']);
       setState(() {
-        _painter = (jsonResponse['painter'] as String).replaceAll("_", " ");
+        _painter = jsonResponse['painter'];
       });
       bool roomAlreadyExist = jsonResponse['roomAlreadyExists'];
       String alertBody;
@@ -73,6 +76,12 @@ class _PaintingRecognitionScreenState extends State<PaintingRecognitionScreen> {
         () {
           debugPrint("COUCOU: " + "click on yes");
           if (roomAlreadyExist) {
+            Navigator.push(
+                ctx,
+                MaterialPageRoute(
+                  builder: (BuildContext context) => RoomsChatPage(
+                    room: room,
+                  )));
           } else {
             debugPrint("COUCOU: " + "push controller");
             Navigator.push(
