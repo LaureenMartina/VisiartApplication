@@ -105,6 +105,7 @@ class _HomeState extends State<HomeScreen> {
       if (hobbies.isEmpty) {
         _navigateToUserInterestsScreen();
       } else {
+        SharedPref().saveBool("curiousBadgeEnabled", true);
         _navigateToDashboard();
       }
     } else if (response.statusCode == 400){

@@ -40,6 +40,7 @@ class _AwardsListScreenState extends State<AwardsListScreen> {
     
     SharedPref().readInteger("counterInvested").then((value) => {
         setState(() {
+           print("value invested : $value");
           if(value == 99999) {
             _counterInvested = 0;
           } else {
@@ -291,9 +292,6 @@ class _AwardsListScreenState extends State<AwardsListScreen> {
       child: Container(
         alignment: Alignment.center,
         child: Column(
-          //crossAxisAlignment: CrossAxisAlignment.center,
-          //mainAxisAlignment: MainAxisAlignment.center,
-          //mainAxisSize: MainAxisSize.min,
           children: <Widget>[
             _imagePassionateBadge(),
             _titlePasionateBadge(),
@@ -331,18 +329,18 @@ class _AwardsListScreenState extends State<AwardsListScreen> {
                   top: 25,
                   left: 20,
                   child: SizedBox.fromSize(
-                    size: Size(50, 50), // button width and height
+                    size: Size(50, 50),
                     child: ClipOval(
                       child: Material(
-                        color: Color.fromRGBO(82, 59, 92, 1.0), // button color
+                        color: Color.fromRGBO(82, 59, 92, 1.0),
                         child: InkWell(
-                          splashColor: Colors.yellow, // splash color
+                          splashColor: Color.fromRGBO(249, 248, 249, 1.0),
                           onTap: () {
-                            Navigator.push(
+                            Navigator.pushReplacement(
                               context, MaterialPageRoute(
                                 builder: (BuildContext context) => MenuBoardScreen() )
                             );
-                          }, // button pressed
+                          },
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: <Widget>[

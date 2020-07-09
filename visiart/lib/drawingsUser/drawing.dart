@@ -510,7 +510,7 @@ class _DrawState extends State<Draw> {
                   )
                 :
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: <Widget>[
                       IconButton(
                         icon: Icon(Icons.apps, size: 30, color: Colors.cyan[900],),
@@ -529,15 +529,6 @@ class _DrawState extends State<Draw> {
                             if (selectedMode == SelectedMode.Object3D)
                               _showBottomList = !_showBottomList;
                             selectedMode = SelectedMode.Object3D;
-                          });
-                        }
-                      ),
-                      IconButton(
-                        icon: Icon(Icons.file_download),
-                        onPressed: () {
-                          setState(() {
-                            _showBottomList = false;
-                            //paint.save();
                           });
                         }
                       ),
@@ -587,14 +578,11 @@ class _DrawState extends State<Draw> {
 
       body: RepaintBoundary(
         key: _globalKey,
-        child:
-         Stack(
+        child: Stack(
           alignment: Alignment.center,
           children: <Widget>[ 
             Container(
               child: ARKitSceneView(
-                //showFeaturePoints: true,
-                //planeDetection: ARPlaneDetection.horizontalAndVertical,
                 onARKitViewCreated: (controller) {
                   return _onArKitViewCreated(controller, _selectedObj, _selectedMaterial);
                 }
@@ -649,23 +637,20 @@ class _DrawState extends State<Draw> {
               )
             :
               GestureDetector(
-              onPanUpdate: (details) {
-                setState(() {
-                });
-              },
-              onPanStart: (details) {
-                setState(() {
-                });
-              },
-              onPanEnd: (details) {
-                setState(() {
-                });
-              },
-              child: ARKitSceneView(onARKitViewCreated: (controller) {
-                  return _onArKitViewCreated(controller, _selectedObj, _selectedMaterial);
-                }
+                onPanUpdate: (details) {
+                  setState(() {});
+                },
+                onPanStart: (details) {
+                  setState(() {});
+                },
+                onPanEnd: (details) {
+                  setState(() {});
+                },
+                child: ARKitSceneView(onARKitViewCreated: (controller) {
+                    return _onArKitViewCreated(controller, _selectedObj, _selectedMaterial);
+                  }
+                ),
               ),
-            ),
 
             (_loading) ? Center(child: CircularProgressIndicator(),) : Center(),
             Container(
