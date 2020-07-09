@@ -40,7 +40,6 @@ class _AwardsListScreenState extends State<AwardsListScreen> {
     
     SharedPref().readInteger("counterInvested").then((value) => {
         setState(() {
-           print("value invested : $value");
           if(value == 99999) {
             _counterInvested = 0;
           } else {
@@ -108,10 +107,6 @@ class _AwardsListScreenState extends State<AwardsListScreen> {
 
   String _setPassionateImage() {
     String _imageBadge = "";
-    print("curious: $_isEnabledCurious");
-    print("invested: $_isEnabledInvested");
-    print("reagent: $_isEnabledReagent");
-    print("conter: $_counterDrawing");
     if( (_isEnabledCurious && _isEnabledInvested && _isEnabledReagent && (_counterDrawing >= COUNTER_DRAWING)) || _isEnabledPassionate) {
       SharedPref().saveBool("passionateBadgeEnabled", true);
       _imageBadge = "assets/imgs/passionne.png";
