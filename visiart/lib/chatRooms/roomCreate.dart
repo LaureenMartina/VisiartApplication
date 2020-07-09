@@ -1,17 +1,22 @@
 import 'dart:convert';
 import 'dart:ui';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:visiart/chatRooms/roomsList.dart';
 import 'package:visiart/config/SharedPref.dart';
-import 'package:visiart/models/Hobby.dart';
-import 'package:visiart/localization/AppLocalization.dart';
 import 'package:visiart/config/config.dart' as globals;
 import 'package:custom_switch/custom_switch.dart';
+import 'package:visiart/models/Room.dart';
+import 'package:visiart/localization/AppLocalization.dart';
+import 'package:visiart/models/Hobby.dart';
 
 SharedPref sharedPref = SharedPref();
 
-class RoomsCreateScreen extends StatefulWidget { 
+class RoomsCreateScreen extends StatefulWidget {
+  RoomsCreateScreen({Key key, this.defaultRoomName = ""}) : super(key: key);
+  final String defaultRoomName;
+  
   @override
   _RoomsCreateScreenState createState() => _RoomsCreateScreenState();
 }
@@ -25,6 +30,9 @@ class _RoomsCreateScreenState extends State<RoomsCreateScreen> {
 
   final GlobalKey<FormState> _formKey = new GlobalKey<FormState>();
   _RoomsCreateData _data = new _RoomsCreateData();
+
+  bool nameReadOnly;
+  String formHintName;
 
   List<Hobby> listHobbies = [];
   var selectedHobby;
@@ -41,7 +49,6 @@ class _RoomsCreateScreenState extends State<RoomsCreateScreen> {
   @override
   void initState() {
     getListHobbies();
-    
     SharedPref().readInteger("counterInvested").then((value) => {
         setState(() {
           if(value == 99999) {
@@ -52,7 +59,14 @@ class _RoomsCreateScreenState extends State<RoomsCreateScreen> {
           }
         })
     });
-
+    nameReadOnly = widget.defaultRoomName != "";
+    if (nameReadOnly) {
+      formHintName = widget.defaultRoomName;
+      isPrivate = false;
+      isDisplayed = true;
+    } else {
+      formHintName = 'name';
+    }
     super.initState();
   }
 
@@ -65,8 +79,8 @@ class _RoomsCreateScreenState extends State<RoomsCreateScreen> {
         'private' : isPrivate.toString(),
         "hobbies": [{
           "id": this._data.roomThematic
-        }], 
-        "user": userId, 
+        }],
+        "user": userId,
     };
     final response = await http.post(
         globals.API_ROOMS,
@@ -77,7 +91,7 @@ class _RoomsCreateScreenState extends State<RoomsCreateScreen> {
         },
         body: json.encode(data)
     );
-    
+
     if (response.statusCode == 200) {
       _counterInvested += 1;
       if(_counterInvested <= globals.COUNTER_INVESTED) {
@@ -99,7 +113,7 @@ class _RoomsCreateScreenState extends State<RoomsCreateScreen> {
 
   void _addUserToPrivateRoom(int userId, int roomId) async {
     var token = await sharedPref.read(globals.API_TOKEN_KEY);
-    
+
     var data = {
         'user': userId.toString(),
         'room' : roomId.toString(),
@@ -120,7 +134,7 @@ class _RoomsCreateScreenState extends State<RoomsCreateScreen> {
       throw Exception("Can't add user to private room");
     }
   }
-  
+
   void getListHobbies() async{
     var token = await sharedPref.read(globals.API_TOKEN_KEY);
     final response = await http.get(
@@ -135,7 +149,11 @@ class _RoomsCreateScreenState extends State<RoomsCreateScreen> {
         List jsonResponse = json.decode(response.body);
         var items = jsonResponse.map((hobby) => new Hobby.fromJson(hobby)).toList();
         setState(() {
-          this.listHobbies.addAll(items);
+          if (nameReadOnly) {
+            this.listHobbies.addAll(items.where((element) => element.id == 7));
+          } else {
+            this.listHobbies.addAll(items);
+          }
         });
     } else {
       throw Exception('Failed to load hobbies from API');
@@ -149,7 +167,7 @@ class _RoomsCreateScreenState extends State<RoomsCreateScreen> {
         this.createRoom(_data.roomName, _data.roomThematic);
     }
   }
-  
+
   @override
   Widget build(BuildContext context) {
     final Size screenSize = MediaQuery.of(context).size;
@@ -170,11 +188,15 @@ class _RoomsCreateScreenState extends State<RoomsCreateScreen> {
             children: <Widget>[
               SizedBox(height: 25,),
               TextFormField(
-                keyboardType: TextInputType.text,
-                decoration: new InputDecoration(
-                  hintText: AppLocalizations.of(context).translate("roomsCreate_roomName"),
+                  readOnly: nameReadOnly,
+                  keyboardType: TextInputType.text,
+                  decoration: new InputDecoration(
+                  hintText: formHintName,
                 ),
                 onSaved: (String value) {
+                  if (nameReadOnly) {
+                    value = widget.defaultRoomName;
+                  }
                   this._data.roomName = value;
                 }
               ),
@@ -198,10 +220,10 @@ class _RoomsCreateScreenState extends State<RoomsCreateScreen> {
                   },
                 ),
               ),
-              Row(
+              if (!nameReadOnly) Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
-                  Text(AppLocalizations.of(context).translate("roomsCreate_showRomm"), 
+                   Text(AppLocalizations.of(context).translate("roomsCreate_showRomm"),
                     style: TextStyle(fontSize: 15),
                   ),
                   CustomSwitch(
@@ -215,8 +237,8 @@ class _RoomsCreateScreenState extends State<RoomsCreateScreen> {
                   ),
                 ],
               ),
-              SizedBox(height: 25,),
-              Row(
+              if (!nameReadOnly) SizedBox(height: 25,),
+              if (!nameReadOnly) Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
                   Text(AppLocalizations.of(context).translate("roomsCreate_privateRoom"),
@@ -253,7 +275,7 @@ class _RoomsCreateScreenState extends State<RoomsCreateScreen> {
                   color: Color.fromRGBO(82, 59, 92, 1.0),
                 ),
               ),
-            ], 
+            ],
           ),
         )
       ),

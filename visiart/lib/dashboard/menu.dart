@@ -8,7 +8,6 @@ import 'package:visiart/events/eventsList.dart';
 import 'package:visiart/home.dart';
 import 'package:visiart/localization/AppLocalization.dart';
 
-
 class MenuBoardScreen extends StatefulWidget {
   @override
   _MenuBoardScreenState createState() => _MenuBoardScreenState();
@@ -31,6 +30,10 @@ class _MenuBoardScreenState extends State<MenuBoardScreen> {
     Navigator.pushNamed(context, 'account');
   }
 
+  void _navigateToPaintingRecognition(){
+    Navigator.pushNamed(context, "painting_recognition");
+  }
+
   void _navigateToMyDrawings() {
     Navigator.pushNamed(context, 'myDrawings');
   }
@@ -49,6 +52,18 @@ class _MenuBoardScreenState extends State<MenuBoardScreen> {
     ),
     leading: Icon(Icons.fingerprint, size: 40, color: Colors.teal[700]),
     onTap: () { _navigateToAccount(); },
+  );
+
+  ListTile _recognition() => ListTile(
+    title: Text(AppLocalizations.of(context).translate("ml_paintingReco"),
+      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+    ),
+    subtitle: Text(AppLocalizations.of(context).translate('ml_paintingRecoDetail'),
+      style: TextStyle(fontSize: 12, fontStyle: FontStyle.italic
+      ),
+    ),
+    leading: Icon(Icons.brush, size: 40, color: Colors.teal[300]),
+    onTap: () { _navigateToPaintingRecognition(); },
   );
 
   ListTile _about() => ListTile(
@@ -122,7 +137,7 @@ class _MenuBoardScreenState extends State<MenuBoardScreen> {
             UserAccountsDrawerHeader(
               accountName: Text(_username,
                 style: TextStyle(
-                  fontWeight: FontWeight.bold, fontSize: 18, 
+                  fontWeight: FontWeight.bold, fontSize: 18,
                   color: Color.fromRGBO(252, 233, 216, 1.0), letterSpacing: 2),
               ),
               accountEmail: Text(_mail,
@@ -130,7 +145,7 @@ class _MenuBoardScreenState extends State<MenuBoardScreen> {
               ),
               currentAccountPicture: CircleAvatar(
                 backgroundColor: Color.fromRGBO(82, 59, 92, 0.8),
-                child: Text(_pictureText.toUpperCase(), 
+                child: Text(_pictureText.toUpperCase(),
                   style: TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.w500),
                 ),
               ),
@@ -144,6 +159,7 @@ class _MenuBoardScreenState extends State<MenuBoardScreen> {
             ),
             _account(),
             _drawingUser(),
+            _recognition(),
             _about(),
             SizedBox(height: 15,),
             Divider(

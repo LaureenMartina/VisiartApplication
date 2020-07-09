@@ -1,3 +1,4 @@
+import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:visiart/account/account.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -10,6 +11,7 @@ import 'package:visiart/drawingsUser/drawing.dart';
 import 'package:visiart/drawingsUser/myDrawings.dart';
 import 'package:visiart/events/eventsList.dart';
 import 'package:visiart/home.dart';
+import 'package:visiart/machinelearning/recognition.dart';
 import 'package:visiart/signUp/privacyPolicy.dart';
 import 'package:visiart/signUp/signup.dart';
 
@@ -59,4 +61,5 @@ var _routes = <String, WidgetBuilder> {
   "events": (BuildContext context) => EventsListScreen(),
   "rooms": (BuildContext context) => RoomsListPage(),
   "room_chats": (BuildContext context) => RoomsChatPage(),
+  "painting_recognition": (BuildContext context) => PaintingRecognitionScreen()
 };
