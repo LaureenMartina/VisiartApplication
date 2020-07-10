@@ -99,7 +99,6 @@ class _RoomsListPageState extends State<RoomsListPage>  with SingleTickerProvide
   }
 
   void _fetchRooms() async {
-    //final roomAPIUrl = globals.API_BASE_URL + '/rooms?private=false&display=true';
     var token = await sharedPref.read(globals.API_TOKEN_KEY);
     this._userId = await sharedPref.readInteger(globals.API_USER_ID_KEY);
     
@@ -191,7 +190,6 @@ class _RoomsListPageState extends State<RoomsListPage>  with SingleTickerProvide
       ).then((value) {
         Timer(Duration(milliseconds: 100), () => { _fetchRooms()});
       }),
-      //Navigator.pushNamed(context, "room_chats", arguments: RoomsChatsScreen(room: room)),
     child: Container(
       padding: EdgeInsets.only(top: 10.0, bottom: 5, left: 15, right: 15),
       child: Column(
@@ -235,7 +233,6 @@ class _RoomsListPageState extends State<RoomsListPage>  with SingleTickerProvide
       ).then((value) {
         Timer(Duration(milliseconds: 300), () => {_fetchUserRoomsPrivate()});
       }),
-      //Navigator.pushNamed(context, "room_chats", arguments: RoomsChatsScreen(room: room)),
     child: Container(
       padding: EdgeInsets.only(top: 10.0, bottom: 5, left: 15, right: 15),
       child: Column(
@@ -255,7 +252,6 @@ class _RoomsListPageState extends State<RoomsListPage>  with SingleTickerProvide
                   letterSpacing: 1.2
                 ),
               ),
-              //trailing: room.roomMessages != null && room.roomMessages.isNotEmpty && room.roomMessages.last != null && room.roomMessages.last.userId != this._userId 
               trailing: userRoomPrivate.room.lastDate != null 
               && userRoomPrivate.room.roomMessages.isNotEmpty 
               && userRoomPrivate.room.roomMessages.last != null &&  
@@ -372,12 +368,6 @@ class _RoomsListPageState extends State<RoomsListPage>  with SingleTickerProvide
                       shrinkWrap: true,
                       itemCount: _listUserRoomsPrivate.length,
                       itemBuilder: (context, index) {
-                        /* return FutureBuilder(
-                          future: sharedPref.read("lastDateMessageVieweRoom_"+_listUserRoomsPrivate[index].room.id.toString()),
-                          builder: (context, lastDate) {
-                            return _rowPublic(_listUserRoomsPrivate[index].room, Icons.work, lastDate.data.toString());
-                          },
-                        ); */
                         return _rowPrivate(_listUserRoomsPrivate[index], Icons.work);
                       },
                     ),

@@ -64,10 +64,7 @@ dependencies:
   custom_switch: ^0.0.1
   location: ^3.0.2
   firebase_ml_vision: ^0.9.4
-  #mlkit: ^0.15.0
   path: ^1.6.4
-  #tflite: 1.1.0
-  #tflite_flutter_helper: ^0.1.0
   image_picker: ^0.6.7+4
   arcore_flutter_plugin: ^0.0.5+1
 

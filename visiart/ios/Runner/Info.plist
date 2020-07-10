@@ -10,6 +10,11 @@
 	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
+	<key>CFBundleLocalizations</key>
+	<array>
+		<string>en</string>
+		<string>fr</string>
+	</array>
 	<key>CFBundleName</key>
 	<string>visiart</string>
 	<key>CFBundlePackageType</key>
@@ -29,21 +34,22 @@
 			</array>
 		</dict>
 	</array>
-	<key>CFBundleLocalizations</key>
-	<array>
-		<string>en</string>
-		<string>fr</string>
-	</array>
 	<key>CFBundleVersion</key>
 	<string>$(CURRENT_PROJECT_VERSION)</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSCameraUsageDescription</key>
 	<string>Can I use the camera please?</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>For Google Maps</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>So I can track you while you use the app</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>Can I use the mic please?</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
 	<string>Take pretty screenshots and save it to the PhotoLibrary.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Saving your images</string>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>
@@ -65,7 +71,5 @@
 	<false/>
 	<key>io.flutter.embedded_views_preview</key>
 	<string>YES</string>
-	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>So I can track you while you use the app</string>
 </dict>
 </plist>

@@ -134,7 +134,6 @@ class _RoomsChatPageState extends State<RoomsChatPage> {
     }
   }
 
-  //RoomsChatsScreen createState() => RoomsChatsScreen(room: room);
   void deleteRoom(roomId) async {
     var token = await sharedPref.read(globals.API_TOKEN_KEY);
     await http.put(
@@ -330,7 +329,6 @@ class _RoomsChatPageState extends State<RoomsChatPage> {
                 onPressed: () {
                   disableRoom(room.id);
                   Navigator.pop(ctx);
-                  //Navigator.pop(context);
                 },
               )
             : IconButton(
@@ -411,8 +409,7 @@ class _RoomsChatPageState extends State<RoomsChatPage> {
                   controller: textEditingController,
                   decoration: InputDecoration(
                     border: InputBorder.none,
-                    hintText: AppLocalizations.of(ctx)
-                        .translate('roomsChats_textHint'),
+                    hintText: AppLocalizations.of(ctx).translate('roomsChats_textHint'),
                     hintStyle: TextStyle(
                       fontSize: 16.0,
                       color: Color(0xffAEA4A3),
@@ -454,20 +451,27 @@ class _RoomsChatPageState extends State<RoomsChatPage> {
       appBar: buildAppBar(context),
       body: Stack(
         children: <Widget>[
-          Padding(
-            padding: EdgeInsets.only(bottom: 70),
-            child: Flexible(
-              child: _roomsListMeesageView(this.messageList, this._userid,
-                  this.allMessage, this._scrollController),
+          //Padding(
+            //padding: EdgeInsets.only(bottom: 70),
+            //child: 
+            Column(
+              children: <Widget>[
+                Flexible(
+                  child: _roomsListMeesageView(this.messageList, this._userid, this.allMessage, this._scrollController),
+                ),
+              ],
             ),
-          ),
+          //),
 
           Column(
             mainAxisAlignment: MainAxisAlignment.end,
             children: <Widget>[
-              Padding(
-                padding: EdgeInsets.only(left: 10, right: 10, bottom: 10),
-                child: buildMessageTextField(),
+              Container(
+                color: Colors.white,
+                child: Padding(
+                  padding: EdgeInsets.only(left: 10, right: 10, bottom: 10),
+                  child: buildMessageTextField(),
+                ),
               )
             ],
           ),
