@@ -10,6 +10,7 @@ import 'package:custom_switch/custom_switch.dart';
 import 'package:visiart/models/Room.dart';
 import 'package:visiart/localization/AppLocalization.dart';
 import 'package:visiart/models/Hobby.dart';
+import 'package:visiart/utils/AlertUtils.dart';
 
 SharedPref sharedPref = SharedPref();
 
@@ -33,6 +34,8 @@ class _RoomsCreateScreenState extends State<RoomsCreateScreen> {
 
   bool nameReadOnly;
   String formHintName;
+
+  BuildContext ctx;
 
   List<Hobby> listHobbies = [];
   var selectedHobby;
@@ -59,14 +62,6 @@ class _RoomsCreateScreenState extends State<RoomsCreateScreen> {
           }
         })
     });
-    nameReadOnly = widget.defaultRoomName != "";
-    if (nameReadOnly) {
-      formHintName = widget.defaultRoomName;
-      isPrivate = false;
-      isDisplayed = true;
-    } else {
-      formHintName = 'name';
-    }
     super.initState();
   }
 
@@ -75,7 +70,8 @@ class _RoomsCreateScreenState extends State<RoomsCreateScreen> {
     var userId = await sharedPref.readInteger(globals.API_USER_ID_KEY);
     var data = {
         'name': newRoomName,
-        'display' : isDisplayed.toString(),
+        'enabled': 'true',
+        'display' : 'true',
         'private' : isPrivate.toString(),
         "hobbies": [{
           "id": this._data.roomThematic
@@ -102,10 +98,7 @@ class _RoomsCreateScreenState extends State<RoomsCreateScreen> {
        // Room room = jsonResponse.map((room) => new Room.fromJson(room)).toList();
         _addUserToPrivateRoom(userId, jsonResponse['id']);
       }
-
-      Navigator.push(
-        context, MaterialPageRoute(builder: (context) => RoomsListPage()),
-      );
+      Navigator.pop(context);
     } else {
       throw Exception('Failed to post room from API');
     }
@@ -164,12 +157,34 @@ class _RoomsCreateScreenState extends State<RoomsCreateScreen> {
     // First validate form.
     if (this._formKey.currentState.validate()) {
         _formKey.currentState.save(); // Save our form now.
-        this.createRoom(_data.roomName, _data.roomThematic);
+        if (_data.roomThematic.isNotEmpty) {
+          this.createRoom(_data.roomName, _data.roomThematic);
+        } else {
+          showAlert(
+            ctx,
+            AppLocalizations.of(ctx).translate("warning"),
+            AppLocalizations.of(ctx).translate("roomsCreate_selectHobby"),
+            AppLocalizations.of(ctx).translate("close"));
+        }
+    }
+  }
+
+  void _reInit(BuildContext context) {
+    nameReadOnly = widget.defaultRoomName != "";
+    if (nameReadOnly) {
+      formHintName = widget.defaultRoomName;
+      isPrivate = false;
+      isDisplayed = true;
+    } else {
+      formHintName = AppLocalizations.of(context).translate("roomsCreate_roomName");
     }
   }
 
   @override
   Widget build(BuildContext context) {
+
+    _reInit(context);
+    ctx = context;
     final Size screenSize = MediaQuery.of(context).size;
 
     selectedPrivateMessage = AppLocalizations.of(context).translate("no");
@@ -188,16 +203,22 @@ class _RoomsCreateScreenState extends State<RoomsCreateScreen> {
             children: <Widget>[
               SizedBox(height: 25,),
               TextFormField(
-                  readOnly: nameReadOnly,
-                  keyboardType: TextInputType.text,
-                  decoration: new InputDecoration(
+                validator: (value) {
+                  if (value.isEmpty) {
+                    return AppLocalizations.of(context).translate('roomsCreate_fillName');
+                  }
+                  return null;
+                },
+                readOnly: nameReadOnly,
+                keyboardType: TextInputType.text,
+                decoration: new InputDecoration(
                   hintText: formHintName,
                 ),
                 onSaved: (String value) {
-                  if (nameReadOnly) {
-                    value = widget.defaultRoomName;
-                  }
-                  this._data.roomName = value;
+                if (nameReadOnly) {
+                  value = widget.defaultRoomName;
+                }
+                this._data.roomName = value;
                 }
               ),
               Padding(
@@ -219,23 +240,6 @@ class _RoomsCreateScreenState extends State<RoomsCreateScreen> {
                     });
                   },
                 ),
-              ),
-              if (!nameReadOnly) Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                   Text(AppLocalizations.of(context).translate("roomsCreate_showRomm"),
-                    style: TextStyle(fontSize: 15),
-                  ),
-                  CustomSwitch(
-                    activeColor: Color.fromRGBO(252, 233, 216, 1.0),
-                    value: isDisplayed,
-                    onChanged: (value) {
-                      setState(() {
-                        isDisplayed = value;
-                      });
-                    },
-                  ),
-                ],
               ),
               if (!nameReadOnly) SizedBox(height: 25,),
               if (!nameReadOnly) Row(
