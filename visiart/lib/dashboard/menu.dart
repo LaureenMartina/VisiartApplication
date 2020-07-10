@@ -66,18 +66,6 @@ class _MenuBoardScreenState extends State<MenuBoardScreen> {
     onTap: () { _navigateToPaintingRecognition(); },
   );
 
-  ListTile _about() => ListTile(
-    title: Text(AppLocalizations.of(context).translate('menu_about'),
-      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-    ),
-    subtitle: Text(AppLocalizations.of(context).translate('menu_aboutSubtitle'),
-      style: TextStyle(fontSize: 12, fontStyle: FontStyle.italic
-      ),
-    ),
-    leading: Icon(Icons.info_outline, size: 40, color: Colors.lightBlue[900]),
-    onTap: () {  },
-  );
-
   ListTile _drawingUser() => ListTile(
     title: Text(AppLocalizations.of(context).translate('menu_myDrawings'),
       style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Color.fromRGBO(82, 59, 92, 1.0)),
@@ -160,7 +148,6 @@ class _MenuBoardScreenState extends State<MenuBoardScreen> {
             _account(),
             _drawingUser(),
             _recognition(),
-            _about(),
             SizedBox(height: 15,),
             Divider(
               indent: 10,
