@@ -58,7 +58,9 @@ class _AccountState extends State<AccountScreen> {
         _fNameController.text.isEmpty ||
         _nameController.text.isEmpty ||
         _phoneController.text.isEmpty) {
-      showAlert(context, "Warning", "All fields must be filled", "Close");
+          showAlert(context, AppLocalizations.of(context).translate("warning"),
+            AppLocalizations.of(context).translate("forms_warningFill"),
+            AppLocalizations.of(context).translate("close"));
       return;
     }
 
