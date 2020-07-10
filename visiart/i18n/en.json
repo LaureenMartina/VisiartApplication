@@ -15,6 +15,11 @@
   "none": "None",
   "search": "Search",
 
+  "forms_warningFill": "All fields must be filled",
+  "forms_passwordMatch": "Passwords doesn't match",
+  "forms_emailValid": "Email must be valid",
+  "forms_policyCheck": "Private Policy must be checked",
+
   "home_signUpLink": "Not signed in ? Join thousands of passionates !",
   "home_slogan": "Add more ART to your life",
   "home_gmail": "Continue with :",
@@ -88,12 +93,6 @@
   "eventDetail_from": "From :",
   "eventDetail_to": "To :",
   "eventDetail_linkEvent": "More information on the official website",
-  "drawingAR_drawing": "Drawing",
-
-  "myDrawings_title": "Your Creations",
-  "myDrawings_infoDate": "Creation of ",
-  "myDrawings_infoSave": "The screenshot has been saved !",
-  "myDrawings_infoErrorSave": "Error taking the screenshot :(",
 
   "awards_title": "Trophies",
   "awards_titleCurious": "Curious Badge",
@@ -105,12 +104,26 @@
   "awards_descriptionReagent": "Reagent Badge\nobtained by participating in various discussions",
   "awards_descriptionPassionate": "Passionate Badge\nobtained by registering your 3 favorite drawings and having obtained the previous badges",
 
+  "drawingAR_drawing": "Drawing",
+
+  "myDrawings_title": "Your Creations",
+  "myDrawings_infoDate": "Creation of ",
+  "myDrawings_infoSave": "The screenshot has been saved !",
+  "myDrawings_infoErrorSave": "Error taking the screenshot :(",
+  
   "account_title": "My Personal Data",
   "account_name": "Name",
   "account_firstname": "Firstname",
   "account_username": "Username",
   "account_phone": "Phone",
   "account_language": "Language",
-  "account_save": "Save !"
-  
+  "account_save": "Save !",
+
+  "ml_createRoom": "There is no room in honor to this painter, create one ?",
+  "ml_goToRoom": "A room in his honor already exists, go to it ?",
+  "ml_paintingReco": "Painter recognition",
+  "ml_calculating": "Calculating...",
+  "ml_paintingRecoDetail": "Machine Learning",
+  "ml_noImage": "No image selected",
+  "ml_screenTitle": "Painter recognitionn"
 }

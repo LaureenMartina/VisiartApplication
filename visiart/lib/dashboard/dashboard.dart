@@ -125,7 +125,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
             child: Padding(
               padding: EdgeInsets.only(top:25),
               child: Text(
-                AppLocalizations.of(context).translate("dashboard_title") + ' ${_username[0].toUpperCase()}${_username.substring(1)}',
+                _username.isNotEmpty ? AppLocalizations.of(context).translate("dashboard_title") + ' ${_username[0].toUpperCase()}${_username.substring(1)}' : AppLocalizations.of(context).translate("dashboard_title") + "",
                 style: TextStyle(
                   fontSize: 22.0,
                   fontWeight: FontWeight.bold,

@@ -71,7 +71,37 @@ class _UserInterestsScreenState extends State<UserInterestsScreen> {
   }
 
   void _setAwardsFirstConnexion() {
-    SharedPref().saveBool("curiousBadgeEnabled", true);
+    SharedPref().saveInteger("counterInvested", 0);
+    SharedPref().saveInteger("counterReagent", 0);
+    SharedPref().saveInteger("counterDrawing", 0);
+    _updateAwardsUser();
+  }
+
+  Future<void> _updateAwardsUser() async {
+    var token = await SharedPref().read("token");
+    var userId = await SharedPref().readInteger(API_USER_ID_KEY);
+
+    final response = await http.put(API_USERS + "/" + userId.toString(),
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'Authorization': 'Bearer $token',
+      }, 
+      body: jsonEncode({
+        "Award": {
+          'curiousBadge' : true,
+          'investedBadge': false,
+          'reagentBadge': false,
+          'passionateBadge': false
+        },
+      })
+    );
+
+    if (response.statusCode == 200) {
+        setState(() {});
+    } else {
+      throw Exception('Failed to load events from API');
+    }
   }
 
   // Call to have the Popup Badge information

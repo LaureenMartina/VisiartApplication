@@ -2,7 +2,8 @@ library visiart.globals;
 
 //API
 //const String API_BASE_URL = "http://91.121.165.149";
-const String API_BASE_URL = "https://www.visiart.fr";
+//const String API_BASE_URL = "http://192.168.1.18:1337";
+const String API_BASE_URL = "https://visiart.fr";
 
 const String API_TOKEN_KEY = "token";
 const String API_USER_ID_KEY = "userId";
@@ -30,6 +31,7 @@ const String API_ROOMS_MESSAGE_ID_ROOM = API_BASE_URL + "/room-messages?room=";
 const String API_USER_ROOM_PRIVATE = API_BASE_URL + "/user-room-privates";
 const String API_ROOMS_NO_PRIVATE_DISPLAY = API_BASE_URL + "/rooms?private=false&display=true";
 const String API_USER_ROOM_PRIVATE_FETCH_ROOM_USER = API_BASE_URL + "/user-room-privates?room.display=true&user.id=";
+const String API_ML = API_BASE_URL + "/ml";
 
 const API_HEADERS = {
   'Content-Type': 'application/json',

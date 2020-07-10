@@ -15,6 +15,11 @@
   "none": "Aucune",
   "search": "Rechercher",
 
+  "forms_warningFill": "Tous les champs doivent être remplis",
+  "forms_passwordMatch": "Les mots de passe ne correspondent pas",
+  "forms_emailValid": "L'email doit être valide",
+  "forms_policyCheck": "Vous devez accepter la Politique de Confidentialité",
+
   "home_signUpLink": "Pas encore inscrit ? Rejoignez les passionnés !",
   "home_slogan": "Mettez de l'ART dans vos vies",
   "home_gmail": "Continuer avec :",
@@ -54,7 +59,7 @@
   "dashboard_subtitle": "Les événements du Mois",
   "dashboard_infoDateEvent": "A partir du \n",
   "dashboard_titleAwards": "Vos Trophées",
-  "dashboard_titleDrawing":"Dessins AR",
+  "dashboard_titleDrawing":"AR\nDessins",
 
   "userInterest_userInterest": "Vos Centres d'intérêts",
   "userInterests_congratulations": "Bravooo !",
@@ -70,7 +75,6 @@
   "roomsList_roomsPublic": "Salon publique",
   "roomsList_roomsPrivate": "Salon privée",
   "roomsList_filterRooms": "Filtrer avec une categorie",
-  
 
   "roomsCreate_hobbyChoice": "Choisir le hobby",
   "roomsCreate_addRomm": "Ajout d'un salon",
@@ -113,5 +117,13 @@
   "account_username": "Pseudo",
   "account_phone": "Téléphone",
   "account_language": "Langue",
-  "account_save": "Enregistrer !"
+  "account_save": "Enregistrer !",
+
+  "ml_createRoom": "Il n'y a pas de salon en l'honneur de ce peintre, en créer une ?",
+  "ml_goToRoom": "Un salon existe un salon en l'honneur de ce peintre, y aller ?",
+  "ml_paintingReco": "Reconaissance de peintre",
+  "ml_calculating": "Recherche....",
+  "ml_paintingRecoDetail": "Machine Learning",
+  "ml_noImage": "Aucune image selectionnée",
+  "ml_screenTitle": "Reconaissance de peintres"
 }
