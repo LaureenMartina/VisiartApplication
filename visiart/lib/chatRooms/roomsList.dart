@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'package:badges/badges.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
@@ -12,23 +13,7 @@ import 'package:visiart/config/SharedPref.dart';
 import 'package:visiart/models/UserRoomPrivate.dart';
 import 'package:visiart/config/config.dart' as globals;
 
-void main() => runApp(new RoomsList());
-
 SharedPref sharedPref = SharedPref();
-
-class RoomsList extends StatelessWidget {
-  // This widget is the root of your application.
-  @override
-  Widget build(BuildContext context) {
-    return new MaterialApp(
-      title: "Liste des salons",
-      theme: new ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: new RoomsListPage(title: "Liste des salons"),
-    );
-  }
-}
 
 class RoomsListPage extends StatefulWidget{
   RoomsListPage({Key key, this.title}) : super(key: key);
@@ -40,10 +25,6 @@ class RoomsListPage extends StatefulWidget{
 
 class _RoomsListPageState extends State<RoomsListPage>  with SingleTickerProviderStateMixin{
   TextEditingController editingController = TextEditingController();
-  List<Tab> myTabs = [
-    Tab(text: "Salon"),
-    Tab(text: "Salon")
-  ];
   TabController _tabController;
   List<Room> duplicateItems;
 
@@ -61,7 +42,7 @@ class _RoomsListPageState extends State<RoomsListPage>  with SingleTickerProvide
     _getListHobbies();
     _fetchRooms();
     _fetchUserRoomsPrivate();
-    _tabController = TabController(vsync: this, length: myTabs.length);
+    _tabController = TabController(vsync: this, length: 2);
   }
 
   @override
@@ -138,6 +119,7 @@ class _RoomsListPageState extends State<RoomsListPage>  with SingleTickerProvide
             );
          });
         setState(() {
+          _publicRooms.clear();
           _publicRooms.addAll(duplicateItems);
         });
       //return jsonResponse.map((room) => new Room.fromJson(room)).toList();
@@ -161,7 +143,7 @@ class _RoomsListPageState extends State<RoomsListPage>  with SingleTickerProvide
     if (response.statusCode == 200) {
         List jsonResponse = json.decode(response.body);
         setState(() {
-          this._listUserRoomsPrivate = jsonResponse.map((userRoomPrivate) => new UserRoomPrivate.fromJson(userRoomPrivate)).toList();
+          _listUserRoomsPrivate = jsonResponse.map((userRoomPrivate) => new UserRoomPrivate.fromJson(userRoomPrivate)).toList();
         });
     } else {
       throw Exception('Failed to load user rooms from API');
@@ -203,9 +185,12 @@ class _RoomsListPageState extends State<RoomsListPage>  with SingleTickerProvide
 
   GestureDetector _rowPublic(Room room, IconData icon) => GestureDetector(
     onTap: () => 
-      Navigator.push(context,
-        MaterialPageRoute(builder: (context) => RoomsChatsScreen(room: room), maintainState: true),
-      ),
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => RoomsChatsScreen(room: room)),
+      ).then((value) {
+        Timer(Duration(milliseconds: 100), () => { _fetchRooms()});
+      }),
       //Navigator.pushNamed(context, "room_chats", arguments: RoomsChatsScreen(room: room)),
     child: Container(
       padding: EdgeInsets.only(top: 10.0, bottom: 5, left: 15, right: 15),
@@ -243,10 +228,13 @@ class _RoomsListPageState extends State<RoomsListPage>  with SingleTickerProvide
   );
 
   GestureDetector _rowPrivate(UserRoomPrivate userRoomPrivate, IconData icon) => GestureDetector(
-    onTap: () => 
-      Navigator.push(context,
-        MaterialPageRoute(builder: (context) => RoomsChatsScreen(room: userRoomPrivate.room, userRoomPrivate: userRoomPrivate), maintainState: true),
-      ),
+    onTap: () =>
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => RoomsChatsScreen(room: userRoomPrivate.room, userRoomPrivate: userRoomPrivate)),
+      ).then((value) {
+        Timer(Duration(milliseconds: 300), () => {_fetchUserRoomsPrivate()});
+      }),
       //Navigator.pushNamed(context, "room_chats", arguments: RoomsChatsScreen(room: room)),
     child: Container(
       padding: EdgeInsets.only(top: 10.0, bottom: 5, left: 15, right: 15),
@@ -287,11 +275,10 @@ class _RoomsListPageState extends State<RoomsListPage>  with SingleTickerProvide
 
   @override
   Widget build(BuildContext context) {
-    this.myTabs = <Tab>[
-      Tab(text: "Salon Public"),
-      Tab(text: "Salon Privée"),
+    List<Tab> myTabs = <Tab>[
+      Tab(text: AppLocalizations.of(context).translate('roomsList_roomsPublic')),
+      Tab(text: AppLocalizations.of(context).translate('roomsList_roomsPrivate')),
     ];
-
     return new Scaffold(
       appBar: PreferredSize(
         child: AppBar(
@@ -312,7 +299,7 @@ class _RoomsListPageState extends State<RoomsListPage>  with SingleTickerProvide
       body:TabBarView(
         controller: _tabController,
         children: myTabs.map((Tab tab) {
-          if (tab.text.contains("Salon Public")) {
+          if (tab.text.contains(AppLocalizations.of(context).translate('roomsList_roomsPublic'))) {
             return Container(
               child: Column(
                 children: <Widget>[
@@ -409,7 +396,12 @@ class _RoomsListPageState extends State<RoomsListPage>  with SingleTickerProvide
         onPress: () {
           Navigator.push(context,
             MaterialPageRoute(builder: (context) => RoomsCreateScreen()),
-          );
+          ).then((value) {
+            Timer(Duration(milliseconds: 100), () {
+              _fetchRooms();
+              _fetchUserRoomsPrivate();
+            });
+          });
         },
       ),
     );

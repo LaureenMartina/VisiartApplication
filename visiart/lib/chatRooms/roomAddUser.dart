@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
+import 'package:visiart/localization/AppLocalization.dart';
 import 'package:visiart/models/Hobby.dart';
 import 'package:visiart/models/Room.dart';
 import 'package:visiart/config/SharedPref.dart';
@@ -8,24 +9,10 @@ import 'package:visiart/models/User.dart';
 import 'package:visiart/models/UserRoomPrivate.dart';
 import 'package:visiart/config/config.dart' as globals;
 
+BuildContext ctx;
+
 
 SharedPref sharedPref = SharedPref();
-class RoomAddUser extends StatelessWidget {
-  // This widget is the root of your application.
-
-  final Room room;
-  RoomAddUser({Key key, @required this.room}) : super(key: key);
-  @override
-  Widget build(BuildContext context) {
-    return new MaterialApp(
-      title: "Ajout d'un utilisateur au salon",
-      theme: new ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: new RoomAddUserPage(room: room),
-    );
-  }
-}
 
 class RoomAddUserPage extends StatefulWidget{
 
@@ -67,9 +54,11 @@ class _RoomAddUserPageState extends State<RoomAddUserPage>  with SingleTickerPro
   void _searchUsersByUsername() async {
 
     if (this._usernameToSearch != null && this._usernameToSearch.isNotEmpty) {
+      debugPrint("COUCOU: if");
       var token = await sharedPref.read(globals.API_TOKEN_KEY);
       
       final roomAPIUrl = globals.API_USERS_USERNAME + this._usernameToSearch.toString() + "&user_room_privates_null=true";
+      debugPrint("COUCOU: ${roomAPIUrl}");
       
       final response = await http.get(roomAPIUrl, headers: {
         'Content-Type': 'application/json',
@@ -79,6 +68,7 @@ class _RoomAddUserPageState extends State<RoomAddUserPage>  with SingleTickerPro
 
       if (response.statusCode == 200) {
         List jsonResponse = json.decode(response.body);
+        debugPrint("COUCOU: ${response.body}");
         setState(() {
           this._listUserToAdd.clear();
           this._listUserToAdd.addAll(jsonResponse.map((user) => new User.fromJson(user)).toList());
@@ -119,12 +109,14 @@ class _RoomAddUserPageState extends State<RoomAddUserPage>  with SingleTickerPro
 
   @override
   Widget build(BuildContext context) {
-    
+    debugPrint("COUCOU: ${context}");
+    ctx = context;
     final Size screenSize = MediaQuery.of(context).size;
     return new Scaffold(
       appBar: AppBar(
-        title: new Text("Ajout d'un utilisateur"),
+        title: new Text('Add User'),
         centerTitle: true,
+        backgroundColor: Color.fromRGBO(82, 59, 92, 1.0),
         automaticallyImplyLeading: false,
       ),
       body: new Container(
@@ -134,7 +126,7 @@ class _RoomAddUserPageState extends State<RoomAddUserPage>  with SingleTickerPro
               new TextFormField(
                 keyboardType: TextInputType.text,
                 decoration: new InputDecoration(
-                  hintText: 'name',
+                  hintText: 'Username' ,
                   //labelText: 'Nom du salon'
                 ),
                 onChanged: (String value) {
@@ -145,13 +137,13 @@ class _RoomAddUserPageState extends State<RoomAddUserPage>  with SingleTickerPro
                 width: screenSize.width,
                 child: new RaisedButton(
                   child: new Text(
-                    "Valider",
+                    'Search',
                     style: new TextStyle(
                       color: Colors.white
                     ),
                   ),
                   onPressed: () => _searchUsersByUsername(),
-                  color: Colors.blue,
+                  color: Color.fromRGBO(82, 59, 92, 1.0),
                 ),
                 margin: new EdgeInsets.only(
                   top: 20.0
@@ -172,7 +164,6 @@ class _RoomAddUserPageState extends State<RoomAddUserPage>  with SingleTickerPro
                           ),
                           IconButton(
                             icon: Icon(Icons.add),
-                            tooltip: 'Ajout de l\'utilisateur',
                             onPressed: () {
                               addUserToPrivateRoom(_listUserToAdd[index].id);
                               setState(() {

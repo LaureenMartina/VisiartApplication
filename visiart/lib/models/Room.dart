@@ -3,7 +3,7 @@ import 'package:visiart/models/Room_message.dart';
 
 class Room {
   final int id;
-  final String name;
+  String name;
   final int userId;
   final int hobbyId;
   final bool private;
