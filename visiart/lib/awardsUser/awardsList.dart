@@ -1,9 +1,12 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:visiart/dashboard/menu.dart';
 import 'package:visiart/config/config.dart';
 import 'package:visiart/config/SharedPref.dart';
 import 'package:visiart/localization/AppLocalization.dart';
+import 'package:http/http.dart' as http;
 
 class AwardsListScreen extends StatefulWidget {
   @override
@@ -12,32 +15,15 @@ class AwardsListScreen extends StatefulWidget {
 
 class _AwardsListScreenState extends State<AwardsListScreen> {
 
+  List _awards = [];
+
   int _counterCurious = 0, _counterInvested = 0, _counterReagent = 0, _counterDrawing = 0;
-  bool _isEnabledCurious = false, _isEnabledInvested = false, _isEnabledReagent = false, _isEnabledPassionate = false;
+  bool _isEnabledCurious = true, _isEnabledInvested = false, _isEnabledReagent = false, _isEnabledPassionate = false;
 
   @override
   void initState() {
-    SharedPref().readBool("curiousBadgeEnabled").then((value) => {
-        setState(() {
-            _isEnabledCurious = value;
-        })
-    });
-    SharedPref().readBool("investedBadgeEnabled").then((value) => {
-        setState(() {
-            _isEnabledInvested = value;
-        })
-    });
-    SharedPref().readBool("reagentBadgeEnabled").then((value) => {
-        setState(() {
-            _isEnabledReagent = value;
-        })
-    });
-    SharedPref().readBool("passionateBadgeEnabled").then((value) => {
-        setState(() {
-            _isEnabledPassionate = value;
-        })
-    });
-    
+    _getAwardsUser();
+
     SharedPref().readInteger("counterInvested").then((value) => {
         setState(() {
           if(value == 99999) {
@@ -66,10 +52,73 @@ class _AwardsListScreenState extends State<AwardsListScreen> {
         })
     });
 
-    _setCuriousImage();
     super.initState();
   }
+
+  void _getAwardsUser() async {
+    var token = await SharedPref().read("token");
+
+    final response = await http.get(API_USERS_ME,
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'Authorization': 'Bearer $token',
+      }
+    );
+
+    if (response.statusCode == 200) {
+      Map<String, dynamic> _listAwards = json.decode(response.body)['Award'];
+      setState(() {
+        _listAwards.forEach((key, value) {
+          if(key != "id") {
+            _awards.add([key, value]);
+          }
+        });
+
+        for(int i = 0; i < _awards.length; i++) {
+          if(_awards[i][0] == "curiousBadge") _isEnabledCurious = _awards[i][1];
+          if(_awards[i][0] == "investedBadge") _isEnabledInvested = _awards[i][1];
+          if(_awards[i][0] == "reagentBadge") _isEnabledReagent = _awards[i][1];
+          if(_awards[i][0] == "passionateBadge") _isEnabledPassionate = _awards[i][1];
+        }
+
+        _setCuriousImage();
+        _setInvestedImage();
+        _setReagentImage();
+        _setPassionateImage();
+      });
+    } else {
+      throw Exception('Failed to load events from API');
+    }
+  }
   
+  Future<void> _updateAwardsUser() async {
+    var token = await SharedPref().read("token");
+    var userId = await SharedPref().readInteger(API_USER_ID_KEY);
+
+    final response = await http.put(API_USERS + "/" + userId.toString(),
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'Authorization': 'Bearer $token',
+      }, 
+      body: jsonEncode({
+        "Award": {
+          "curiousBadge": true,
+          "investedBadge" : _isEnabledInvested,
+          "reagentBadge": _isEnabledReagent,
+          "passionateBadge": _isEnabledPassionate
+        },
+      })
+    );
+
+    if (response.statusCode == 200) {
+        setState(() {});
+    } else {
+      throw Exception('Failed to load events from API');
+    }
+  }
+
   String _setCuriousImage() {
     String _imageBadge = "";
     if(_isEnabledCurious) {
@@ -84,9 +133,12 @@ class _AwardsListScreenState extends State<AwardsListScreen> {
   String _setInvestedImage() {
     String _imageBadge = "";
 
-    if(_counterInvested >= COUNTER_INVESTED) {
-      SharedPref().saveBool("investedBadgeEnabled", true);
+    if(_counterInvested >= COUNTER_INVESTED || _isEnabledInvested) {
       _imageBadge = "assets/imgs/investi.png";
+      if(!_isEnabledInvested) {
+        _isEnabledInvested = true;
+        _updateAwardsUser();
+      }
     }else{
       _imageBadge = "assets/imgs/coming-soon.png";
     }
@@ -96,9 +148,12 @@ class _AwardsListScreenState extends State<AwardsListScreen> {
   String _setReagentImage() {
     String _imageBadge = "";
 
-    if(_counterReagent >= COUNTER_REAGENT) {
-      SharedPref().saveBool("reagentBadgeEnabled", true);
+    if(_counterReagent >= COUNTER_REAGENT || _isEnabledReagent) {
       _imageBadge = "assets/imgs/reactif.png";
+      if(!_isEnabledReagent) {
+        _isEnabledReagent = true;
+        _updateAwardsUser();
+      }
     }else{
       _imageBadge = "assets/imgs/coming-soon.png";
     }
@@ -108,8 +163,11 @@ class _AwardsListScreenState extends State<AwardsListScreen> {
   String _setPassionateImage() {
     String _imageBadge = "";
     if( (_isEnabledCurious && _isEnabledInvested && _isEnabledReagent && (_counterDrawing >= COUNTER_DRAWING)) || _isEnabledPassionate) {
-      SharedPref().saveBool("passionateBadgeEnabled", true);
       _imageBadge = "assets/imgs/passionne.png";
+      if(!_isEnabledPassionate) {
+        _isEnabledPassionate = true;
+        _updateAwardsUser();
+      }
     }else{
       _imageBadge = "assets/imgs/coming-soon.png";
     }
@@ -119,19 +177,19 @@ class _AwardsListScreenState extends State<AwardsListScreen> {
 
   Padding _titleCuriousBadge() => Padding(
     padding: EdgeInsets.only(top: 10),
-    child: Text(
-      '$_counterCurious/$COUNTER_CURIOUS\n' + AppLocalizations.of(context).translate("awards_titleCurious"),
+    child: Text('$_counterCurious/$COUNTER_CURIOUS\n' + AppLocalizations.of(context).translate("awards_titleCurious"),
       maxLines: 3,
       softWrap: true,
       style: TextStyle(fontSize: 17.0),
       textAlign: TextAlign.center,
-    ),
+    ), 
   );
   
   Padding _titleInvestedBadge() => Padding(
     padding: EdgeInsets.all(10),
-    child: Text(
-      '$_counterInvested/$COUNTER_INVESTED\n' + AppLocalizations.of(context).translate("awards_titleInvested"),
+    child: Text((!_isEnabledInvested) ? 
+      '$_counterInvested/$COUNTER_INVESTED\n' + AppLocalizations.of(context).translate("awards_titleInvested") :
+      '$COUNTER_INVESTED/$COUNTER_INVESTED\n' + AppLocalizations.of(context).translate("awards_titleInvested"),
       maxLines: 3,
       softWrap: true,
       style: TextStyle(fontSize: 17.0),
@@ -141,8 +199,9 @@ class _AwardsListScreenState extends State<AwardsListScreen> {
   
   Padding _titleReagentBadge() => Padding(
     padding: EdgeInsets.only(top: 10),
-    child: Text(
-      '$_counterReagent/$COUNTER_REAGENT\n' + AppLocalizations.of(context).translate("awards_titleReagent"),
+    child: Text((!_isEnabledReagent) ?
+      '$_counterReagent/$COUNTER_REAGENT\n' + AppLocalizations.of(context).translate("awards_titleReagent") : 
+      '$COUNTER_REAGENT/$COUNTER_REAGENT\n' + AppLocalizations.of(context).translate("awards_titleReagent"),
       maxLines: 3,
       softWrap: true,
       style: TextStyle(fontSize: 17.0),
@@ -152,8 +211,9 @@ class _AwardsListScreenState extends State<AwardsListScreen> {
 
   Padding _titlePasionateBadge() => Padding(
     padding: EdgeInsets.all(10),
-    child: Text(
-      '$_counterDrawing/$COUNTER_DRAWING\n' + AppLocalizations.of(context).translate("awards_titlePassionate"),
+    child: Text((!_isEnabledPassionate) ?
+      '$_counterDrawing/$COUNTER_DRAWING\n' + AppLocalizations.of(context).translate("awards_titlePassionate") :
+      '$COUNTER_DRAWING/$COUNTER_DRAWING\n' + AppLocalizations.of(context).translate("awards_titlePassionate"),
       maxLines: 3,
       softWrap: true,
       style: TextStyle(fontSize: 17.0),
