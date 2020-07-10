@@ -74,7 +74,9 @@ class _HomeState extends State<HomeScreen> {
 
   void _onCLickLoginButton() {
     if (_emailController.text.isEmpty || _passwordController.text.isEmpty) {
-      showAlert(context, "Warning", "All fields must be filled", "Close");
+      showAlert(context, AppLocalizations.of(context).translate("warning"),
+      AppLocalizations.of(context).translate("forms_warningFill"),
+      AppLocalizations.of(context).translate("close"));
       return;
     }
     _login(_emailController.text, _passwordController.text);
@@ -110,7 +112,10 @@ class _HomeState extends State<HomeScreen> {
       }
     } else if (response.statusCode == 400){
       String errorMsg = jsonResponse['message'][0]['messages'][0]['message'];
-      showAlert(context, "Error", errorMsg, "Close");
+      showAlert(context,
+      AppLocalizations.of(context).translate("warning"),
+      errorMsg,
+      AppLocalizations.of(context).translate("close"));
       throw Exception(errorMsg);
     } else {
       //throw Exception('Failed to Log In');
@@ -182,7 +187,10 @@ class _HomeState extends State<HomeScreen> {
 
     } else if (response.statusCode == 400) {
       String errorMsg = jsonResponse['message'][0]['messages'][0]['message'];
-      showAlert(context, "Error", errorMsg, "Close");
+      showAlert(context,
+      AppLocalizations.of(context).translate("warning"),
+      errorMsg,
+      AppLocalizations.of(context).translate("close"));
       throw Exception(errorMsg);
     } else {
       throw Exception('Failed to create user from API');

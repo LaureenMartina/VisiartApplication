@@ -114,7 +114,7 @@ class _PaintingRecognitionScreenState extends State<PaintingRecognitionScreen> {
           brightness: Brightness.light,
           elevation: 2,
           title: Text(
-            AppLocalizations.of(context).translate('userInterest_userInterest'),
+            AppLocalizations.of(context).translate('ml_screenTitle'),
             style: TextStyle(color: Colors.white),
           ),
         ),

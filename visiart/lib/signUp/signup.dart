@@ -34,6 +34,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   SharedPref sharedPref = SharedPref();
 
+  void _showWArningAlert(String message) {
+    showAlert(context, AppLocalizations.of(context).translate("warning"), 
+      message, 
+      AppLocalizations.of(context).translate("close"));
+  }
+
   void _onClickCreateAccountButton() {
     if (_nameController.text.isEmpty ||
         _emailController.text.isEmpty ||
@@ -41,7 +47,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
         _passwordConfirmationController.text.isEmpty ||
         _passwordConfirmationController.text.isEmpty
         ) {
-      showAlert(context, "Warning", "All fields must be complete", "Close");
+          _showWArningAlert(AppLocalizations.of(context).translate("forms_warningFill"));
       return;
     }
     if (_passwordController.text.toString() !=
