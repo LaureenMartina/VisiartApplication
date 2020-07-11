@@ -1,5 +1,4 @@
 import 'package:camera/camera.dart';
-import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:visiart/account/account.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -21,11 +20,6 @@ import 'localization/AppLocalization.dart';
 import 'splashscreen.dart';
 
 void main() async {
-  Crashlytics.instance.enableInDevMode = true;
-
-  // Pass all uncaught errors from the framework to Crashlytics.
-  FlutterError.onError = Crashlytics.instance.recordFlutterError;
-
   runApp(MyApp());
 }
 

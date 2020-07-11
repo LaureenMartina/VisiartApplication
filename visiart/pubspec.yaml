@@ -67,7 +67,6 @@ dependencies:
   path: ^1.6.4
   image_picker: ^0.6.7+4
   arcore_flutter_plugin: ^0.0.5+1
-  firebase_crashlytics: ^0.1.3+3
 
 dev_dependencies:
   flutter_test:
