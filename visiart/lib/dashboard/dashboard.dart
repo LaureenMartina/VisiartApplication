@@ -152,7 +152,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
             future: _calculation,
             builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
               Widget child;
-              if (snapshot.hasData) {
+              if (snapshot.hasData && events.isNotEmpty) {
                 child = CarouselSlider(
                   height: 190.0,
                   initialPage: 0,
