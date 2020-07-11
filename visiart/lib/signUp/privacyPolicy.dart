@@ -31,7 +31,9 @@ class PrivacyPolicy extends StatelessWidget {
             backgroundColor: Colors.blueGrey[700],
             expandedHeight: 130.0,
             flexibleSpace: FlexibleSpaceBar(
-              title: Text(AppLocalizations.of(context).translate("rgpd_title")),
+              title: Text(AppLocalizations.of(context).translate("rgpd_title"), 
+                style: TextStyle(fontSize: 18),
+              ),
               centerTitle: true,
               collapseMode: CollapseMode.parallax,
               background: Row(

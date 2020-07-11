@@ -446,12 +446,15 @@ class _RoomsChatPageState extends State<RoomsChatPage> {
       appBar: buildAppBar(context),
       body: Stack(
         children: <Widget>[
-          Column(
-            children: <Widget>[
-              Flexible(
-                child: _roomsListMeesageView(this.messageList, this._userid, this.allMessage, this._scrollController),
-              ),
-            ],
+          Padding(
+            padding: const EdgeInsets.only(bottom: 70.0),
+            child: Column(
+              children: <Widget>[
+                Flexible(
+                  child: _roomsListMeesageView(this.messageList, this._userid, this.allMessage, this._scrollController),
+                ),
+              ],
+            ),
           ),
           Column(
             mainAxisAlignment: MainAxisAlignment.end,
