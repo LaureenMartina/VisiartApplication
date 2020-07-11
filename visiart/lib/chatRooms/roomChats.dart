@@ -246,7 +246,6 @@ class _RoomsChatPageState extends State<RoomsChatPage> {
       automaticallyImplyLeading: false,
       title: Text(this.room.name),
       actions: <Widget>[
-        // action button
         IconButton(
           tooltip: AppLocalizations.of(ctx).translate('roomsChats_unlinkRoom'),
           icon: Icon(Icons.add),
@@ -278,7 +277,6 @@ class _RoomsChatPageState extends State<RoomsChatPage> {
                 onPressed: () {
                   disableRoom(room.id);
                   Navigator.pop(ctx);
-                  //Navigator.pop(context);
                 },
               )
             : IconButton(
@@ -286,7 +284,6 @@ class _RoomsChatPageState extends State<RoomsChatPage> {
                 onPressed: () {
                   enableRoom(room.id);
                   Navigator.pop(ctx);
-                  //Navigator.pop(context);
                 },
               ),
         IconButton(
@@ -307,7 +304,6 @@ class _RoomsChatPageState extends State<RoomsChatPage> {
       automaticallyImplyLeading: false,
       title: Text(this.room.name),
       actions: <Widget>[
-        // action button
         IconButton(
           icon: Icon(Icons.mode_edit),
           onPressed: () {
@@ -356,7 +352,6 @@ class _RoomsChatPageState extends State<RoomsChatPage> {
       automaticallyImplyLeading: false,
       title: Text(this.room.name),
       actions: <Widget>[
-        // action button
         IconButton(
           icon: Icon(Icons.remove),
           tooltip: AppLocalizations.of(ctx).translate('roomsChats_unlinkRoom'),
@@ -451,18 +446,13 @@ class _RoomsChatPageState extends State<RoomsChatPage> {
       appBar: buildAppBar(context),
       body: Stack(
         children: <Widget>[
-          //Padding(
-            //padding: EdgeInsets.only(bottom: 70),
-            //child: 
-            Column(
-              children: <Widget>[
-                Flexible(
-                  child: _roomsListMeesageView(this.messageList, this._userid, this.allMessage, this._scrollController),
-                ),
-              ],
-            ),
-          //),
-
+          Column(
+            children: <Widget>[
+              Flexible(
+                child: _roomsListMeesageView(this.messageList, this._userid, this.allMessage, this._scrollController),
+              ),
+            ],
+          ),
           Column(
             mainAxisAlignment: MainAxisAlignment.end,
             children: <Widget>[
@@ -489,8 +479,6 @@ ListView _roomsListMeesageView(data, userId, allMessage, controller) {
       itemBuilder: (context, index) {
         if (data[index].userId == userId) {
           return Container(
-            //color:  Theme.of(context).accentColor,
-
             width: 10,
             padding: EdgeInsets.all(12.0),
             margin: EdgeInsets.all(5.0),

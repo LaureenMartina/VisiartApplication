@@ -32,7 +32,6 @@ class _RoomsUpdateScreenState extends State<RoomsUpdateScreen> {
   String newRoomName;
   final GlobalKey<FormState> _formKey = new GlobalKey<FormState>();
 
-  //_RoomsUpdateData _data = new _RoomsUpdateData();
   _RoomsUpdateScreenState(Room room) {
     this.room = room;
   }

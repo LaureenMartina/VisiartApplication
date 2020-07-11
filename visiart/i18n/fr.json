@@ -20,9 +20,9 @@
   "forms_emailValid": "L'email doit être valide",
   "forms_policyCheck": "Vous devez accepter la Politique de Confidentialité",
 
-  "home_signUpLink": "Pas encore inscrit ? Rejoignez les passionnés !",
+  "home_signUpLink": "Pas encore inscrit ?\nRejoignez les passionnés !",
   "home_slogan": "Mettez de l'ART dans vos vies",
-  "home_gmail": "Continuer avec :",
+  "home_gmail": "Continuer avec",
 
   "signup_createAccount": "Créer un Compte",
   "signup_username": "Nom / Pseudo",

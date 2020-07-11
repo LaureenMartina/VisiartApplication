@@ -127,7 +127,6 @@ class _RoomAddUserPageState extends State<RoomAddUserPage>  with SingleTickerPro
                 keyboardType: TextInputType.text,
                 decoration: new InputDecoration(
                   hintText: 'Username' ,
-                  //labelText: 'Nom du salon'
                 ),
                 onChanged: (String value) {
                   this._usernameToSearch = value;
@@ -156,7 +155,6 @@ class _RoomAddUserPageState extends State<RoomAddUserPage>  with SingleTickerPro
                     itemCount: this._listUserToAdd.length,
                     padding: const EdgeInsets.only(top: 10.0),
                     itemBuilder: (context, index) {
-                      //return new Text(this._listUserToAdd[index].name);
                       return new Row(
                         children: <Widget>[
                           Expanded(

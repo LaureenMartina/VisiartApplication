@@ -20,7 +20,7 @@ class Room {
     var list = json['room_messages'] as List;
     List<RoomMessage> messageList;
     if (list != null) {
-      messageList = list.map((value) => RoomMessage.fromJson(value)).toList();//RoomMessage.fromJson(index)).toList();
+      messageList = list.map((value) => RoomMessage.fromJson(value)).toList();
     }
 
     var listHobbies = json['hobbies'] as List;

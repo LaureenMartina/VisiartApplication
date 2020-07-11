@@ -95,7 +95,6 @@ class _RoomsCreateScreenState extends State<RoomsCreateScreen> {
       }
       if (isPrivate) {
         var jsonResponse = json.decode(response.body);
-       // Room room = jsonResponse.map((room) => new Room.fromJson(room)).toList();
         _addUserToPrivateRoom(userId, jsonResponse['id']);
       }
       Navigator.pop(context);

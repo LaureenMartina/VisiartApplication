@@ -201,8 +201,6 @@ class _DrawArCoreState extends State<DrawArCore> {
     );
 
     Map<String, dynamic> jsonResponse = json.decode(response.body);
-
-    // TODO save counter for Awards
     if (response.statusCode == 200) {
       setState(() {
         _counterDrawing += 1;
@@ -332,7 +330,6 @@ class _DrawArCoreState extends State<DrawArCore> {
                         onPressed: () {
                           setState(() async {
                             String path = await NativeScreenshot.takeScreenshot();
-                            //debugPrint('Screenshot taken, path: $path');
 
                             if( path == null || path.isEmpty ) {
                               _scaffoldKey.currentState.showSnackBar(
@@ -610,8 +607,6 @@ class _DrawArCoreState extends State<DrawArCore> {
   }
 
   updateMaterials() async {
-    //debugPrint("updateMaterials");
-
     if(nodeSphere != null) {
       this.arCoreController.removeNode(nodeName: nodeSphere.name);
       nodeSphere = null;

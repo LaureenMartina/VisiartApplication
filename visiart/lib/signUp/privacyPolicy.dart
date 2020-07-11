@@ -34,7 +34,6 @@ class PrivacyPolicy extends StatelessWidget {
               title: Text(AppLocalizations.of(context).translate("rgpd_title")),
               centerTitle: true,
               collapseMode: CollapseMode.parallax,
-              //titlePadding: const EdgeInsets.only(bottom: 8.0),
               background: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -50,16 +49,6 @@ class PrivacyPolicy extends StatelessWidget {
                           fit: BoxFit.fill,
                         ),
                       ),
-                      // child: Text(
-                      //   'VISIART',
-                      //   textAlign: TextAlign.center,
-                      //   style: TextStyle(
-                      //     color: Colors.white,
-                      //     fontFamily: 'PlayfairDisplay',
-                      //     fontStyle: FontStyle.italic,
-                      //     fontSize: 18.0
-                      //   ),
-                      // ),
                     ),
                   ],
                 ),

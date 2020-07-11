@@ -121,7 +121,6 @@ class _RoomsListPageState extends State<RoomsListPage>  with SingleTickerProvide
           _publicRooms.clear();
           _publicRooms.addAll(duplicateItems);
         });
-      //return jsonResponse.map((room) => new Room.fromJson(room)).toList();
     } else {
       throw Exception('Failed to load rooms from API');
     }
@@ -209,7 +208,6 @@ class _RoomsListPageState extends State<RoomsListPage>  with SingleTickerProvide
                   letterSpacing: 1.2
                 ),
               ),
-              //trailing: room.roomMessages != null && room.roomMessages.isNotEmpty && room.roomMessages.last != null && room.roomMessages.last.userId != this._userId 
               trailing: room.lastDate != null && room.roomMessages.isNotEmpty && room.roomMessages.last != null &&  
               DateTime.parse(room.roomMessages.last.date).isAfter(DateTime.parse(room.lastDate))
               ? Badge(
@@ -217,7 +215,6 @@ class _RoomsListPageState extends State<RoomsListPage>  with SingleTickerProvide
                 badgeColor: Colors.green[300],
                 padding: EdgeInsets.all(10),
               ) : null,
-              //subtitle: Text("Salon public"),
             ),
           ),
         ],
@@ -261,7 +258,6 @@ class _RoomsListPageState extends State<RoomsListPage>  with SingleTickerProvide
                 badgeColor: Colors.green[300],
                 padding: EdgeInsets.all(10),
               ) : null,
-              //subtitle: Text("Salon public"),
             ),
           ),
         ],

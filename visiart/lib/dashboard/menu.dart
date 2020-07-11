@@ -39,7 +39,11 @@ class _MenuBoardScreenState extends State<MenuBoardScreen> {
   }
 
   void _navigateToLogin() {
-    Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => HomeScreen()));
+    Navigator.pushAndRemoveUntil(
+      context,
+      MaterialPageRoute(builder: (BuildContext context) => HomeScreen()),
+      (Route<dynamic> route) => false
+    );
   }
 
   ListTile _account() => ListTile(

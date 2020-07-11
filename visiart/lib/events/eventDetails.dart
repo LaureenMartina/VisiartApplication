@@ -339,7 +339,7 @@ class _EventDetailsState extends State<EventDetails> {
                                 color: Colors.grey.withOpacity(0.2),
                                 spreadRadius: 5,
                                 blurRadius: 7,
-                                offset: Offset(0, 3), // changes position of shadow
+                                offset: Offset(0, 3),
                               ),
                             ],
                           ),
@@ -364,7 +364,7 @@ class _EventDetailsState extends State<EventDetails> {
                                 color: Colors.grey.withOpacity(0.2),
                                 spreadRadius: 5,
                                 blurRadius: 7,
-                                offset: Offset(0, 3), // changes position of shadow
+                                offset: Offset(0, 3),
                               ),
                             ],
                           ),
@@ -377,7 +377,6 @@ class _EventDetailsState extends State<EventDetails> {
                       flex: 0,
                       child: Container(
                         margin: EdgeInsets.fromLTRB(10, 0, 10, 5),
-                        //height: 210,
                         width: double.infinity,
                         decoration: BoxDecoration(
                           color: Colors.white,
@@ -387,14 +386,13 @@ class _EventDetailsState extends State<EventDetails> {
                               color: Colors.grey.withOpacity(0.2),
                               spreadRadius: 5,
                               blurRadius: 7,
-                              offset: Offset(0, 3), // changes position of shadow
+                              offset: Offset(0, 3),
                             ),
                           ],
                         ),
                         child: Padding(
                           padding: EdgeInsets.only(top: 12, left: 12, right: 12, bottom: 14),
                           child: Text("${widget.specificEvent.longDescription}",
-                            //overflow: TextOverflow.ellipsis,
                             maxLines: 30,
                             style: TextStyle(
                               wordSpacing: 1.2,
