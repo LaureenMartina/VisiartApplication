@@ -96,7 +96,6 @@ flutter:
     - assets/icons/
     - assets/flare/
     - assets/lottie/
-    - assets/obj/
     - i18n/en.json
     - i18n/fr.json
 
