@@ -54,11 +54,9 @@ class _RoomAddUserPageState extends State<RoomAddUserPage>  with SingleTickerPro
   void _searchUsersByUsername() async {
 
     if (this._usernameToSearch != null && this._usernameToSearch.isNotEmpty) {
-      debugPrint("COUCOU: if");
       var token = await sharedPref.read(globals.API_TOKEN_KEY);
       
-      final roomAPIUrl = globals.API_USERS_USERNAME + this._usernameToSearch.toString() + "&user_room_privates_null=true";
-      debugPrint("COUCOU: ${roomAPIUrl}");
+      final roomAPIUrl = globals.API_USERS_USERNAME + this._usernameToSearch.toString()/*  + "&user_room_privates_null=true" */;
       
       final response = await http.get(roomAPIUrl, headers: {
         'Content-Type': 'application/json',
@@ -68,7 +66,19 @@ class _RoomAddUserPageState extends State<RoomAddUserPage>  with SingleTickerPro
 
       if (response.statusCode == 200) {
         List jsonResponse = json.decode(response.body);
-        debugPrint("COUCOU: ${response.body}");
+        for (var i = 0; i < jsonResponse.length; i++) {
+          if (jsonResponse[i]['id'] == _userId) {
+            jsonResponse.remove(jsonResponse[i]);
+          }
+
+          List listPrivateRooms = jsonResponse[i]['user_room_privates'];
+          for (var j = 0; j <  listPrivateRooms.length; j++) {
+            if (jsonResponse[i]['user_room_privates'][j]['room'] == room.id) {
+              jsonResponse.remove(jsonResponse[i]);
+              break;
+            }
+          }
+        }
         setState(() {
           this._listUserToAdd.clear();
           this._listUserToAdd.addAll(jsonResponse.map((user) => new User.fromJson(user)).toList());
@@ -109,7 +119,6 @@ class _RoomAddUserPageState extends State<RoomAddUserPage>  with SingleTickerPro
 
   @override
   Widget build(BuildContext context) {
-    debugPrint("COUCOU: ${context}");
     ctx = context;
     final Size screenSize = MediaQuery.of(context).size;
     return new Scaffold(

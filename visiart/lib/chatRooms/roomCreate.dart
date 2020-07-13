@@ -55,7 +55,6 @@ class _RoomsCreateScreenState extends State<RoomsCreateScreen> {
     SharedPref().readInteger("counterInvested").then((value) => {
         setState(() {
           if(value == 99999) {
-            print("value");
             _counterInvested = 0;
           } else {
             _counterInvested = value;

@@ -179,7 +179,7 @@ class _RoomsChatPageState extends State<RoomsChatPage> {
         this.userRoomPrivate.id.toString();
     var token = await sharedPref.read(globals.API_TOKEN_KEY);
 
-    final response = await http.put(roomAPIUrl, headers: {
+    final response = await http.delete(roomAPIUrl, headers: {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
       'Authorization': 'Bearer $token',
@@ -187,7 +187,7 @@ class _RoomsChatPageState extends State<RoomsChatPage> {
 
     if (response.statusCode == 200) {
       Navigator.push(
-        context,
+        ctx,
         MaterialPageRoute(builder: (context) => RoomsListPage()),
       );
     } else {

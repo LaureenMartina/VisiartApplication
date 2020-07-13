@@ -28,14 +28,12 @@ class _EventsListScreenState extends State<EventsListScreen> {
   bool _favorite = false, _recent = false;
   int _count = 50;
 
-  List<UserEventFavorite> _eventsFavorite = List<UserEventFavorite>();
   List<UserEventFavorite> filteredFavoriteEvents = List<UserEventFavorite>();
 
   List<Event> _events = List<Event>();
   List<Event> filteredEvents = List<Event>();
   Event castFavoriteEvent;
 
-  List<Event> _eventsRecent = List<Event>();
   List<Event> filteredRecentEvents = List<Event>();
 
   TextEditingController editingController = TextEditingController();
@@ -75,6 +73,8 @@ class _EventsListScreenState extends State<EventsListScreen> {
 
     if (response.statusCode == 200) {
       List jsonResponse = json.decode(response.body);
+      filteredEvents.clear();
+      _events.clear();
       setState(() {
         _events.addAll(
             jsonResponse.map((event) => new Event.fromJson(event)).toList());
@@ -99,10 +99,9 @@ class _EventsListScreenState extends State<EventsListScreen> {
 
     if (response.statusCode == 200) {
       List jsonResponse = json.decode(response.body);
+      filteredFavoriteEvents.clear();
       setState(() {
-        _eventsFavorite.addAll(
-            jsonResponse.map((event) => new UserEventFavorite.fromJson(event)).toList());
-        filteredFavoriteEvents.addAll(_eventsFavorite);
+        filteredFavoriteEvents.addAll(jsonResponse.map((event) => new UserEventFavorite.fromJson(event)).toList());
       });
     } else {
       throw Exception('Failed to load favorite userEventFavorite from API');
@@ -122,10 +121,10 @@ class _EventsListScreenState extends State<EventsListScreen> {
 
     if (response.statusCode == 200) {
       List jsonResponse = json.decode(response.body);
+
+      filteredRecentEvents.clear();
       setState(() {
-        _eventsRecent.addAll(
-            jsonResponse.map((event) => new Event.fromJson(event)).toList());
-        filteredRecentEvents.addAll(_eventsRecent);
+        filteredRecentEvents.addAll(jsonResponse.map((event) => new Event.fromJson(event)).toList());
       });
     } else {
       throw Exception('Failed to load recent events from API');
@@ -235,9 +234,6 @@ class _EventsListScreenState extends State<EventsListScreen> {
             onTap: () {
               _favorite = true;
               _recent = false;
-              _eventsRecent = [];
-              filteredRecentEvents = [];
-              filteredEvents = [];
               _fetchFavoriteEvents();
             }),
           // Recent filter
@@ -248,10 +244,6 @@ class _EventsListScreenState extends State<EventsListScreen> {
             onTap: () {
               _recent = true;
               _favorite = false;
-              _eventsFavorite = [];
-              _events = [];
-              filteredFavoriteEvents = [];
-              filteredEvents = [];
               _fetchRecentEvents();
             }),
           // ALL no filter
@@ -262,10 +254,6 @@ class _EventsListScreenState extends State<EventsListScreen> {
             onTap: () {
               _favorite = false;
               _recent = false;
-              _eventsFavorite = [];
-              _eventsRecent = [];
-              filteredRecentEvents = [];
-              filteredFavoriteEvents = [];
               _fetchEvents(_count);
             }),
         ],

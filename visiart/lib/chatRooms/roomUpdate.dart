@@ -84,7 +84,6 @@ class _RoomsUpdateScreenState extends State<RoomsUpdateScreen> {
               children: <Widget>[
                 new TextFormField(
                     validator: (value) {
-                      debugPrint("COUCOU: validator ${ctx}");
                       if (value.isEmpty) {
                         return 'Please enter a name';
                       }
