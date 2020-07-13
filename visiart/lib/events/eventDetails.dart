@@ -28,7 +28,6 @@ class _EventDetailsState extends State<EventDetails> {
   int _idEvent, _idUserEventFavorite;
 
   List<Event> specificEvent = List<Event>();
-  List<UserEventFavorite> _getAllFavorite = List<UserEventFavorite>();
   List<UserEventFavorite> _allFavoriteEvents = List<UserEventFavorite>();
 
   @override
@@ -43,16 +42,14 @@ class _EventDetailsState extends State<EventDetails> {
     }
   }
 
-  void _changeFavorite() {
-    setState(() {
-      if (_favorite) {
-        _favorite = false;
-        _removeFavoriteEvent();
-      } else {
-        _favorite = true;
-        _setFavoriteEvent(_favorite);
-      }
-    });
+  void _changeFavorite() async {
+    if (_favorite) {
+      _favorite = false;
+      _removeFavoriteEvent();
+    } else {
+      _favorite = true;
+      _setFavoriteEvent(_favorite);
+    }
   }
 
   void _getFavoriteEvent() async {
@@ -69,10 +66,9 @@ class _EventDetailsState extends State<EventDetails> {
     
     if(response.statusCode == 200) {
       List jsonResponse = json.decode(response.body);
+      _allFavoriteEvents.clear();
       setState(() {
-        _getAllFavorite.addAll(
-            jsonResponse.map((favori) => new UserEventFavorite.fromJson(favori)).toList());
-        _allFavoriteEvents.addAll(_getAllFavorite);
+        _allFavoriteEvents.addAll(jsonResponse.map((favori) => new UserEventFavorite.fromJson(favori)).toList());
       });
 
     } else {
@@ -104,6 +100,7 @@ class _EventDetailsState extends State<EventDetails> {
     );
     
     if(response.statusCode == 200) {
+      _getFavoriteEvent();
     } else {
       throw Exception('Failed to create user-event-favorite in API');
     }
@@ -111,16 +108,17 @@ class _EventDetailsState extends State<EventDetails> {
 
   void _removeFavoriteEvent() async {
     String token = await sharedPref.read(API_TOKEN_KEY);
-
     if(_allFavoriteEvents != []) {
       for(int i = 0; i < _allFavoriteEvents.length; i++){
-        if(_allFavoriteEvents[i].event.id == _idEvent && _allFavoriteEvents[i].favorite == true) {
-          _favorite = false;
+        if(_allFavoriteEvents[i].event.id == _idEvent) {
+          setState(() {
+            _favorite = false;
+          });
           _idUserEventFavorite = _allFavoriteEvents[i].id;
+          break;
         }
       }
     }
-
     final response = await http.delete(API_USER_EVENT_FAVORITES + "/" + _idUserEventFavorite.toString(),
       headers: {
           'Content-Type': 'application/json',
@@ -130,6 +128,7 @@ class _EventDetailsState extends State<EventDetails> {
     );
     
     if(response.statusCode == 200) {
+      _getFavoriteEvent();
     } else {
       throw Exception('Failed to delete user-event-favorite in API');
     }
@@ -202,9 +201,7 @@ class _EventDetailsState extends State<EventDetails> {
                         color: Colors.red[500],
                         iconSize: 35,
                         onPressed: () {
-                          setState(() {
                             _changeFavorite();
-                          });
                         },
                       ),
                     ),
