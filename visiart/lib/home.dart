@@ -83,7 +83,6 @@ class _HomeState extends State<HomeScreen> {
   }
 
   Future<void> _login(String username, String password) async {
-    print("_login: $username, $password");
     Map data = {'identifier': username, 'password': password};
 
     Response response = await post(
@@ -93,7 +92,6 @@ class _HomeState extends State<HomeScreen> {
     );
 
     Map<String, dynamic> jsonResponse = json.decode(response.body);
-    print(jsonResponse);
 
     if (response.statusCode == 200) {
       int id = jsonResponse['user']['id'];
