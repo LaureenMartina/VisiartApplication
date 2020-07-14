@@ -8,6 +8,8 @@ const String API_BASE_URL = "https://visiart.fr";
 const String API_TOKEN_KEY = "token";
 const String API_USER_ID_KEY = "userId";
 
+const String API_USER_CHECK = API_BASE_URL + "/user-check";
+
 const String API_REGISTER = API_BASE_URL + "/auth/local/register";
 const String API_LOGIN = API_BASE_URL + "/auth/local";
 const String API_USERS_ME = API_BASE_URL + "/users/me";

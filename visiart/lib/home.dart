@@ -83,6 +83,7 @@ class _HomeState extends State<HomeScreen> {
   }
 
   Future<void> _login(String username, String password) async {
+    print("_login: $username, $password");
     Map data = {'identifier': username, 'password': password};
 
     Response response = await post(
@@ -92,6 +93,7 @@ class _HomeState extends State<HomeScreen> {
     );
 
     Map<String, dynamic> jsonResponse = json.decode(response.body);
+    print(jsonResponse);
 
     if (response.statusCode == 200) {
       int id = jsonResponse['user']['id'];
@@ -124,7 +126,9 @@ class _HomeState extends State<HomeScreen> {
 
   Future<String> _signInWithGoogle() async {
     final GoogleSignInAccount googleSignInAccount = await _googleSignIn.signIn();
+    print(googleSignInAccount);
     final GoogleSignInAuthentication googleSignInAuthentication = await googleSignInAccount.authentication;
+    print(googleSignInAuthentication);
 
     final AuthCredential credential = GoogleAuthProvider.getCredential(
       accessToken: googleSignInAuthentication.accessToken,
@@ -135,7 +139,7 @@ class _HomeState extends State<HomeScreen> {
 
     final FirebaseUser user = authResult.user;
 
-    //assert(user.email != null);
+    assert(user.email != null);
     assert(!user.isAnonymous);
     assert(await user.getIdToken() != null);
 
@@ -145,18 +149,42 @@ class _HomeState extends State<HomeScreen> {
     var email = currentUser.email;
     var password = " "; // empty if connexion is GMAIL
 
-    if (email == null) {
+    assert(user.uid == currentUser.uid);
+
+    var isExisted = await _checkUserExist(email);
+
+    if (!isExisted) {
       _createUser(name, name, email, password);
     } else {
-      _login(email, password);
+      _login(name, password);
     }
-
-    assert(user.uid == currentUser.uid);
 
     return 'signInWithGoogle succeeded: $user';
   }
 
- void _createUser(String newUsername, String newName, String newEmail, String newPassword) async {
+  Future<bool> _checkUserExist(String email) async {
+
+    Response response = await post(
+      API_USER_CHECK,
+      headers: API_HEADERS,
+      body: json.encode({
+      'mail': email
+      }),
+    );
+
+    Map<String, dynamic> jsonResponse = json.decode(response.body);
+
+    if (response.statusCode == 200) {
+      return jsonResponse["exist"];
+    } else if (response.statusCode == 400) {
+      return false;
+    } else {
+      throw Exception('Failed to create user from API');
+    }
+  }
+
+
+  void _createUser(String newUsername, String newName, String newEmail, String newPassword) async {
     Map data = {
       'username': newUsername,
       'name': newName,
