@@ -126,9 +126,7 @@ class _HomeState extends State<HomeScreen> {
 
   Future<String> _signInWithGoogle() async {
     final GoogleSignInAccount googleSignInAccount = await _googleSignIn.signIn();
-    print(googleSignInAccount);
     final GoogleSignInAuthentication googleSignInAuthentication = await googleSignInAccount.authentication;
-    print(googleSignInAuthentication);
 
     final AuthCredential credential = GoogleAuthProvider.getCredential(
       accessToken: googleSignInAuthentication.accessToken,
@@ -149,8 +147,6 @@ class _HomeState extends State<HomeScreen> {
     var email = currentUser.email;
     var password = " "; // empty if connexion is GMAIL
 
-    assert(user.uid == currentUser.uid);
-
     var isExisted = await _checkUserExist(email);
 
     if (!isExisted) {
@@ -158,6 +154,8 @@ class _HomeState extends State<HomeScreen> {
     } else {
       _login(name, password);
     }
+
+    assert(user.uid == currentUser.uid);
 
     return 'signInWithGoogle succeeded: $user';
   }
