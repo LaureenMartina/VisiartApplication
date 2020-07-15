@@ -77,6 +77,7 @@ class _PaintingRecognitionScreenState extends State<PaintingRecognitionScreen> {
             alertBody,
             AppLocalizations.of(ctx).translate("yes"),
             () {
+              Navigator.pop(ctx);
               if (roomAlreadyExist) {
                 Navigator.push(
                     ctx,

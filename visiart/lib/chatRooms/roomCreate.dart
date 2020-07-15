@@ -202,7 +202,7 @@ class _RoomsCreateScreenState extends State<RoomsCreateScreen> {
               SizedBox(height: 25,),
               TextFormField(
                 validator: (value) {
-                  if (value.isEmpty) {
+                  if (value.isEmpty && widget.defaultRoomName.isEmpty) {
                     return AppLocalizations.of(context).translate('roomsCreate_fillName');
                   }
                   return null;
