@@ -71,6 +71,11 @@
   "userInterest_move": "Are you ready to move ?",
   "userInterest_save": "Save",
 
+  "roomAddUser_title": "Add user to room",
+  "roomAddUser_addUser": "Add user",
+  "roomAddUser_addTheUser": "Add the user",
+  "roomAddUser_name": "Name",
+
   "roomsList_roomsList": "Rooms list",
   "roomsList_roomsPublic": "Public room",
   "roomsList_roomsPrivate": "Private room",
@@ -82,9 +87,12 @@
   "roomsCreate_updateRomm": "Update a room",
   "roomsCreate_showRomm": "Show the room ?",
   "roomsCreate_privateRoom": "Is it a private room ?",
+  "roomsCreate_fillName": "Please enter a room name.",
+  "roomsCreate_selectHobby": "Please select a hobby",
 
-  "roomsChats_addFriend": "Add a friend",
-  "roomsChats_unlinkRoom": "Délier de cette room",
+  "roomsChats_addFriend": "Add users to this room",
+  "roomsChats_unlinkRoom": "Unlink this room",
+  "roomsChats_textHint": "Message",
 
   "event_filterFavorite": "Favorite",
   "event_filterRecent": "Recent",
@@ -118,6 +126,12 @@
   "account_phone": "Phone",
   "account_language": "Language",
   "account_save": "Save !",
+  "account_error": "Erreur",
+  "account_infoError": "Cannot get infos",
+  "account_back": "Back",
+  "account_nice": "Nice",
+  "account_infoSuccess": "Data saved",
+  "account_problem": "A problem occured",
 
   "ml_createRoom": "There is no room in honor to this painter, create one ?",
   "ml_goToRoom": "A room in his honor already exists, go to it ?",

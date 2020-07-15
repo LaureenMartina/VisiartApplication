@@ -39,7 +39,11 @@ class _MenuBoardScreenState extends State<MenuBoardScreen> {
   }
 
   void _navigateToLogin() {
-    Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => HomeScreen()));
+    Navigator.pushAndRemoveUntil(
+      context,
+      MaterialPageRoute(builder: (BuildContext context) => HomeScreen()),
+      (Route<dynamic> route) => false
+    );
   }
 
   ListTile _account() => ListTile(
@@ -64,18 +68,6 @@ class _MenuBoardScreenState extends State<MenuBoardScreen> {
     ),
     leading: Icon(Icons.brush, size: 40, color: Colors.teal[300]),
     onTap: () { _navigateToPaintingRecognition(); },
-  );
-
-  ListTile _about() => ListTile(
-    title: Text(AppLocalizations.of(context).translate('menu_about'),
-      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-    ),
-    subtitle: Text(AppLocalizations.of(context).translate('menu_aboutSubtitle'),
-      style: TextStyle(fontSize: 12, fontStyle: FontStyle.italic
-      ),
-    ),
-    leading: Icon(Icons.info_outline, size: 40, color: Colors.lightBlue[900]),
-    onTap: () {  },
   );
 
   ListTile _drawingUser() => ListTile(
@@ -160,7 +152,6 @@ class _MenuBoardScreenState extends State<MenuBoardScreen> {
             _account(),
             _drawingUser(),
             _recognition(),
-            _about(),
             SizedBox(height: 15,),
             Divider(
               indent: 10,

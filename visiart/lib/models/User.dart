@@ -6,7 +6,6 @@ class User {
   String firstname;
   String email;
   String password = ""; //change if basic connexion
-  //bool confirmed;
   String phone;
   String language;
   String role;

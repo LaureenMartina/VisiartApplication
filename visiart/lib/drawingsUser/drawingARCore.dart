@@ -131,7 +131,6 @@ class _DrawArCoreState extends State<DrawArCore> {
     return GestureDetector(
       onTap: () {
         setState(() {
-          print("_changed: $_changed");
           if(nodeSphere != null) this.arCoreController.removeNode(nodeName: nodeSphere.name);
           if(nodeCube != null) this.arCoreController.removeNode(nodeName: nodeCube.name);
           if(nodeCylinder != null) this.arCoreController.removeNode(nodeName: nodeCylinder.name);
@@ -155,7 +154,6 @@ class _DrawArCoreState extends State<DrawArCore> {
 
           _changed = true;
           _selectedObj = nameObj;
-          print("object cliqué: $_selectedObj");
         });
       },
       child: ClipOval(
@@ -201,18 +199,12 @@ class _DrawArCoreState extends State<DrawArCore> {
     );
 
     Map<String, dynamic> jsonResponse = json.decode(response.body);
-
-    // TODO save counter for Awards
     if (response.statusCode == 200) {
       setState(() {
         _counterDrawing += 1;
-        print("_counterDrawing: $_counterDrawing");
         if(_counterDrawing <= COUNTER_DRAWING) {
           SharedPref().saveInteger("_counterDrawing", _counterDrawing);
-          print("increment draw: $_counterDrawing");
         }
-        print(">= draw : $_counterDrawing");
-
       });
 
     } else if (response.statusCode == 400) {
@@ -332,7 +324,6 @@ class _DrawArCoreState extends State<DrawArCore> {
                         onPressed: () {
                           setState(() async {
                             String path = await NativeScreenshot.takeScreenshot();
-                            //debugPrint('Screenshot taken, path: $path');
 
                             if( path == null || path.isEmpty ) {
                               _scaffoldKey.currentState.showSnackBar(
@@ -610,8 +601,6 @@ class _DrawArCoreState extends State<DrawArCore> {
   }
 
   updateMaterials() async {
-    //debugPrint("updateMaterials");
-
     if(nodeSphere != null) {
       this.arCoreController.removeNode(nodeName: nodeSphere.name);
       nodeSphere = null;

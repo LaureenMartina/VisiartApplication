@@ -35,7 +35,7 @@ class _AccountState extends State<AccountScreen> {
       'Authorization': 'Bearer ${await SharedPref().read("token")}'
     }).then((r) {
       if (r.statusCode != 200) {
-        showAlert(context, "Error", "Cannot get infos", "Back", () {
+        showAlert(context, AppLocalizations.of(context).translate("account_error"), AppLocalizations.of(context).translate("account_infoError"), AppLocalizations.of(context).translate("account_back"), () {
           if (Navigator.canPop(context)) {
             Navigator.pop(context);
           } else {
@@ -81,9 +81,10 @@ class _AccountState extends State<AccountScreen> {
             body: json.encode(data))
         .then((r) {
       if (r.statusCode == 200) {
-        showAlert(context, "Nice", "Data saved", "Close");
+        SharedPref().save("name", _nameController.text.trim());
+        showAlert(context, AppLocalizations.of(context).translate("account_nice"), AppLocalizations.of(context).translate("account_infoSuccess"), AppLocalizations.of(context).translate("close"));
       } else {
-        showAlert(context, ":(", "A problem occured", "Close");
+        showAlert(context, ":(", AppLocalizations.of(context).translate("account_problem"), AppLocalizations.of(context).translate("close"));
       }
     });
   }

@@ -20,9 +20,9 @@
   "forms_emailValid": "L'email doit être valide",
   "forms_policyCheck": "Vous devez accepter la Politique de Confidentialité",
 
-  "home_signUpLink": "Pas encore inscrit ? Rejoignez les passionnés !",
+  "home_signUpLink": "Pas encore inscrit ?\nRejoignez les passionnés !",
   "home_slogan": "Mettez de l'ART dans vos vies",
-  "home_gmail": "Continuer avec :",
+  "home_gmail": "Continuer avec",
 
   "signup_createAccount": "Créer un Compte",
   "signup_username": "Nom / Pseudo",
@@ -71,9 +71,14 @@
   "userInterest_move": "Etes-vous prêt(e) à vous déplacer ?",
   "userInterest_save": "Enregistrer",
 
+  "roomAddUser_title": "Ajout d'un utilisateur au salon",
+  "roomAddUser_addUser": "Ajout d'un utilisateur",
+  "roomAddUser_addTheUser": "Ajout de l'utilisateur",
+  "roomAddUser_name": "Nom",
+
   "roomsList_roomsList": "Liste des salons",
-  "roomsList_roomsPublic": "Salon publique",
-  "roomsList_roomsPrivate": "Salon privée",
+  "roomsList_roomsPublic": "Salon public",
+  "roomsList_roomsPrivate": "Salon privé",
   "roomsList_filterRooms": "Filtrer avec une categorie",
 
   "roomsCreate_hobbyChoice": "Choisir le hobby",
@@ -81,10 +86,13 @@
   "roomsCreate_roomName": "Nom du salon",
   "roomsCreate_updateRomm": "Modification d'un salon",
   "roomsCreate_showRomm": "Afficher le salon ?",
-  "roomsCreate_privateRoom": "Est-ce un salon privée ?",
+  "roomsCreate_privateRoom": "Est-ce un salon privé ?",
+  "roomsCreate_fillName": "Veuillez entrer un nom de salon.",
+  "roomsCreate_selectHobby": "Veuillez sélectionner un hobby",
 
-  "roomsChats_addFriend": "Ajouter un ami",
+  "roomsChats_addFriend": "Ajouter des utilisateur à cette room",
   "roomsChats_unlinkRoom": "Délier de cette room",
+  "roomsChats_textHint": "Message",
 
   "event_filterFavorite": "Favoris",
   "event_filterRecent": "Récents",
@@ -118,6 +126,12 @@
   "account_phone": "Téléphone",
   "account_language": "Langue",
   "account_save": "Enregistrer !",
+  "account_error": "Erreur",
+  "account_infoError": "Impossible d'obtenir les informations",
+  "account_back": "Retour",
+  "account_nice": "Top",
+  "account_infoSuccess": "Données sauvegardées",
+  "account_problem": "Un problème est survenu",
 
   "ml_createRoom": "Il n'y a pas de salon en l'honneur de ce peintre, en créer une ?",
   "ml_goToRoom": "Un salon existe un salon en l'honneur de ce peintre, y aller ?",

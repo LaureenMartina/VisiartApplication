@@ -77,6 +77,7 @@ class _PaintingRecognitionScreenState extends State<PaintingRecognitionScreen> {
             alertBody,
             AppLocalizations.of(ctx).translate("yes"),
             () {
+              Navigator.pop(ctx);
               if (roomAlreadyExist) {
                 Navigator.push(
                     ctx,
@@ -146,7 +147,6 @@ class DisplayPictureScreen extends StatelessWidget {
   Uint8List imageToByteListFloat32(
       img.Image image, int inputSize, double mean, double std) {
     var convertedBytes = Float32List(1 * inputSize * inputSize * 3);
-    debugPrint("COUCOU: " + "${convertedBytes.buffer}");
     var buffer = Float32List.view(convertedBytes.buffer);
     int pixelIndex = 0;
     for (var i = 0; i < inputSize; i++) {

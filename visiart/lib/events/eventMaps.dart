@@ -40,7 +40,6 @@ class EventMapsState extends State<EventMaps> {
       Marker(
         markerId: MarkerId("1"),
         position: LatLng(coordinate.last, coordinate.first),
-        //icon: value,
         infoWindow: InfoWindow(title: eventName),
         onTap: () {},
       ),
@@ -99,7 +98,6 @@ class EventMapsState extends State<EventMaps> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      //title: 'You are...',
       home: 
       Scaffold(
         body: Stack(

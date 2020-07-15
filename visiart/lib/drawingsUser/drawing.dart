@@ -568,7 +568,6 @@ class _DrawState extends State<Draw> {
                       direction: Axis.horizontal,
                       spacing: 10.0,
                       runSpacing: 10.0,
-                      //children: _getMaterials(),
                       children: <Widget>[
                         ListMaterialsSelection(
                           initialMaterialValue: _selectedMaterial,
@@ -652,10 +651,6 @@ class _DrawState extends State<Draw> {
                   setState(() {});
                 },
                 child: Center(),
-                // ARKitSceneView(onARKitViewCreated: (controller) {
-                //     return _onArKitViewCreated(controller, _selectedObj, _selectedMaterial);
-                //   }
-                // ),
               ),
 
             (_loading) ? Center(child: CircularProgressIndicator(),) : Center(),

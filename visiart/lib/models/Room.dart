@@ -3,7 +3,7 @@ import 'package:visiart/models/Room_message.dart';
 
 class Room {
   final int id;
-  final String name;
+  String name;
   final int userId;
   final int hobbyId;
   final bool private;
@@ -20,7 +20,7 @@ class Room {
     var list = json['room_messages'] as List;
     List<RoomMessage> messageList;
     if (list != null) {
-      messageList = list.map((value) => RoomMessage.fromJson(value)).toList();//RoomMessage.fromJson(index)).toList();
+      messageList = list.map((value) => RoomMessage.fromJson(value)).toList();
     }
 
     var listHobbies = json['hobbies'] as List;
