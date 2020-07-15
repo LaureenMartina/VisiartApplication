@@ -126,6 +126,12 @@
   "account_phone": "Phone",
   "account_language": "Language",
   "account_save": "Save !",
+  "account_error": "Erreur",
+  "account_infoError": "Cannot get infos",
+  "account_back": "Back",
+  "account_nice": "Nice",
+  "account_infoSuccess": "Data saved",
+  "account_problem": "A problem occured",
 
   "ml_createRoom": "There is no room in honor to this painter, create one ?",
   "ml_goToRoom": "A room in his honor already exists, go to it ?",

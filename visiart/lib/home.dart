@@ -150,7 +150,7 @@ class _HomeState extends State<HomeScreen> {
     if (!isExisted) {
       _createUser(name, name, email, password);
     } else {
-      _login(name, password);
+      _login(email, password);
     }
 
     assert(user.uid == currentUser.uid);

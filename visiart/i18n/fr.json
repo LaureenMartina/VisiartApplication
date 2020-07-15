@@ -126,6 +126,12 @@
   "account_phone": "Téléphone",
   "account_language": "Langue",
   "account_save": "Enregistrer !",
+  "account_error": "Erreur",
+  "account_infoError": "Impossible d'obtenir les informations",
+  "account_back": "Retour",
+  "account_nice": "Top",
+  "account_infoSuccess": "Données sauvegardées",
+  "account_problem": "Un problème est survenu",
 
   "ml_createRoom": "Il n'y a pas de salon en l'honneur de ce peintre, en créer une ?",
   "ml_goToRoom": "Un salon existe un salon en l'honneur de ce peintre, y aller ?",
